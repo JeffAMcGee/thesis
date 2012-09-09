@@ -4,23 +4,28 @@ Text goes here.
 
 \section{Crawling}
 To investigate how social relation and geographical distance between the
-relations correlate, we sample a dataset from Twitter.
-Before going into the details of the data collection, we first define a few
-terms to simplify the process of explaining how the data was collected.
-\textbf{Contacts} are defined to be the set of a user's friends, followers, and
-people who a user mentioned in her tweets (i.e., people the user speaks to). 
-Twitter does not provide a mechanism to determine who mentioned a given user.
-Thus, only one-directional conversation is considered.
-In some blogging platforms, such as Tumblr, it is relatively easy to find the
-communication edges that point back toward a user.
-In those platforms, it would be fairly straightforward to use that information in location prediction.
+relations correlate, we sample a dataset from Twitter.  Before going into the
+details of the data collection, we first define a few terms to simplify the
+process of explaining how the data was collected.  \textbf{Contacts} are
+defined to be the set of a user's friends, followers, and people who a user
+mentioned in her tweets (i.e., people the user speaks to).  Twitter does not
+provide a mechanism to determine who mentioned a given user.  Thus, only
+one-directional conversation is considered.  In some blogging platforms, such
+as Tumblr, it is relatively easy to find the communication edges that point
+back toward a user.  In those platforms, it would be fairly straightforward to
+use that information in location prediction.
 
-Any given contact can be categorized into precisely one of these four disjoint sets:
+Any given contact can be categorized into precisely one of these four disjoint
+sets:
 \begin{description}
-\item[reciprocal friend] The geo-located user follows this user and is followed back.
-\item[just friend] The geo-located user follows this user and is not followed back.
-\item[just follower] The geo-located user is followed by this user, but does not follow them.
-\item[just mentioned] The users do not follow each other, but the geo-located user mentioned the name of the other user in a tweet.
+\item[reciprocal friend] The geo-located user follows this user and is followed
+    back.
+\item[just friend] The geo-located user follows this user and is not followed
+    back.
+\item[just follower] The geo-located user is followed by this user, but does
+    not follow them.
+\item[just mentioned] The users do not follow each other, but the geo-located
+    user mentioned the name of the other user in a tweet.
 \end{description}
 
 We built a crawler to find these contacts for users who used Twitter's Location
@@ -34,8 +39,10 @@ For each user in the geo-coded tweets, we use the median latitude and median
 longitude of locations of the user's tweets as an approximation of her home
 location. 
 Some Twitter accounts, such as accounts that posted jobs, would
-move around faster than a human could possibly move. To account for this, the crawler
-calculated the distance between each tweet and the user's home location. The crawler
+move around faster than a human could possibly move. To account for this, the
+crawler
+calculated the distance between each tweet and the user's home location. The
+crawler
 ignored users if the median distance from their tweets to their home location
 was greater than 50 miles.
 
@@ -43,7 +50,8 @@ Users are considered to be in the US based on a simple bounding box.  If their
 median latitude was between 24 and 50 degrees and their median longitude was
 between -126 and -66 degrees, then their home location was considered inside
 the continental US.
-We divided these geo-located users into groups based on the last digit of their twitter user id:
+We divided these geo-located users into groups based on the last digit of their
+twitter user id:
 \begin{description}
 \item[Training (0--6)] 104,214 users with a home location in the US bounding
 box. Some of these users were also used to evaluate the quality of geocoding.
@@ -66,7 +74,8 @@ categories listed below.
 From the profiles, the crawler kept the users with a decodable location field
 and threw away the rest. From what was left, the crawler randomly picked one
 Friend, one Follower, one Just Mentioned, and up to seven reciprocal friends.
-For each of these contacts, the crawler stored their friends, followers, and 100 most recent tweets.
+For each of these contacts, the crawler stored their friends, followers, and
+100 most recent tweets.
 
 \section{Geocoding}
 %We used Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
@@ -86,7 +95,8 @@ First, it uses a regular expression to find latitude and longitude coordinates.
 These are treated as if they were a unique type of location returned by the
 geocoder.
 Occasionally, users would put two locations separated by a slash, dash or a
-conjunction. If the geocoder did not return any results for a user, our system tried to
+conjunction.
+If the geocoder did not return any results for a user, our system tried to
 geocode both locations and returned the first location that the geocoder
 understood.
 
@@ -99,7 +109,8 @@ estimate the accuracy of a location returned by the geocoder.
 Because users in the US had friends outside of the US, FriendlyLocation needs
 to estimate the quality of
 locations outside of the US as well.
-As a result, we trained the geocoder trained on geographic data from around the world.
+As a result, we trained the geocoder trained on geographic data from around the
+world.
 
 \begin{table}[t]
 \centering
@@ -133,12 +144,14 @@ We calculated the median error for each location type.
 The median is more appropriate than the average or standard deviation because
 those metrics are strongly affected by large outliers.
 We choose to make the cutoff three because that is the smallest value where the median is not just an average.
-Table \ref{tab:MedianLocErr} shows the median location error for a few example locations and location types.
+Table \ref{tab:MedianLocErr} shows the median location error for a few example
+locations and location types.
 
-This gives us a method to estimate the quality of a coordinate returned by Gisgraphy.
-We define the \textbf{predicted location error (PLE)} for a given location to be the
-median location error if it is one of the 3866 locations that had three users;
-otherwise, it is the median location error for the location's type.
+This gives us a method to estimate the quality of a coordinate returned by
+Gisgraphy.
+We define the \textbf{predicted location error (PLE)} for a given location to
+be the median location error if it is one of the 3866 locations that had three
+users; otherwise, it is the median location error for the location's type.
 For example one user had ``PDX,OR'' in his location field. Gisgraphy identifies
 this as ``Portland International Airport''. Since it is not one of the most
 common locations, its PLE is determined by its place type to be 31 miles as

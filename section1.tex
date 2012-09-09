@@ -42,72 +42,75 @@ between the pair.  We identify several factors -- including following,
 mentioning, and actively engaging in conversations with another user -- that
 can strongly reveal the distance between a pair of users.
 
-We find a bimodal distribution in the distance between Twitter users, with one peak around 10 miles from
-people who live nearby, and another peak around 2500 miles, further validating
-Twitter's use as both a social network (with geographically nearby friends) and
-as a news distribution network (with very distant relationships).
-Figure \ref{fig:EdgeTypes} gives a preview of this bimodal distribution for four basic types of relationships.
-The red curve represents a strong, reciprocal friendship whereas the cyan line
-represents a relatively weak relationship. The red curve has more users at a
-distance of ten miles than the cyan line, indicating that reciprocal
-friendships are more likely to be local.
+We find a bimodal distribution in the distance between Twitter users, with one
+peak around 10 miles from people who live nearby, and another peak around 2500
+miles, further validating Twitter's use as both a social network (with
+geographically nearby friends) and as a news distribution network (with very
+distant relationships).  Figure \ref{fig:EdgeTypes} gives a preview of this
+bimodal distribution for four basic types of relationships.  The red curve
+represents a strong, reciprocal friendship whereas the cyan line represents a
+relatively weak relationship. The red curve has more users at a distance of ten
+miles than the cyan line, indicating that reciprocal friendships are more
+likely to be local.
 
-Based on these findings, we propose and evaluate a framework for predicting location for
-users based purely on an analysis of the user's social network, which has great
-significance for augmenting traditional social media and enriching
-location-based services with more refined and accurate location estimates.
-FriendlyLocation correctly locates 63\% of users within 25 miles.
+Based on these findings, we propose and evaluate a framework for predicting
+location for users based purely on an analysis of the user's social network,
+which has great significance for augmenting traditional social media and
+enriching location-based services with more refined and accurate location
+estimates.  FriendlyLocation correctly locates 63\% of users within 25 miles.
 
 \section{Related Work}
 
-The study of geographical properties of online social media users has drawn intensive attention in
-recent years.
-Characterizing network properties
-in relation to local geography has been studied in \cite{yardi2010tweeting}.
-Lindqvist \cite{lindqvist2011m} analyzed how and why people use location sharing services, and discussed
-the privacy issues related to location sharing services.
+FIXME: Mr. Cheng wrote some of this.
+FIXME: add new papers here - especially the twitter ones
+
+The study of geographical properties of online social media users has drawn
+intensive attention in recent years.  Characterizing network properties in
+relation to local geography has been studied in \cite{yardi2010tweeting}.
+Lindqvist \cite{lindqvist2011m} analyzed how and why people use location
+sharing services, and discussed the privacy issues related to location sharing
+services.
 
 Scellato et al. \cite{scellato2011socio} used data from three location based
 social networks to investigate the relationship between distance and location,
 and they show that connections are not purely caused by geographical or social
-factors.
-They investigated two random models where they shuffle the user locations and
-another where they shuffle the social connections and investigate what happens
-to the user location.
-They show that if a user has more connections, then their friends tend to be further away.
-They also found that longer connections are equally likely to be part of a
-social triangle as shorter connections.
+factors.  They investigated two random models where they shuffle the user
+locations and another where they shuffle the social connections and investigate
+what happens to the user location.  They show that if a user has more
+connections, then their friends tend to be further away.  They also found that
+longer connections are equally likely to be part of a social triangle as
+shorter connections.
 
 We know of two previous systems that attempted to estimate the location of
-users on social networking sites.
-In the first, Facebook researchers analyzed the physical distance between Facebook users'
-social relations and utilized the locations of a user's friends' to predict the
-user's geographical location \cite{backstrom2010find}.
-They picked users who entered their street address
+users on social networking sites.  In the first, Facebook researchers analyzed
+the physical distance between Facebook users' social relations and utilized the
+locations of a user's friends' to predict the user's geographical location
+\cite{backstrom2010find}.  They picked users who entered their street address
 in the location field of their profile and used this to predict the location of
 their friends using maximum likelihood estimation.  However, the information
 they used is generally not available outside of Facebook, since people rarely
-make their street address public.
-Cheng et al. \cite{cheng2010you} propose a
+make their street address public.  Cheng et al. \cite{cheng2010you} propose a
 content-based system for locating users on Twitter. They find words that are
 highly concentrated in specific regions and build a model to calculate the
 probability that a user lives at a location.
 
-Gilbert \cite{gilbert2009predicting} shows how the strength of a tie can be predicted by interaction patterns.
-They had volunteers rate the strength of several friendships and then analyzed
-the activity between the users can predict the strength of the friendship.
-We argue that tie strength is also correlated with physical proximity.
+Gilbert \cite{gilbert2009predicting} shows how the strength of a tie can be
+predicted by interaction patterns.  They had volunteers rate the strength of
+several friendships and then analyzed the activity between the users can
+predict the strength of the friendship.  We argue that tie strength is also
+correlated with physical proximity.
 
-There has also been some research into specific aspects of Twitter that is relevant to our work.
-User behavior with regard to the location field in Twitter user profiles has been studied in \cite{hecht2011tweets}.
-One of the early investigations into Twitter usage by Java \cite{java2007we} showed that people
-use twitter for chatter, conversations, sharing information, and reporting
-news.
-This mixture of uses fits well with the bimodal distribution of friends and followers that we propose.
+There has also been some research into specific aspects of Twitter that is
+relevant to our work.  User behavior with regard to the location field in
+Twitter user profiles has been studied in \cite{hecht2011tweets}.  One of the
+early investigations into Twitter usage by Java \cite{java2007we} showed that
+people use twitter for chatter, conversations, sharing information, and
+reporting news.  This mixture of uses fits well with the bimodal distribution
+of friends and followers that we propose.
 
 Finally, Cranshaw et al. \cite{cranshaw2010bridging} solved the inverse of the
 problem we are investigating: they predicted the existence of a social network
 tie given precise location information from laptops and cell phones. They used
-a collection of features of when users are co-located.
-Together, these efforts have begun to lay a foundation for the study \textit{geo-social media}.
+a collection of features of when users are co-located.  Together, these efforts
+have begun to lay a foundation for the study \textit{geo-social media}.
 
