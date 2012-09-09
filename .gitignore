@@ -1,2 +1,5 @@
 tamuthesis.dvi
 tamuthesis.pdf
+tamuthesis.log
+out/
+*.swp
