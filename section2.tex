@@ -4,86 +4,53 @@ Text goes here.
 
 \section{Crawling}
 To investigate how social relation and geographical distance between the
-relations correlate, we sample a dataset from Twitter.  Before going into the
-details of the data collection, we first define a few terms to simplify the
-process of explaining how the data was collected.  \textbf{Contacts} are
-defined to be the set of a user's friends, followers, and people who a user
-mentioned in her tweets (i.e., people the user speaks to).  Twitter does not
-provide a mechanism to determine who mentioned a given user.  Thus, only
-one-directional conversation is considered.  In some blogging platforms, such
-as Tumblr, it is relatively easy to find the communication edges that point
-back toward a user.  In those platforms, it would be fairly straightforward to
-use that information in location prediction.
-
-Any given contact can be categorized into precisely one of these four disjoint
-sets:
-\begin{description}
-\item[reciprocal friend] The geo-located user follows this user and is followed
-    back.
-\item[just friend] The geo-located user follows this user and is not followed
-    back.
-\item[just follower] The geo-located user is followed by this user, but does
-    not follow them.
-\item[just mentioned] The users do not follow each other, but the geo-located
-    user mentioned the name of the other user in a tweet.
-\end{description}
+relations correlate, we sample a dataset from Twitter.
 
 We built a crawler to find these contacts for users who used Twitter's Location
 Feature to disclose their location.
-The crawler sampled 19,877,804 geo-coded tweets by monitoring Twitter's public
-Streaming API between April 7 until April 16, 2011.
+The crawler sampled FIXME geo-coded tweets by monitoring Twitter's public
+Streaming API between May FIXME until May FIXME, 2012.
 In the dataset, users are filtered who have strict privacy settings, have
-neither friends nor followers, or posted fewer than two tweets in the sampled
+neither friends nor followers, or posted fewer than three tweets in the sampled
 dataset.
-For each user in the geo-coded tweets, we use the median latitude and median
+For each user with geo-coded tweets, we use the median latitude and median
 longitude of locations of the user's tweets as an approximation of her home
-location. 
+location.
 Some Twitter accounts, such as accounts that posted jobs, would
-move around faster than a human could possibly move. To account for this, the
-crawler
-calculated the distance between each tweet and the user's home location. The
-crawler
-ignored users if the median distance from their tweets to their home location
-was greater than 50 miles.
+move around faster than a human could possibly move.
+To account for this, the crawler calculated the distance between each tweet and
+the user's home location.
+The crawler ignored users if the median distance from their tweets to their
+home location was greater than 50 miles.
 
-Users are considered to be in the US based on a simple bounding box.  If their
-median latitude was between 24 and 50 degrees and their median longitude was
-between -126 and -66 degrees, then their home location was considered inside
-the continental US.
-We divided these geo-located users into groups based on the last digit of their
-twitter user id:
-\begin{description}
-\item[Training (0--6)] 104,214 users with a home location in the US bounding
-box. Some of these users were also used to evaluate the quality of geocoding.
-For geocoding, we chose users from around the world with a decodable location
-field and split them into two groups:
-\begin{description}
-\item[Geocoding Training (0--3)] 131,295 users
-\item[Geocoding Evaluation (4--6)] 85,664 users
-\end{description}
-\item[Evaluation (7--9)] 40,861 users with a home location in the US.
-\end{description}
+FIXME: talk about how I picked the 2500 users
 
 For all of the geo-located users with a home location in the US, the crawler
 used Twitter's API to download the users' friends, followers, and 100 most
 recent tweets.
-The crawler also downloaded the profiles for up to 2000 friends, followers, and
-people they mention in their tweets. If they had over 2000, it chose a random
-sample of 2000 profiles that included at least 25 of each of the four
+The crawler also downloaded the profiles for up to 100 friends, followers, and
+people they mention in their tweets. If they had over 100, it chose a random
+sample of 100 profiles that included at most 25 of each of the four
 categories listed below.
+
+FIXME: was that right?
+FIXME: the next paragraph is totally wrong.
+
 From the profiles, the crawler kept the users with a decodable location field
-and threw away the rest. From what was left, the crawler randomly picked one
+and threw away the rest.
+From what was left, the crawler randomly picked one
 Friend, one Follower, one Just Mentioned, and up to seven reciprocal friends.
 For each of these contacts, the crawler stored their friends, followers, and
 100 most recent tweets.
 
 \section{Geocoding}
+FIXME: urls?
 %We used Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
 %Gisgraphy does full-text search on the GeoNames\footnote{\url{http://www.geonames.org/}}
 database using Lucene. Since
 it runs locally it is not limited to a certain number of queries per day.
 Gisgraphy's geocoder returns ranked results based on a full text search
-over millions of geographical features such as countries, cities, and schools. 
+over millions of geographical features such as countries, cities, and schools.
 
 The location field on a user's profile is just a text field that asks the user
 to respond to ``Where in the world are you?''.
@@ -133,31 +100,35 @@ A Country&37&3935\\
 For the users in the geocoding training and evaluation groups, we have both the
 home location based on geo-located tweets, and the free-response location field
 that the geocoder was able to decode.
-We define the \textbf{location error} to be the great circle distance between a user's home
-location and the location returned from the geocoder.
+We define the \textbf{location error} to be the great circle distance between a
+user's home location and the location returned from the geocoder.
 The location error can vary from less than a mile to over ten thousand miles.
-Each user in the geocoding training group was geocoded and grouped based on the exact location returned by the geocoder.
-For the 3866 locations that had at least three users, we calculated the median location error for that location.
+Each user in the geocoding training group was geocoded and grouped based on the
+exact location returned by the geocoder.
+For the FIXME locations that had at least three users, we calculated the median
+location error for that location.
 All the users who were at locations with only one or two users were grouped
 according to the type of location returned by the geocoder.
 We calculated the median error for each location type.
 The median is more appropriate than the average or standard deviation because
 those metrics are strongly affected by large outliers.
-We choose to make the cutoff three because that is the smallest value where the median is not just an average.
-Table \ref{tab:MedianLocErr} shows the median location error for a few example
+We choose to make the cutoff three because that is the smallest value where the
+median is not just an average.
+Table~\ref{tab:MedianLocErr} shows the median location error for a few example
 locations and location types.
 
 This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
 We define the \textbf{predicted location error (PLE)} for a given location to
-be the median location error if it is one of the 3866 locations that had three
+be the median location error if it is one of the FIXME locations that had three
 users; otherwise, it is the median location error for the location's type.
 For example one user had ``PDX,OR'' in his location field. Gisgraphy identifies
 this as ``Portland International Airport''. Since it is not one of the most
 common locations, its PLE is determined by its place type to be 31 miles as
-seen in Table \ref{tab:MedianLocErr}.
+seen in Table~\ref{tab:MedianLocErr}.
 
-Figure \ref{fig:DiffGnpGps} shows the result of using the PLE to ignore users
+FIXME: do we even want this figure?
+Figure~\ref{fig:DiffGnpGps} shows the result of using the PLE to ignore users
 who have low quality locations such as ``Pluto''.
 The solid black line represents the normal results of geocoding where the
 location error is less than 1000 miles for 88\% of the users.
