@@ -5,6 +5,8 @@ information to build a system for location prediction, which we call
 FriendlyLocation.
 Since the location prediction system will be run on a large number of of users,
 it must be fast and scalable.
+
+FIXME: use the new list of factors
 For the purposes of location prediction, we limit ourselves to just four
 factors per edge: the type of contact, if the target user mentioned the
 contact, the number of followers the contact has, and the location error of the
@@ -15,7 +17,7 @@ the number of contacts.
 Most of the gains that come from looking at triangles are also visible by
 looking at the count of followers.
 We use the number of followers for a contact instead of the number of friends
-since it was more significant as seen in Figure \ref{fig:LocalAll}.
+since it was more significant as seen in Figure~\ref{fig:LocalAll}.
 
 \section{Model}
 \label{sec:model}
@@ -33,81 +35,26 @@ The probability that a user lives at specific spot at a distance is
 proportional to the probability that she lives at that distance divided by the
 distance.
 
-While contacts with a small location error are likely to live quite near the
-target user, contacts with a larger location error might live farther away.
-Instead of working measuring distance in miles, we measure distance relative
-to the predicted error.
-We divide the distance between the target user and their contact by the
-contact's location error to create Figure \ref{fig:EdgeTypesMdist}, which shows
-the probability that a contact lives at a spot.
-
 Based on this graph, any given edge will fit into one of three categories: a
 local user that is closer than the predicted location error and is uniformly
 distributed, a nearby user whose relationship was formed by meeting in person
 and fits a power law with the distance, or a user whose connection is not
 related to geography, and is distributed based on the real-world population
 distribution.
-For each of the four types of contacts, we plot two gray lines on the graph
-that represent the first two categories.
-The horizontal lines are not best-fit lines; these lines represent the ratio of
-pairs of users with a distance less than the predicted error to the total
-number of pairs of that contact type. 
-For example, almost 20\% of reciprocal friends live closer to each other than
-the predicted location error of the contact. This is the top gray line on
-\ref{fig:EdgeTypesMdist}.
-The diagonal line is a best fit line for the curve where
-\begin{math}1<={dist \over PLE}<10\end{math}.
-We choose 10 because this is approximately where the randomly distributed
-friends who are not caused by proximity start to affect the distribution.
-Assuming that every edge is in one and only one of these three categories, we
-can create a formula for the probability that a user is in a specific category:
-\begin{displaymath}1=l+\int_{1}^{\infty}e^{b}x^{a}\mathrm{d}x+r\end{displaymath}
-where \(l\) is the fraction of users with a distance less that the predicted
-location error, \(a\) and \(b\) are the parameters of the linear regression,
-and \(r\) is the fraction of users who are caused by random connections that
-have no relationship to distance.
-Since we know everything except \(r\) for any given curve, we can integrate and
-solve for \(r\):
-\begin{displaymath}r=1-l+{e^{b} \over a+1}\end{displaymath}
 
-When this model is created, it assumes that none of the randomly located users
-are located near the target user.
-This is reasonable when the predicted location error is small.
-When the predicted error is large, the location does very little to affect the
-final result since vague locations such as ``Texas'' mostly help to break ties.
+FIXME: add details here.
+FIXME: edge distance prediction
 
 \section{System}
 We used this model to build a Maximum Likelihood Estimator.
-FriendlyLocation trained on 27,251,927 edges from users in the training set to
+FriendlyLocation trained on FIXME edges from users in the training set to
 their contacts.
-The edges were split into the 14 categories seen in Figure \ref{fig:LocalAll}, and
-then further split based on the follower count. For each of these groups, it
-calculated \(l\), did a least-squares fit to find \(a\) and \(b\), and used
-that to calculate \(r\).
-In other words, FriendlyLocation used the training data to calculate \(l\),
-\(a\), \(b\), and \(r\) for each of the red boxes seen in Figure
-\ref{fig:LocalAll}.
 
-We assume that the randomly located users are uniformly distributed with
-distances between 0 and \(c\). We choose \(c\) to be 2750 miles which is
-approximately the distance from one corner of the U.S. to the other. The value
-of this parameter has very little affect on the results except in cases where
-the distance from the target user is large.
-Based on the model from the previous section, the probability that a user is at
-a specific distance, \(d\), is given by the following piecewise function:
-\begin{displaymath}
-    P(d) = FIXME
-\end{displaymath}
-The probability that a user is not random is divided by the PLE so that
-locations with larger errors will contribute less to the final result.
-The probability that a target user is at a given point can be found by
-calculating the distance between the point and the location of each of the
-contacts and then summing \(log(P(d))\) for each of the user's contacts.
+FIXME: describe this
 
 We use this to create a simple procedure for estimating the location for a user:
 \begin{enumerate}
-\item Pick up to 100 of the user's contacts. (They can either be selected
-randomly or the more significant edges can be chosen.)
+\item Pick up to 25 of the user's contacts.
 \item Geocode the location field and calculate the the predicted error for each
 of the contacts.
 \item Ignore any contacts who have no decodable location information.
@@ -116,7 +63,8 @@ Approximately one third of the contacts are ignored.
 target user lives there using the maximum likelihood estimator.
 \item Pick the location with the highest probability.
 \end{enumerate}
-The locations where the contacts live are not necessarily the maximums of the 
+
+FIXME: lots more here
 
 \section{Evaluation}
 We evaluate the system against several baseline implementations, and evaluate
@@ -127,15 +75,16 @@ The geo-located users we used to do the evaluation are less concerned about the
 privacy of their location information than the average twitter user.
 As a result, they tended to give better information in the location field of
 their user profile than the average twitter user.
+FIXME: we added noise instead
 For this evaluation we choose to ignore the contents of the geo-located user's
 location fields.
 It is likely that better results could be achieved in practice
 by using the user's reported location a significant factor in the maximum
 likelihood estimation.
 
-We evaluated the FriendlyLocation system against 40831 of the 40861 users from
+We evaluated the FriendlyLocation system against FIXME of the FIXME users from
 the evaluation group.
-Thirty users from this set were removed because none of their friends or
+FIXME users from this set were removed because none of their friends or
 followers had decodable locations.
 (When the crawler initially created the evaluation set it filtered out users
 with both zero friends and zero followers.)
@@ -154,6 +103,7 @@ friends, are chosen first.
 \item[Full] This is the system described in the previous section. It selects
 users based on relationship type, uses the parameters from the training, and
 uses predicted location error to evaluate the quality of the contact.
+\item[FIXME] Add some more here
 \end{description}
 
 In addition to using the FriendlyLocation system as described in the previous
@@ -163,13 +113,16 @@ section, we created a few baseline location predictors:
 of 100 randomly selected contacts.
 \item[Mode] Finds the most common location of 100 randomly selected contacts,
 and breaks ties by picking one randomly.
+\item[Backstrom] FIXME
 \item[Omniscient] Finds the contact that is closest to the user from 100 users
 selected by the same method used in the Full system.
 \end{description}
 
-Figure \ref{fig:FinalResults} shows a comparison to the results from the 
+FIXME: the rest of this section is mostly wrong
+
+Figure~\ref{fig:FinalResults} shows a comparison to the results from the 
 different predictors.
-Our Full FriendlyLocation system predicts the location within 25 miles 63\% of
+Our Full FriendlyLocation system predicts the location within 25 miles FIXME\% of
 the time.
 Unfortunately, when the predictor system is wrong, it can be very wrong; often
 when it would pick not just the wrong city, but the wrong side of the
@@ -185,7 +138,7 @@ the results.
 Before removing contacts without location information, we sorted the users into
 groups based on the number of contacts the had.
 Next, we ran the FriendlyLocation predictor against each of them.
-Figure \ref{fig:LulResults} shows the results of prediction.
+Figure~\ref{fig:LulResults} shows the results of prediction.
 The quality of the results from the predictor was lower for users with fewer
 than 50 contacts; however, as contacts increased beyond that, it had no
 significant effect on the results.
@@ -197,7 +150,7 @@ For all of the users with more than 200 contacts, we sorted their contacts in
 order of decreasing probability that they were local.
 Then we ran FriendlyLocation on the top \(n\) contacts for
 \(n\in (5,10,15,25,100)\).
-The results shown in Figure \ref{fig:TopResults} for 25 contacts are almost as
+The results shown in Figure~\ref{fig:TopResults} for 25 contacts are almost as
 good as the results for 100 contacts. This means that our algorithm only needs
 location information for around ten users to make reasonable predictions.
 
