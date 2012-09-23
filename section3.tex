@@ -13,6 +13,17 @@ Contacts with a PLE greater than or equal to 1000 miles were filtered out.
 
 \section{What type of contact is closest?}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{figures/edge_types_cuml.pdf}
+\caption{
+CDF of distance from geo-located users to users they have some contact
+with.
+The curves in this figure are the integrals of the curve in Figure \ref{fig:EdgeTypes}.
+}
+\label{fig:EdgeTypesCum}
+\end{figure}
+
 Figure~\ref{fig:EdgeTypesCum} shows the cumulative distribution
 function(CDF) of the distance between a geo-located user and several types of
 contacts.
@@ -39,11 +50,22 @@ This is caused by the large population living on the coast, and the minuscule
 number of people posting tweets from the Atlantic and Pacific oceans.
 
 \section{What is the distribution of contacts?}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{figures/edge_types_norm.pdf}
+\caption{
+Smoothed histogram of distance to users for different types of relationships.
+%The dotted black line was created by calculating the distance between random, unrelated users.
+}
+\label{fig:EdgeTypes}
+\end{figure}
+
 To understand the distribution of contacts, we created a smoothed histogram.
 First, the distances between contacts are sorted into 200 logarithmically
 scaled bins (40 bins for each power of 10). Next, the curve is smoothed by
 convoluting it with a seven element triangular window.
-Figure~\ref{fig:EdgeTypes} (on page 2) shows the result of plotting the
+Figure~\ref{fig:EdgeTypes} (on FIXME) shows the result of plotting the
 smoothed histogram.
 All four types of contacts follow roughly the same bimodal
 distribution: one peak around 10 miles from people who live nearby, and another
@@ -74,6 +96,16 @@ contacts to build a predictive location model based on social ties.
 
 \section{Are users closer to people they communicate with?}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{figures/com_types.pdf}
+\caption{
+CDF of the distance between a geo-located user and various types of contacts piloted on a logarithmic scale.
+In these graphs, ``I'' refers to the geo-located user. ``You'' refers to their contact.
+}
+\label{fig:ComTypes}
+\end{figure}
+
 Figure~\ref{fig:ComTypes} shows the relationship between various types of
 communication patterns between the geo-located users and their contacts.
 Each of the four graphs visualize the same number of edges on the social graph
@@ -103,6 +135,13 @@ communicate.
 
 \section{Are users closer to private accounts?}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{figures/edge_types_prot.pdf}
+\caption{Solid lines represent protected accounts, and dashed lines represent public accounts. If a user follows a protected account, they tend to be closer.}
+\label{fig:EdgeTypesProt}
+\end{figure}
+
 Like many social networks, Twitter allows users to mark their account as
 protected. The specifics differ from network to network, but in Twitter's case
 a user has to be approved to follow a protected user.
@@ -122,6 +161,7 @@ reciprocal friends.
 On the other hand, if a protected account follows the geo-located user, this is
 almost insignificant.
 FIXME: what exactly is insignificant?
+FIXME reference the graph
 
 \section{If two of your friends live near each other, does that increase the
 chance that they live near you?}
@@ -159,51 +199,51 @@ allows us to investigate the effect of mutual friendship on distance.
 We report one very simple result: if two of your friends are close (within 10
 miles), then whether they know each other or not is strongly affects how close
 you are to them. If they are farther apart, it doesn't matter.
-
-\section{Does the type of triangle matter?}
-
-FIXME: do we even want to look at triangle type? I spent a lot of time on it,
-but it is strongly correlated with number of followers.
-
-In the previous section we looked at the relationships between groups of
-reciprocal friends.
-In this section, we will look at the various types of triangles where at least
-one of the six possible directed edges is missing.
-For the geo-located users and their contacts, our crawler stored the user ids
-for up to 5000 of their friends and followers.
-As a result, a script can detect these triangles by looking at user ids even if
-it knows nothing about the third user in the set.
-
-For the geo-located user and his contact, we look at four types of triangles:
-\begin{description}
-\item[star] Both users follow someone. (This person is probably a star.)
-\item[fan] Someone follows both users. (This person is a fan of both users.)
-\item[path] The geo-located user follows someone who follows the contact.
-\item[loop] The contact follows someone who follows the geo-located user.
-\end{description}
-
-For each of the users and their four types of contacts, a script examined their
-friend and follower lists to find these triangles.
-It filtered out triangles where both sides are reciprocal friends, since these
-are relatively common, and were investigated in the previous section.
-Since the number of users who have the types of triangles is about the same
-magnitude as the number of users who do not have it, we investigate the
-presence or absence of each of the four triangle types rather than the number
-of triangles or the ratio of one type of triangle to another.
-
-Figure~\ref{fig:TriadTypes} shows the CDF for each of these types of triangles
-for each of the four kinds of contacts.
-The solid lines represent triangles that do exist for the edge, and the dotted
-lines represent edges that do not exist.
-These triangles are not useful for discriminating between near and far users in
-the reciprocal friend case, but they are more useful for other types of
-friendships.
-The prescience or absence of the triangles is the most significant for the just
-mentioned and just friend cases.
-In general, the star case is the most common type of triangle, and it is also
-the least useful.
-This is particularly true in the just friends case where the CDF of contacts
-with the star pattern and those without it are rather close together.
+%
+%\section{Does the type of triangle matter?}
+%
+%FIXME: do we even want to look at triangle type? I spent a lot of time on it,
+%but it is strongly correlated with number of followers.
+%
+%In the previous section we looked at the relationships between groups of
+%reciprocal friends.
+%In this section, we will look at the various types of triangles where at least
+%one of the six possible directed edges is missing.
+%For the geo-located users and their contacts, our crawler stored the user ids
+%for up to 5000 of their friends and followers.
+%As a result, a script can detect these triangles by looking at user ids even if
+%it knows nothing about the third user in the set.
+%
+%For the geo-located user and his contact, we look at four types of triangles:
+%\begin{description}
+%\item[star] Both users follow someone. (This person is probably a star.)
+%\item[fan] Someone follows both users. (This person is a fan of both users.)
+%\item[path] The geo-located user follows someone who follows the contact.
+%\item[loop] The contact follows someone who follows the geo-located user.
+%\end{description}
+%
+%For each of the users and their four types of contacts, a script examined their
+%friend and follower lists to find these triangles.
+%It filtered out triangles where both sides are reciprocal friends, since these
+%are relatively common, and were investigated in the previous section.
+%Since the number of users who have the types of triangles is about the same
+%magnitude as the number of users who do not have it, we investigate the
+%presence or absence of each of the four triangle types rather than the number
+%of triangles or the ratio of one type of triangle to another.
+%
+%Figure~\ref{fig:TriadTypes} shows the CDF for each of these types of triangles
+%for each of the four kinds of contacts.
+%The solid lines represent triangles that do exist for the edge, and the dotted
+%lines represent edges that do not exist.
+%These triangles are not useful for discriminating between near and far users in
+%the reciprocal friend case, but they are more useful for other types of
+%friendships.
+%The prescience or absence of the triangles is the most significant for the just
+%mentioned and just friend cases.
+%In general, the star case is the most common type of triangle, and it is also
+%the least useful.
+%This is particularly true in the just friends case where the CDF of contacts
+%with the star pattern and those without it are rather close together.
 
 \section{Does the number of friends and followers a person have affect how
 close they are?}
