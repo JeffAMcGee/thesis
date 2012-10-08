@@ -60,8 +60,8 @@ We created labels for the seed users and each of the steps along the way:
 \item[geo-located users] These users choose to use Twitter's location sharing
     features, which means that we have precise latitude and longitude
     coordinates for their location.
-\item[located contacts] These are the 25 randomly chossen contacts of
-    geo-located users who have loactions that we can decode.
+\item[located contacts] These are the 25 randomly chosen contacts of
+    geo-located users who have locations that we can decode.
 \item[leafs] These are the contacts of the located contacts.
 \end{description}
 
@@ -86,9 +86,9 @@ To account for this, the crawler calculated the distance between each tweet and
 the user's home location.
 The crawler ignored users if the median distance from their tweets to their
 home location was greater than 50 miles.
-This left us with 1,695,784 geo-loacted users.
-To enable paralellization, we devided those users into 100 groups based on
-the two least sigificant digits in their Twitter user id, and randomly selected
+This left us with 1,695,784 geo-located users.
+To enable parallelization, we divided those users into 100 groups based on
+the two least significant digits in their Twitter user id, and randomly selected
 2500 users from each of the groups.
 
 This gave us the 250,000 geo-located users that we planned to use for our
@@ -106,25 +106,24 @@ people they mention in their tweets.
 %
 If they had over 100 in total, it chose a random sample of 100 profiles that
 included at most 25 of each of the four types of contacts defined previously:
-reciprical friends, just friends, just followers, and just mentioned.
+reciprocal friends, just friends, just followers, and just mentioned.
 %
 From that 100, we picked at most 25 contacts with locations we could decode to
 be the located contacts. For those located contacts, we downloaded their
 friends, followers, and tweets.
 %
-We finished this process by dowloading 100 profiles of the contacts of the
+We finished this process by downloading 100 profiles of the contacts of the
 contacts.
 %
 Since the Twitter social network graph has a large strongly connected
 component, there are a significant number of users who are contacts or leafs for
-more than one geo-loacted users.
+more than one geo-located users.
 %
 In the end, we collected just over 73 million Twitter user profiles.
 
 \section{Geocoding}
-FIXME: urls?
-%We used Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
-%Gisgraphy does full-text search on the GeoNames\footnote{\url{http://www.geonames.org/}}
+We used Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
+Gisgraphy does full-text search on the GeoNames\footnote{\url{http://www.geonames.org/}}
 database using Lucene. Since
 it runs locally it is not limited to a certain number of queries per day.
 Gisgraphy's geocoder returns ranked results based on a full text search
@@ -133,7 +132,7 @@ over millions of geographical features such as countries, cities, and schools.
 The location field on a user's profile is just a text field that asks the user
 to respond to ``Where in the world are you?''.
 Responses vary from precise latitude and longitude coordinates entered
-automatically by smart phone apps to jokes and nonsense.
+automatically by smartphone apps to jokes and nonsense.
 Our system does some preprocessing before sending user-submitted locations to
 the geocoder.
 First, it uses a regular expression to find latitude and longitude coordinates.
@@ -151,45 +150,58 @@ one million people, Rhode Island is smaller, and as a result, much more useful
 in estimating the location of a user.
 To make the results of the geocoder more useful, we devised a method to
 estimate the accuracy of a location returned by the geocoder.
-Because users in the US had friends outside of the US, FriendlyLocation needs
-to estimate the quality of
-locations outside of the US as well.
-As a result, we trained the geocoder trained on geographic data from around the
-world.
 
 \begin{table}[t]
 \centering
-\caption{Example Median Location Errors (miles)}
-\begin{tabular}{l r r} 
+\caption{Example Median Location Errors (in miles)}
+\begin{tabular}{l r r}
 Location&Number of Users&Median Error\\ \hline
-``Bronx''&53&4\\
-``New York''&1264&174\\
-``Pluto''&11&7843\\ \hline
+``Bronx''&438&4\\
+``New York''&7483&175\\
+``Pluto''&238&8272\\ \hline
 \\
 Place Type&Number of Users&Median Error\\ \hline
-(latitude, longitude)&25216&3\\
-A City&7128&6\\
-An Airport&117&31\\
-A Country&37&3935\\
+(latitude, longitude)&76552&3\\
+A City&20914&6\\
+A Hotel&1052&29\\
+An Airport&410&258\\
+A Stream&739&2373\\
 \hline\end{tabular}
 \label{tab:MedianLocErr}
 \end{table}
 
-For the users in the geocoding training and evaluation groups, we have both the
-home location based on geo-located tweets, and the free-response location field
-that the geocoder was able to decode.
+Since we only selected 250,000 of the 1,695,784 users who posted tweets with
+location information for location prediction and analysis, the remaining users
+could be used for evaluating the geocoder.
+%
+894,617 of the users who posted geo-located tweets also filled in the
+the free-response location field with something that the geocoder was able to
+decode.
+%
+We can compare the results of the geocoder to the location of the geo-located
+tweets for these users to quantify how accurate the geocoder is for certain
+types of locations.
+
 We define the \textbf{location error} to be the great circle distance between a
 user's home location and the location returned from the geocoder.
-The location error can vary from less than a mile to over ten thousand miles.
-Each user in the geocoding training group was geocoded and grouped based on the
-exact location returned by the geocoder.
-For the FIXME locations that had at least three users, we calculated the median
+%
+The location error for a user can vary from less than a mile to over ten
+thousand miles.
+%
+We calculated the location error for each of the geo-located users selected for
+evaluating the geocoder, and sorted the users by their location.
+%
+For the 17,370 locations that had at least three users, we calculated the median
 location error for that location.
+%
 All the users who were at locations with only one or two users were grouped
 according to the type of location returned by the geocoder.
+%
 We calculated the median error for each location type.
+%
 The median is more appropriate than the average or standard deviation because
 those metrics are strongly affected by large outliers.
+%
 We choose to make the cutoff three because that is the smallest value where the
 median is not just an average.
 Table~\ref{tab:MedianLocErr} shows the median location error for a few example
@@ -198,18 +210,18 @@ locations and location types.
 This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
 We define the \textbf{predicted location error (PLE)} for a given location to
-be the median location error if it is one of the FIXME locations that had three
+be the median location error if it is one of the 17,370 locations that had three
 users; otherwise, it is the median location error for the location's type.
 For example one user had ``PDX,OR'' in his location field. Gisgraphy identifies
 this as ``Portland International Airport''. Since it is not one of the most
-common locations, its PLE is determined by its place type to be 31 miles as
+common locations, its PLE is determined by its place type to be 258 miles as
 seen in Table~\ref{tab:MedianLocErr}.
 
-FIXME: do we even want this figure?
-Figure~\ref{fig:DiffGnpGps} shows the result of using the PLE to ignore users
-who have low quality locations such as ``Pluto''.
-The solid black line represents the normal results of geocoding where the
-location error is less than 1000 miles for 88\% of the users.
-The cyan line shows the results of removing locations with a PLE greater than
-or equal to 1000 miles.
-After removing only 6\% of the users, 93\% of them are within 1000 miles.
+%FIXME: do we even want this figure?
+%Figure~\ref{fig:DiffGnpGps} shows the result of using the PLE to ignore users
+%who have low quality locations such as ``Pluto''.
+%The solid black line represents the normal results of geocoding where the
+%location error is less than 1000 miles for 88\% of the users.
+%The cyan line shows the results of removing locations with a PLE greater than
+%or equal to 1000 miles.
+%After removing only 6\% of the users, 93\% of them are within 1000 miles.
