@@ -217,11 +217,19 @@ this as ``Portland International Airport''. Since it is not one of the most
 common locations, its PLE is determined by its place type to be 258 miles as
 seen in Table~\ref{tab:MedianLocErr}.
 
-%FIXME: do we even want this figure?
-%Figure~\ref{fig:DiffGnpGps} shows the result of using the PLE to ignore users
-%who have low quality locations such as ``Pluto''.
-%The solid black line represents the normal results of geocoding where the
-%location error is less than 1000 miles for 88\% of the users.
-%The cyan line shows the results of removing locations with a PLE greater than
-%or equal to 1000 miles.
-%After removing only 6\% of the users, 93\% of them are within 1000 miles.
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/mloc_mdist.pdf}
+\caption{
+Comparison between predicted location error (PLE) and the actual location error.
+}
+\label{fig:DiffMlocMdist}
+\end{figure}
+
+Figure~\ref{fig:DiffMlocMdist} shows the result of using the PLE to ignore
+users who have low quality locations such as ``Pluto''.
+The solid black line represents the normal results of geocoding where the
+location error is less than 1000 miles for 85\% of the users.
+The cyan line shows the results of removing locations with a PLE greater than
+or equal to 1000 miles.
+After removing only 10\% of the users, 93\% of them are within 1000 miles.

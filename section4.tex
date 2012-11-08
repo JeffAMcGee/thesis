@@ -6,18 +6,32 @@ FriendlyLocation.
 Since the location prediction system will be run on a large number of of users,
 it must be fast and scalable.
 
-FIXME: use the new list of factors
-For the purposes of location prediction, we limit ourselves to just four
-factors per edge: the type of contact, if the target user mentioned the
-contact, the number of followers the contact has, and the location error of the
-contact.
-We do not use any information about the contact's friends, followers, or who
-they mentioned since the amount of data this involves grows quadratically with
-the number of contacts.
-Most of the gains that come from looking at triangles are also visible by
-looking at the count of followers.
-We use the number of followers for a contact instead of the number of friends
-since it was more significant as seen in Figure~\ref{fig:LocalAll}.
+\section{Edge Length Prediction}
+
+Before we predict a user's location, we need a way to estimate the probabilty
+that a geo-located user is at a location given the position of their contact.
+%
+To achieve this, we trained a regression tree to predict the distance between a
+user and a contact.
+%
+The regreession tree was trained on several of the features from the previous
+section that are correlated with users living near each other:
+\begin{itemize}
+\item the type of contact
+\item if the geo-located user mentioned the contact
+\item if the contact had a protected account
+\item the contact's follower count
+\item the quality of the contacts's locatation
+\item the contact's local contact ratio
+\end{itemize}
+%
+Since the distances between users varied by several orders of magnitude, we
+trained the regreessor to predict the log of the distnace.
+%
+The tree regressor was configured to not split leafs with fewer than 1000 data
+points to prevent over-fitting.
+% FIXME: this needs more, but I'm not sure what.
+
 
 \section{Model}
 \label{sec:model}
@@ -25,22 +39,38 @@ since it was more significant as seen in Figure~\ref{fig:LocalAll}.
 In this section, we build a model for the probability that a user, who we refer
 to as the target user, lives at a specific location given the approximate
 location of his contacts.
+%
 In the previous sections, we looked at the probability that a contact lived a
 certain distance from a given user.
+%
 Location prediction requires the probability that the user lives at a specific
 location.
-Since the circumference of a circle grows linearly with the radius of a circle,
-the land area at a certain distance also grows.
-The probability that a user lives at specific spot at a distance is
-proportional to the probability that she lives at that distance divided by the
-distance.
 
-Based on this graph, any given edge will fit into one of three categories: a
-local user that is closer than the predicted location error and is uniformly
-distributed, a nearby user whose relationship was formed by meeting in person
-and fits a power law with the distance, or a user whose connection is not
-related to geography, and is distributed based on the real-world population
-distribution.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
+\caption{
+After splitting edges into groups based their predicted distance, each group was fit to a curve. Here are four sample curves.
+}
+\label{fig:NearProbFit}
+\end{figure}
+
+
+% Put more about fit_stgrs
+The edges were sorted by the distance that the tree regressor predicted and
+split into ten equal groups.
+%
+For each of these groups, we calculated the distance to friends and fit it to
+the curve a(b+x)**-c .
+%
+Four of the ten curves and their lines of best fit are shown in
+Figure~\ref{fig:NearProbFit}. The best contacts are orders of magnitude more
+likely to live near a target user than the worst contacts.
+%
+If the predictions from the tree regressor were ignored, and users were placed
+into one group instead of ten equal groups, this would reduce to the model
+for freindship and distance presented in \cite{backstrom2010find}.
 
 FIXME: add details here.
 FIXME: edge distance prediction
@@ -65,93 +95,4 @@ target user lives there using the maximum likelihood estimator.
 \end{enumerate}
 
 FIXME: lots more here
-
-\section{Evaluation}
-We evaluate the system against several baseline implementations, and evaluate
-how the performance of the system varies with the number of contacts a user has
-and how many FriendlyLocation chooses to use.
-
-The geo-located users we used to do the evaluation are less concerned about the
-privacy of their location information than the average twitter user.
-As a result, they tended to give better information in the location field of
-their user profile than the average twitter user.
-FIXME: we added noise instead
-For this evaluation we choose to ignore the contents of the geo-located user's
-location fields.
-It is likely that better results could be achieved in practice
-by using the user's reported location a significant factor in the maximum
-likelihood estimation.
-
-We evaluated the FriendlyLocation system against FIXME of the FIXME users from
-the evaluation group.
-FIXME users from this set were removed because none of their friends or
-followers had decodable locations.
-(When the crawler initially created the evaluation set it filtered out users
-with both zero friends and zero followers.)
-
-We investigate several implementations of the FriendlyLocation system:
-\begin{description}
-\item[Simple] This system treats all contacts equally---it ignores their
-predicted location error and any information about what type of contact it is.
-Users are selected randomly and it uses the same parameters for all the users.
-\item[Location Error] This shows the value of calculating the median location
-error. Users are selected randomly.
-\item[Relationship Types] This shows the value of treating contacts differently
-based on the type of contact.
-Users who are more likely to live near the target user, such as reciprocal
-friends, are chosen first.
-\item[Full] This is the system described in the previous section. It selects
-users based on relationship type, uses the parameters from the training, and
-uses predicted location error to evaluate the quality of the contact.
-\item[FIXME] Add some more here
-\end{description}
-
-In addition to using the FriendlyLocation system as described in the previous
-section, we created a few baseline location predictors:
-\begin{description}
-\item[Median] Finds the median of the latitude and the median of the longitude
-of 100 randomly selected contacts.
-\item[Mode] Finds the most common location of 100 randomly selected contacts,
-and breaks ties by picking one randomly.
-\item[Backstrom] FIXME
-\item[Omniscient] Finds the contact that is closest to the user from 100 users
-selected by the same method used in the Full system.
-\end{description}
-
-FIXME: the rest of this section is mostly wrong
-
-Figure~\ref{fig:FinalResults} shows a comparison to the results from the 
-different predictors.
-Our Full FriendlyLocation system predicts the location within 25 miles FIXME\% of
-the time.
-Unfortunately, when the predictor system is wrong, it can be very wrong; often
-when it would pick not just the wrong city, but the wrong side of the
-country.
-Both using location error and relationship type improved the predictor.  The
-simplified version of FriendlyLocation located users within 25 miles 54\% of
-the time which is still better than the either of the baseline predictors.
-The omniscient predictor demonstrates that there is still room for improvement
-which we discuss in the final section.
-
-We investigated the effect of increasing numbers of contacts on the quality of
-the results.
-Before removing contacts without location information, we sorted the users into
-groups based on the number of contacts the had.
-Next, we ran the FriendlyLocation predictor against each of them.
-Figure~\ref{fig:LulResults} shows the results of prediction.
-The quality of the results from the predictor was lower for users with fewer
-than 50 contacts; however, as contacts increased beyond that, it had no
-significant effect on the results.
-
-
-The final step of the evaluation is to investigate if FriendlyLocation would
-work with a smaller number of profiles than 100.
-For all of the users with more than 200 contacts, we sorted their contacts in
-order of decreasing probability that they were local.
-Then we ran FriendlyLocation on the top \(n\) contacts for
-\(n\in (5,10,15,25,100)\).
-The results shown in Figure~\ref{fig:TopResults} for 25 contacts are almost as
-good as the results for 100 contacts. This means that our algorithm only needs
-location information for around ten users to make reasonable predictions.
-
 
