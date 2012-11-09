@@ -51,48 +51,77 @@ location.
 \centering
 \includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
 \caption{
-After splitting edges into groups based their predicted distance, each group was fit to a curve. Here are four sample curves.
+After splitting edges into groups based their predicted distance, each group was fit to a curve. Here are four of the ten curves.
 }
 \label{fig:NearProbFit}
 \end{figure}
 
+First, we needed a model for the density of Twitter users.
+probContact(group,dist) = nebrEdges(group,dist)/strangeEdges(dist)/numberGroups
+
+We calcualted the distance between every geo-located user and every contact
+(even for contacts and users who had no relationship).
+%
+In oreder to speed up this calculation, we devided the world into a \.1 degree
+by \.1 degree grid, and counted the number of of cantacts in each of the spots
+on the grid.
+%
+We took the distances between users and sorted them into 360 logarithmically
+scaled bins between 10 miles and 10,000 miles.
+%
+(Every edge less than 10 miles was ignored because it was around the size of
+the grid boxes, and therefore, noisy. Distances greater than 10,000 miles are
+on the opposite side of the world.)
+%
+We fit this segment to a power law curve, which gives us a way to estimate
+strangeEdges.
 
 % Put more about fit_stgrs
 The edges were sorted by the distance that the tree regressor predicted and
 split into ten equal groups.
 %
-For each of these groups, we calculated the distance to friends and fit it to
-the curve a(b+x)**-c .
+We split the edges in these groups into 480 logarithmically-scaled bins from 1
+to 10,000 miles based on the length of the edge.
 %
-Four of the ten curves and their lines of best fit are shown in
-Figure~\ref{fig:NearProbFit}. The best contacts are orders of magnitude more
+We devided the number of edges that actually existed at each distance by the
+number of edges that could have existed as predicted by strangeEdges.
+%
+We fit it to this curve:
+%
+probContact(group, dist) = agroup(bgroup+dist)**-cgroup
+
+Four of the ten curves from one of the five evaluation groups and their lines
+of best fit are shown in Figure~\ref{fig:NearProbFit}.
+%
+The best contacts are orders of magnitude more
 likely to live near a target user than the worst contacts.
 %
 If the predictions from the tree regressor were ignored, and users were placed
 into one group instead of ten equal groups, this would reduce to the model
 for freindship and distance presented in \cite{backstrom2010find}.
 
-FIXME: add details here.
-FIXME: edge distance prediction
 
 \section{System}
 We used this model to build a Maximum Likelihood Estimator.
-FriendlyLocation trained on FIXME edges from users in the training set to
-their contacts.
 
-FIXME: describe this
 
 We use this to create a simple procedure for estimating the location for a user:
 \begin{enumerate}
-\item Pick up to 25 of the user's contacts.
-\item Geocode the location field and calculate the the predicted error for each
-of the contacts.
-\item Ignore any contacts who have no decodable location information.
-Approximately one third of the contacts are ignored.
+\item Randomly pick up to 25 of the user's contacts.
+\item For each of those contacts:
+\begin{enumerate}
+    \item Geocode the location field and calculate the the predicted error.
+    \item Ignore the contact if they have no decodable location information.
+    Approximately one third of the contacts are ignored.
+    \item Use the regression tree to estimate the length of the edge.
+    \item Determine which of the ten groups this edge is in to find the curve
+        for the probability that the contact lives near the
+\end{enumerate}
 \item For each of the contacts' locations calculate the probability that the
-target user lives there using the maximum likelihood estimator.
+target user lives at that location using the maximum likelihood estimator.
 \item Pick the location with the highest probability.
 \end{enumerate}
 
-FIXME: lots more here
+FIXME: formuala for MLE, and description
+FIXME: more here
 
