@@ -61,9 +61,9 @@ privacy of their location information than the average Twitter user.
 As a result, they tended to give more precise information in the location field
 of their user profile than other users.
 %
-We assume that the locations supplied by the contacts are more represeentative
+We assume that the locations supplied by the contacts are more representative
 of normal Twitter users so we added noise to the locations of the geo-located
-users to make the distrubution of the quality of their locations would match
+users to make the distribution of the quality of their locations would match
 the quality of the contacts.
 %
 First, we sorted all the geo-located users and all the contacts by their
@@ -72,7 +72,7 @@ PLE(predicted location error).
 Next, we looked at each percentile of the geo-located users and compared their
 PLE to the PLE for that percentile in the contacts.
 %
-For each of the geo-loacted users, we moved the user's location based on
+For each of the geo-located users, we moved the user's location based on
 reverse geocoding away from the user's actual median location based on the
 difference between the PLEs.
 %
@@ -83,7 +83,7 @@ This means that we need to add FIXME miles of noise to a geo-located user with
 a PLE of FIXME.
 %
 We also removed the location field from FIXME\% of the geo-located users to
-make the proportion of geo-loacted users with a location match the general
+make the proportion of geo-located users with a location match the general
 Twitter population.
 
 The final step of the evaluation is to investigate if FriendlyLocation would
@@ -93,6 +93,6 @@ FIXME: eval for small number of hand-picked and random contacts
 %
 In general, using more contacts can produce better results.
 %
-Although we limited the crawler to 25 randomly-picked contacts per geo-loacted
+Although we limited the crawler to 25 randomly-picked contacts per geo-located
 user, if FriendlyLocation is going to be used as part of a larger system, the
 crawler should pick users based on relationship type before crawling.

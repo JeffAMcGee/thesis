@@ -8,25 +8,25 @@ it must be fast and scalable.
 
 \section{Edge Length Prediction}
 
-Before we predict a user's location, we need a way to estimate the probabilty
+Before we predict a user's location, we need a way to estimate the probability
 that a geo-located user is at a location given the position of their contact.
 %
 To achieve this, we trained a regression tree to predict the distance between a
 user and a contact.
 %
-The regreession tree was trained on several of the features from the previous
+The regression tree was trained on several of the features from the previous
 section that are correlated with users living near each other:
 \begin{itemize}
 \item the type of contact
 \item if the geo-located user mentioned the contact
 \item if the contact had a protected account
 \item the contact's follower count
-\item the quality of the contacts's locatation
+\item the quality of the contact's lactation
 \item the contact's local contact ratio
 \end{itemize}
 %
 Since the distances between users varied by several orders of magnitude, we
-trained the regreessor to predict the log of the distnace.
+trained the regressor to predict the log of the distance.
 %
 The tree regressor was configured to not split leafs with fewer than 1000 data
 points to prevent over-fitting.
@@ -59,11 +59,11 @@ After splitting edges into groups based their predicted distance, each group was
 First, we needed a model for the density of Twitter users.
 probContact(group,dist) = nebrEdges(group,dist)/strangeEdges(dist)/numberGroups
 
-We calcualted the distance between every geo-located user and every contact
+We calculated the distance between every geo-located user and every contact
 (even for contacts and users who had no relationship).
 %
-In oreder to speed up this calculation, we devided the world into a \.1 degree
-by \.1 degree grid, and counted the number of of cantacts in each of the spots
+In order to speed up this calculation, we divided the world into a \.1 degree
+by \.1 degree grid, and counted the number of of contacts in each of the spots
 on the grid.
 %
 We took the distances between users and sorted them into 360 logarithmically
@@ -83,7 +83,7 @@ split into ten equal groups.
 We split the edges in these groups into 480 logarithmically-scaled bins from 1
 to 10,000 miles based on the length of the edge.
 %
-We devided the number of edges that actually existed at each distance by the
+We divided the number of edges that actually existed at each distance by the
 number of edges that could have existed as predicted by strangeEdges.
 %
 We fit it to this curve:
@@ -98,7 +98,7 @@ likely to live near a target user than the worst contacts.
 %
 If the predictions from the tree regressor were ignored, and users were placed
 into one group instead of ten equal groups, this would reduce to the model
-for freindship and distance presented in \cite{backstrom2010find}.
+for friendship and distance presented in \cite{backstrom2010find}.
 
 
 \section{System}
@@ -119,10 +119,10 @@ We use this to create a simple procedure for estimating the location for a user:
 \end{enumerate}
 \item For each of the contacts' locations calculate the probability that the
 target user lives at that location using the maximum likelihood estimator.
-\item FIXME: (For some versions we added in utc offset, reported location, and stranger prob)
+\item FIXME: (For some versions we added in UTC offset, reported location, and stranger prob)
 \item Pick the location with the highest probability.
 \end{enumerate}
 
-FIXME: formuala for MLE, and description
+FIXME: formula for MLE, and description
 FIXME: more here
 
