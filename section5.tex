@@ -1,73 +1,46 @@
-
-\section{Evaluation}
+\chapter{\uppercase{Evaluation}}
 We evaluate the system against several baseline implementations, and evaluate
 how the performance of the system varies with the number of contacts a user has
 and how many FriendlyLocation chooses to use.
-
-The geo-located users we used to do the evaluation are less concerned about the
-privacy of their location information than the average twitter user.
-As a result, they tended to give better information in the location field of
-their user profile than the average twitter user.
-FIXME: we added noise instead
-For this evaluation we choose to ignore the contents of the geo-located user's
-location fields.
-It is likely that better results could be achieved in practice
-by using the user's reported location a significant factor in the maximum
-likelihood estimation.
-
-We evaluated the FriendlyLocation system against FIXME of the FIXME users from
-the evaluation group.
+We used five-fold cross validation on the geo-located users to evaluate the system.
+We evaluated the FriendlyLocation system against FIXME users.
 FIXME users from this set were removed because none of their friends or
 followers had decodable locations.
-(When the crawler initially created the evaluation set it filtered out users
-with both zero friends and zero followers.)
 
+\section{Prediction}
 We investigate several implementations of the FriendlyLocation system:
 \begin{description}
-\item[Simple] This system treats all contacts equally---it ignores their
-predicted location error and any information about what type of contact it is.
-Users are selected randomly and it uses the same parameters for all the users.
-\item[Location Error] This shows the value of calculating the median location
-error. Users are selected randomly.
-\item[Relationship Types] This shows the value of treating contacts differently
-based on the type of contact.
-Users who are more likely to live near the target user, such as reciprocal
-friends, are chosen first.
-\item[Full] This is the system described in the previous section. It selects
-users based on relationship type, uses the parameters from the training, and
-uses predicted location error to evaluate the quality of the contact.
-\item[FIXME] Add some more here
+\item[FriendlyLocation Full] The MLE presented in the previous section with
+    additional information sources: UTC offset, the user-supplied location,
+    and the location of users who are not contacts.
+\item[FriendlyLocation Plain] This is the system described in the previous
+    section with only information from the locations of contacts.
+%\item[Median] Finds the median of the latitude and the median of the longitude
+%f the 25 randomly selected contacts.
+\item[Backstrom] This is based on the MLE estimator presented in
+    \cite{backstro m2010find}. Some changes to the system were made to make it
+    work. (FIXME: more here)
+\item[Omniscient] Returns the location of the contact that is closest to the
+    geo-located user from the 25 users used for location prediction.
+\item[Random] Returns the location of a randomly-selected contact.
 \end{description}
 
-In addition to using the FriendlyLocation system as described in the previous
-section, we created a few baseline location predictors:
-\begin{description}
-\item[Median] Finds the median of the latitude and the median of the longitude
-of 100 randomly selected contacts.
-\item[Mode] Finds the most common location of 100 randomly selected contacts,
-and breaks ties by picking one randomly.
-\item[Backstrom] FIXME
-\item[Omniscient] Finds the contact that is closest to the user from 100 users
-selected by the same method used in the Full system.
-\end{description}
-
-FIXME: the rest of this section is mostly wrong
-
-Figure~\ref{fig:FinalResults} shows a comparison to the results from the 
-different predictors.
-Our Full FriendlyLocation system predicts the location within 25 miles FIXME\% of
+Our basic FriendlyLocation system predicts the location within 25 miles FIXME\% of
 the time.
-Unfortunately, when the predictor system is wrong, it can be very wrong; often
-when it would pick not just the wrong city, but the wrong side of the
-country.
-Both using location error and relationship type improved the predictor.  The
-simplified version of FriendlyLocation located users within 25 miles 54\% of
-the time which is still better than the either of the baseline predictors.
-The omniscient predictor demonstrates that there is still room for improvement
-which we discuss in the final section.
+%
+Our basic system preforms significantly better than the baseline implementations.
+%
+Unfortunately, when the predictor is wrong, it can be very wrong.
+%
+The comparison to the omniscient predictor shows that there is room for improvement.
+%
+Many users who have an incorrectly predicted location have at least one contact
+that is closer than the incorrectly predicted location.
 
+\section{Additional Information}
 We investigated the effect of increasing numbers of contacts on the quality of
 the results.
+
 Before removing contacts without location information, we sorted the users into
 groups based on the number of contacts the had.
 Next, we ran the FriendlyLocation predictor against each of them.
@@ -76,16 +49,50 @@ The quality of the results from the predictor was lower for users with fewer
 than 50 contacts; however, as contacts increased beyond that, it had no
 significant effect on the results.
 
+Many Twitter users fill out the text-based location field.
+%
+If this user-reported data is good, there is no reason to spend time crawling
+their contacts.
+%
+It would be nice to use this information when predicting location, but
+the geo-located users we used to do the evaluation are less concerned about the
+privacy of their location information than the average Twitter user.
+%
+As a result, they tended to give more precise information in the location field
+of their user profile than other users.
+%
+We assume that the locations supplied by the contacts are more represeentative
+of normal Twitter users so we added noise to the locations of the geo-located
+users to make the distrubution of the quality of their locations would match
+the quality of the contacts.
+%
+First, we sorted all the geo-located users and all the contacts by their
+PLE(predicted location error).
+%
+Next, we looked at each percentile of the geo-located users and compared their
+PLE to the PLE for that percentile in the contacts.
+%
+For each of the geo-loacted users, we moved the user's location based on
+reverse geocoding away from the user's actual median location based on the
+difference between the PLEs.
+%
+For example, the median PLE for a geo-located user was FIXME, and the median
+PLE for a contact was FIXME miles.
+%
+This means that we need to add FIXME miles of noise to a geo-located user with
+a PLE of FIXME.
+%
+We also removed the location field from FIXME\% of the geo-located users to
+make the proportion of geo-loacted users with a location match the general
+Twitter population.
 
 The final step of the evaluation is to investigate if FriendlyLocation would
-work with a smaller number of profiles than 100.
-For all of the users with more than 200 contacts, we sorted their contacts in
-order of decreasing probability that they were local.
-Then we ran FriendlyLocation on the top \(n\) contacts for
-\(n\in (5,10,15,25,100)\).
-The results shown in Figure~\ref{fig:TopResults} for 25 contacts are almost as
-good as the results for 100 contacts. This means that our algorithm only needs
-location information for around ten users to make reasonable predictions.
-
-
-
+work with a smaller number of profiles than 25.
+%
+FIXME: eval for small number of hand-picked and random contacts
+%
+In general, using more contacts can produce better results.
+%
+Although we limited the crawler to 25 randomly-picked contacts per geo-loacted
+user, if FriendlyLocation is going to be used as part of a larger system, the
+crawler should pick users based on relationship type before crawling.
