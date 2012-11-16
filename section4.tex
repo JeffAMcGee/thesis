@@ -57,7 +57,9 @@ After splitting edges into groups based their predicted distance, each group was
 \end{figure}
 
 First, we needed a model for the density of Twitter users.
-probContact(group,dist) = nebrEdges(group,dist)/strangeEdges(dist)/numberGroups
+\[
+    pContact(group,dist) = \frac{nebrEdges(group,dist)}{strangeEdges(dist) \times numberGroups}
+\]
 
 We calculated the distance between every geo-located user and every contact
 (even for contacts and users who had no relationship).
@@ -88,7 +90,9 @@ number of edges that could have existed as predicted by strangeEdges.
 %
 We fit it to this curve:
 %
-probContact(group, dist) = agroup(bgroup+dist)**-cgroup
+\[
+pContact(group, dist) = a_{group} \times (b_{group}+dist)^{-c_{group}}
+\]
 
 Four of the ten curves from one of the five evaluation groups and their lines
 of best fit are shown in Figure~\ref{fig:NearProbFit}.
