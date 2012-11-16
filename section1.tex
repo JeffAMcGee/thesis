@@ -1,11 +1,10 @@
-\pagestyle{plain} % No headers, just page numbers
-\pagenumbering{arabic} % Arabic numerals
-\setcounter{page}{1}
-
-
-\chapter{\uppercase {Introduction and Related Work}}
-
-FIXME: Text goes here.
+\ifdefined\THESIS
+    \pagestyle{plain} % No headers, just page numbers
+    \pagenumbering{arabic} % Arabic numerals
+    \setcounter{page}{1}
+    \chapter{\uppercase {Introduction and Related Work}}
+\else
+\fi
 
 \section{Introduction}
 
@@ -62,7 +61,7 @@ estimates.  FriendlyLocation correctly locates FIXME\% of users within 25 miles.
 
 \section{Related Work}
 
-FIXME: Mr. Cheng wrote some of this.
+%FIXME: Mr. Cheng wrote some of this.
 
 The study of geographical properties of online social media users has drawn
 intensive attention in recent years.  Characterizing network properties in
