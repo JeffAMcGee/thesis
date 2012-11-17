@@ -1,15 +1,11 @@
 \ifdefined\THESIS
     \chapter{\uppercase {Data Collection}}
+
 \else
-    \section{Data Collection}
 \fi
 
-Our analysis and prediction is based on data collected from Twitter during May,
-June, and July of 2012.
+\section{Definitions}
 
-\ifdefined\THESIS
-    \section{Definitions}
-\fi
 Before going into the details of the data collection, we first define a few
 terms to simplify the process of explaining how the data was collected.
 %
@@ -71,9 +67,12 @@ We created labels for the seed users and each of the steps along the way:
 \item[leafs] These are the contacts of the located contacts.
 \end{description}
 
-\section{Crawling}
+\section{Data Collection}
 To investigate how social relation and geographical distance between the
 relations correlate, we sample a dataset from Twitter.
+%
+Our analysis and prediction is based on data collected from Twitter during
+May, June, and July of 2012.
 
 We built a crawler to find these contacts for users who used Twitter's Location
 Feature to disclose their location.

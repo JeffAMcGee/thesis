@@ -1,5 +1,7 @@
 \ifdefined\THESIS
     \chapter{\uppercase{Location Prediction}}
+\else
+    \section{Location Prediction}
 \fi
 
 Based on the questions we answered in the previous section, we have enough
@@ -8,7 +10,7 @@ FriendlyLocation.
 Since the location prediction system will be run on a large number of of users,
 it must be fast and scalable.
 
-\section{Edge Length Prediction}
+\subsection{Edge Length Prediction}
 
 Before we predict a user's location, we need a way to estimate the probability
 that a geo-located user is at a location given the position of their contact.
@@ -35,7 +37,7 @@ points to prevent over-fitting.
 % FIXME: this needs more, but I'm not sure what.
 
 
-\section{Model}
+\subsection{Model}
 \label{sec:model}
 
 In this section, we build a model for the probability that a user, who we refer
@@ -107,7 +109,7 @@ into one group instead of ten equal groups, this would reduce to the model
 for friendship and distance presented in \cite{backstrom2010find}.
 
 
-\section{System}
+\subsection{System}
 We used this model to build a Maximum Likelihood Estimator.
 
 

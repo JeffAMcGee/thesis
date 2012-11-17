@@ -10,7 +10,7 @@ All of the analysis in this section was done on the contacts of 249584 geo-locat
 Contacts with a predicted location error that was greater than or equal to 1000
 miles were filtered out.
 
-\section{What type of contact is closest?}
+\subsection{What type of contact is closest?}
 \label{sec:EdgeTypes}
 
 \begin{figure}[tb]
@@ -44,7 +44,7 @@ user and not a celebrity.
 If they follow someone, it might be a celebrity; however, if someone follows
 them, it is probably someone who knows them.
 
-\section{What is the distribution of contacts?}
+\subsection{What is the distribution of contacts?}
 
 \begin{figure}[tb]
 \centering
@@ -76,9 +76,9 @@ In section~\ref{sec:model}, we use this idea that there are two types of
 contacts to build a predictive location model based on social ties.
 
 
-\section{Are users closer to people they communicate with?}
+\subsection{Are users closer to people they communicate with?}
 
-\begin{figure}[tb]
+\begin{figure*}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/com_types.pdf}
 \caption{
@@ -88,7 +88,7 @@ In these graphs, ``I'' refers to the geo-located user. ``You'' refers to their
 contact.
 }
 \label{fig:ComTypes}
-\end{figure}
+\end{figure*}
 
 Figure~\ref{fig:ComTypes} shows the relationship between various types of
 communication patterns between the geo-located users and their contacts.
@@ -112,7 +112,7 @@ Unsurprisingly, the strongest type of connection is reciprocal friends who
 communicate.
 
 
-\section{Are users closer to private accounts?}
+\subsection{Are users closer to private accounts?}
 
 \begin{figure}[tb]
 \centering
@@ -144,7 +144,7 @@ reciprocal friends.
 On the other hand, if a protected account follows the geo-located user, they
 are only slightly more likely to be nearby.
 
-\section{If two of your friends live near each other, does that increase the
+\subsection{If two of your friends live near each other, does that increase the
 chance that they live near you?}
 
 \begin{figure}[tb]
@@ -194,10 +194,10 @@ We report one very simple result: if two of your friends are close (within 10
 miles), then whether they know each other or not is strongly affects how close
 you are to them. If they are farther apart, it doesn't matter.
 
-\section{Does the number of friends and followers a person have affect how
+\subsection{Does the number of friends and followers a person have affect how
 close they are?}
 
-\begin{figure}[tb]
+\begin{figure*}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_counts.pdf}
 \caption{
@@ -205,7 +205,7 @@ A comparison between number of followers and proximity---people who have more
 friends or followers tend to be further away.
 }
 \label{fig:EdgeCounts}
-\end{figure}
+\end{figure*}
 
 %FIXME: this is important: should we move it up?
 
@@ -228,18 +228,19 @@ hundred.
 Follower count is a good way to distinguish celebrity and news accounts which
 are useless for location prediction.
 
-\section{Are some users closer to all of their friends and followers?}
+\subsection{Are some users closer to all of their friends and followers?}
 
-\begin{figure}[tb]
+\begin{figure*}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/local_ratio.pdf}
 \caption{
 The colored lines show the distance to contacts split into groups based on the
 proportion of the contact's friends and followers who live near the contact.
 The dotted line shows the distance to contacts who have no locatable contacts.
+FIXME: the labels are stupid
 }
 \label{fig:LocalRatio}
-\end{figure}
+\end{figure*}
 
 In the previous sections we only looked at the contacts of the geo-located
 users. In this section we will go two steps out on the social graph and

@@ -1,6 +1,9 @@
 \ifdefined\THESIS
     \chapter{\uppercase{Evaluation}}
+\else
+    \section{Evaluation}
 \fi
+
 We evaluate the system against several baseline implementations, and evaluate
 how the performance of the system varies with the number of contacts a user has
 and how many FriendlyLocation chooses to use.
@@ -12,14 +15,14 @@ followers had decodable locations.
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
+\includegraphics[width=\linewidth]{figures/fl_basic.pdf}
 \caption{
-After splitting edges into groups based their predicted distance, each group was fit to a curve. Here are four of the ten curves.
+    FriendlyLocation against several baseline systems.
 }
 \label{fig:NearProbFit}
 \end{figure}
 
-\section{Prediction}
+\subsection{Prediction}
 We investigate several implementations of the FriendlyLocation system:
 \begin{description}
 \item[FriendlyLocation Full] The MLE presented in the previous section with
@@ -48,6 +51,16 @@ The comparison to the omniscient predictor shows that there is room for improvem
 %
 Many users who have an incorrectly predicted location have at least one contact
 that is closer than the incorrectly predicted location.
+
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/fl_parts.pdf}
+\caption{
+    FIXME: This is looking at the effect of adding information. make this a table instead, remove some of the things
+}
+\label{fig:NearProbFit}
+\end{figure}
 
 \section{Additional Information}
 We investigated the effect of increasing numbers of contacts on the quality of
@@ -98,6 +111,9 @@ We also removed the location field from FIXME\% of the geo-located users to
 make the proportion of geo-located users with a location match the general
 Twitter population.
 
+FIXME: discuss adding other factors
+FIXME: do we want to do us-only evaluation?
+
 The final step of the evaluation is to investigate if FriendlyLocation would
 work with a smaller number of profiles than 25.
 %
@@ -108,3 +124,6 @@ In general, using more contacts can produce better results.
 Although we limited the crawler to 25 randomly-picked contacts per geo-located
 user, if FriendlyLocation is going to be used as part of a larger system, the
 crawler should pick users based on relationship type before crawling.
+
+
+
