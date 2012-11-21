@@ -28,7 +28,7 @@ We investigate several implementations of the FriendlyLocation system:
 \item[FriendlyLocation Full] The MLE presented in the previous section with
     additional information sources: UTC offset, the user-supplied location,
     and the location of users who are not contacts.
-\item[FriendlyLocation Plain] This is the system described in the previous
+\item[FriendlyLocation Basic] This is the system described in the previous
     section with only information from the locations of contacts.
 %\item[Median] Finds the median of the latitude and the median of the longitude
 %f the 25 randomly selected contacts.
@@ -74,42 +74,44 @@ The quality of the results from the predictor was lower for users with fewer
 than 50 contacts; however, as contacts increased beyond that, it had no
 significant effect on the results.
 
-Many Twitter users fill out the text-based location field.
-%
-If this user-reported data is good, there is no reason to spend time crawling
-their contacts.
-%
-It would be nice to use this information when predicting location, but
-the geo-located users we used to do the evaluation are less concerned about the
-privacy of their location information than the average Twitter user.
-%
-As a result, they tended to give more precise information in the location field
-of their user profile than other users.
-%
-We assume that the locations supplied by the contacts are more representative
-of normal Twitter users so we added noise to the locations of the geo-located
-users to make the distribution of the quality of their locations would match
-the quality of the contacts.
-%
-First, we sorted all the geo-located users and all the contacts by their
-PLE(predicted location error).
-%
-Next, we looked at each percentile of the geo-located users and compared their
-PLE to the PLE for that percentile in the contacts.
-%
-For each of the geo-located users, we moved the user's location based on
-reverse geocoding away from the user's actual median location based on the
-difference between the PLEs.
-%
-For example, the median PLE for a geo-located user was FIXME, and the median
-PLE for a contact was FIXME miles.
-%
-This means that we need to add FIXME miles of noise to a geo-located user with
-a PLE of FIXME.
-%
-We also removed the location field from FIXME\% of the geo-located users to
-make the proportion of geo-located users with a location match the general
-Twitter population.
+\ifdefined\THESIS
+    Many Twitter users fill out the text-based location field.
+    %
+    If this user-reported data is good, there is no reason to spend time
+    crawling their contacts.
+    %
+    It would be nice to use this information when predicting location, but
+    the geo-located users we used to do the evaluation are less concerned about
+    the privacy of their location information than the average Twitter user.
+    %
+    As a result, they tended to give more precise information in the location
+    field of their user profile than other users.
+    %
+    We assume that the locations supplied by the contacts are more
+    representative of normal Twitter users so we added noise to the locations
+    of the geo-located users to make the distribution of the quality of their
+    locations would match the quality of the contacts.
+    %
+    First, we sorted all the geo-located users and all the contacts by their
+    PLE(predicted location error).
+    %
+    Next, we looked at each percentile of the geo-located users and compared
+    their PLE to the PLE for that percentile in the contacts.
+    %
+    For each of the geo-located users, we moved the user's location based on
+    reverse geocoding away from the user's actual median location based on the
+    difference between the PLEs.
+    %
+    For example, the median PLE for a geo-located user was FIXME, and the median
+    PLE for a contact was FIXME miles.
+    %
+    This means that we need to add FIXME miles of noise to a geo-located user
+    with a PLE of FIXME.
+    %
+    We also removed the location field from FIXME\% of the geo-located users to
+    make the proportion of geo-located users with a location match the general
+    Twitter population.
+\fi
 
 FIXME: discuss adding other factors
 FIXME: do we want to do us-only evaluation?

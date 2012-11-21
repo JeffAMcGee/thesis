@@ -2,9 +2,10 @@
     \chapter{\uppercase {Data Collection}}
 
 \else
+    \section{Data Collection}
 \fi
 
-\section{Definitions}
+\subsection{Definitions}
 
 Before going into the details of the data collection, we first define a few
 terms to simplify the process of explaining how the data was collected.
@@ -64,10 +65,17 @@ We created labels for the seed users and each of the steps along the way:
     coordinates for their location.
 \item[located contacts] These are the 25 randomly chosen contacts of
     geo-located users who have locations that we can decode.
-\item[leafs] These are the contacts of the located contacts.
+\item[leafs] These are at most 100 of the contacts of the located contacts.
+    The geo-located users were excluded to make the graph acyclic.
 \end{description}
 
-\section{Data Collection}
+
+% FIXME: Can you add a small table showing the datasets that you use? So it is
+% clearly that you have a big number. And it seems you have several types of
+% data -- all, training, test, ??? -- so showing each dataset clearly labeled
+% would help.
+
+\subsection{Data Collection}
 To investigate how social relation and geographical distance between the
 relations correlate, we sample a dataset from Twitter.
 %
@@ -156,7 +164,7 @@ in estimating the location of a user.
 To make the results of the geocoder more useful, we devised a method to
 estimate the accuracy of a location returned by the geocoder.
 
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{Example Median Location Errors (in miles)}
 \begin{tabular}{l r r}
@@ -186,6 +194,11 @@ decode.
 We can compare the results of the geocoder to the location of the geo-located
 tweets for these users to quantify how accurate the geocoder is for certain
 types of locations.
+
+% FIXME: anytime you have a concept that you define in words, you should really
+% define it in math as well. For example, the "location error" should be a
+% clearly defined equation. Anywhere else you have similar definitions, use
+% math too.
 
 We define the \textbf{location error} to be the great circle distance between a
 user's home location and the location returned from the geocoder.
@@ -221,6 +234,9 @@ For example one user had ``PDX,OR'' in his location field. Gisgraphy identifies
 this as ``Portland International Airport''. Since it is not one of the most
 common locations, its PLE is determined by its place type to be 258 miles as
 seen in Table~\ref{tab:MedianLocErr}.
+
+% FIXME: For the PLE of PDX,OR, I don't get the intuition. Why isn't the error
+% smaller since PDX is an airport? Seems like the error should be much smaller.
 
 \begin{figure}[tb]
 \centering

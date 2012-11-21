@@ -29,7 +29,32 @@ SIG-ALTERNATE.CLS. Supported by ACM.}}
 
 \maketitle
 \begin{abstract}
-We predict location of Twitter users.
+
+With the rise of volunteered user location information through services
+like Foursquare, Google Latitude, and Facebook Places, we face unprecedented
+access to the real-world connections among millions of social media users.
+%
+This location information is increasingly incorporated into social media for
+providing localized content, location-aware recommendations, and other
+geo-spatial enabled services.
+%
+In this paper, we investigate the relationship between the strength of the tie
+between a pair of users, and the distance between the pair through an
+examination of over 100 million geo-encoded tweets and
+over 73 million user profiles collected from Twitter.
+%
+Based on this investigation, we identify several factors such as number of
+followers and how the users interact that can strongly reveal the distance
+between a pair of users, and use these factors to train a tree classifier to
+predict the distance between a pair of connected users.
+%
+We use the results of this classifier as the input to a maximum likelihood
+estimator to predict a user's location.
+%
+We find that this proposed method significantly improves the results of
+location estimation relative to a state-of-the-art technique.
+
+
 \end{abstract}
 
 % FIXME: this junk

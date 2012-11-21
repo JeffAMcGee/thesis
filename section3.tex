@@ -1,6 +1,24 @@
 \ifdefined\THESIS
     \chapter{\uppercase{Analysis of Distance to Contacts}}
+\else
+    \section{Analysis of Distance to Contacts}
 \fi
+
+% FIXME: For each subsection finding (e.g., "What is the distribution of
+% contacts?") you need to add more intuition/analysis. Walk the reader through
+% each figure. Highlight some actual numbers from the figures in the text. Tell
+% us what those numbers mean. Tell me what I should learn. You do some of this
+% already, but it really needs to be expanded. Remember, your reader is not as
+% on top of this material as you are, so you need to do more handholding.
+
+
+% FIXME: For all figs, I think you may need a black/white legible version. I'm
+% worried about readers seeing lots of lines and not wanting to go back to the
+% screen PDF to tell the difference. What did Backstrom do for their FB paper?
+
+% FIXME: For all figs, you might want to add a takeaway sentence in the
+% caption. So if a reader only looks at the fig (without following along in the
+% text), they can learn something.
 
 Every user who has multiple contacts will have some contacts who are much
 closer than others. In order to estimate the locations of users, we would like
@@ -67,6 +85,9 @@ distribution: one peak around 10 miles from people who live nearby, and several
 other peeks between 100 and 10,000 miles. These peeks occur at the distances
 between major population centers.
 
+% FIXME: The comment on Twitter being a news distribution network should cite
+% that WWW paper from Moon that examines exactly this question.
+
 One reasonable explanation for this is that Twitter is not just a social
 network; it is also a news distribution network.  This distribution
 suggests that users have two types of contacts: people who they met in
@@ -76,21 +97,45 @@ In section~\ref{sec:model}, we use this idea that there are two types of
 contacts to build a predictive location model based on social ties.
 
 
-\subsection{Are users closer to people they communicate with?}
+\ifdefined\THESIS
+    \begin{figure*}[tb]
+    \subsection{Are users closer to people they communicate with?}
+    \centering
+    \includegraphics[width=\linewidth]{figures/com_types.pdf}
+    \caption{
+    CDF of the distance between a geo-located user and various types of contacts
+    piloted on a logarithmic scale.
+    }
+    \label{fig:ComTypes}
+    \end{figure*}
+\fi
 
-\begin{figure*}[tb]
+\begin{table*}[tb]
 \centering
-\includegraphics[width=\linewidth]{figures/com_types.pdf}
+\begin{tabular}{l | r r | r r | r r | r r}
+    & \multicolumn{2}{c}{I Talk}
+    & \multicolumn{2}{|c}{We Talk}
+    & \multicolumn{2}{|c}{You Talk}
+    & \multicolumn{2}{|c}{We Ignore} \\
+    \cline{2-9}
+    &local&count&local&count&local&count&local&count \\
+    \hline
+    Just Follower & 40\%&2001 & 47\%&792 & 40\%&5958 & 25\%&216834 \\
+    Recip Friend & 42\%&28067 & 50\%&17903 & 45\%&21066 & 35\%&168973 \\
+    Just Friend & 21\%&23314 & 40\%&910 & 42\%&1884 & 21\%&212969 \\
+    Just Mentioned & 18\%&182978 & 36\%&4721 & & & & \\
+\end{tabular}
 \caption{
-CDF of the distance between a geo-located user and various types of contacts
-piloted on a logarithmic scale.
+FIXME: explain this
+The effect of communication on tie strength.
 In these graphs, ``I'' refers to the geo-located user. ``You'' refers to their
 contact.
 }
-\label{fig:ComTypes}
-\end{figure*}
+\label{tab:ComTypes}
+\end{table*}
 
-Figure~\ref{fig:ComTypes} shows the relationship between various types of
+
+Table~\ref{tab:ComTypes} shows the relationship between various types of
 communication patterns between the geo-located users and their contacts.
 In almost every case, increased communication increases the probability that
 two users live near each other.
@@ -114,14 +159,24 @@ communicate.
 
 \subsection{Are users closer to private accounts?}
 
-\begin{figure}[tb]
+\begin{table}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/edge_types_prot.pdf}
-\caption{Solid lines represent protected accounts, and dashed lines represent
-public accounts. If a user follows a protected account, they tend to be
-closer.}
-\label{fig:EdgeTypesProt}
-\end{figure}
+\begin{tabular}{l | r r | r r}
+    & \multicolumn{2}{c}{Public}
+    & \multicolumn{2}{|c}{Private} \\
+    \cline{2-5}
+    &local&count&local&count \\
+    \hline
+    Just Follower & 25\%&204417 & 31\%&21168 \\
+    Recip Friend & 37\%&211136 & 41\%&24873 \\
+    Just Friend & 21\%&233849 & 39\%&5228 \\
+    Just Mentioned & 18\%&183368 & 35\%&4331 \\
+\end{tabular}
+\caption{
+    Private accounts tend to be closer.
+}
+\label{tab:EdgeTypesProt}
+\end{table}
 
 Like many social networks, Twitter allows users to mark their account as
 protected. The specifics differ from network to network, but in Twitter's case
@@ -134,7 +189,7 @@ about their profile such as their location and the number of friends and
 followers is public, but their friends list, followers list, and the text of
 their tweets is private, and not available for analysis.
 
-As seen in figure~\ref{fig:EdgeTypesProt}, the most dramatic difference between
+As seen in Table~\ref{tab:EdgeTypesProt}, the most dramatic difference between
 private and public occurs if a user follows a protected account.
 %
 Since users generally only allow people they know to follow a protected
@@ -176,7 +231,12 @@ reciprocal friends.  It needed four users who fit the following criteria:
 \item ``our'' is reciprocal friends with both ``me'' and ``you''
 \end{itemize}
 
-We found this pattern in 147669 of the users in the training set.
+% FIXME: when you talk about the me, you, my, our. I would put that subfigure
+% from the figure in the body of the text so it is clearer. And the language
+% itself is pretty tough to follow. Not sure on how to improve it, but it is
+% confusing.
+
+We found this pattern for 147669 of the geo-located users.
 If a user had multiple instances of this pattern, it picked one of them
 randomly so that particular users would not bias the results.
 Since our crawler only retrieved friend and follower information for at most
@@ -237,7 +297,6 @@ are useless for location prediction.
 The colored lines show the distance to contacts split into groups based on the
 proportion of the contact's friends and followers who live near the contact.
 The dotted line shows the distance to contacts who have no locatable contacts.
-FIXME: the labels are stupid
 }
 \label{fig:LocalRatio}
 \end{figure*}
