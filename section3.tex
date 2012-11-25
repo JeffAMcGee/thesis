@@ -11,7 +11,6 @@
 % already, but it really needs to be expanded. Remember, your reader is not as
 % on top of this material as you are, so you need to do more handholding.
 
-
 % FIXME: For all figs, I think you may need a black/white legible version. I'm
 % worried about readers seeing lots of lines and not wanting to go back to the
 % screen PDF to tell the difference. What did Backstrom do for their FB paper?
@@ -290,16 +289,25 @@ are useless for location prediction.
 
 \subsection{Are some users closer to all of their friends and followers?}
 
-\begin{figure*}[tb]
+\begin{figure}[tb]
 \centering
-\includegraphics[width=\linewidth]{figures/local_ratio.pdf}
+\includegraphics[width=\linewidth]{figures/locals_cmp.pdf}
+\caption{
+    FIXME: caption
+}
+\label{fig:LocalCmp}
+\end{figure}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/locals_10.pdf}
 \caption{
 The colored lines show the distance to contacts split into groups based on the
 proportion of the contact's friends and followers who live near the contact.
 The dotted line shows the distance to contacts who have no locatable contacts.
 }
-\label{fig:LocalRatio}
-\end{figure*}
+\label{fig:Local10}
+\end{figure}
 
 In the previous sections we only looked at the contacts of the geo-located
 users. In this section we will go two steps out on the social graph and
