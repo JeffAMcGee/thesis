@@ -2,6 +2,7 @@
     \chapter{\uppercase{Analysis of Distance to Contacts}}
 \else
     \section{Analysis of Distance to Contacts}
+    \label{sec:analysis}
 \fi
 
 % FIXME: For each subsection finding (e.g., "What is the distribution of
@@ -20,10 +21,17 @@
 % text), they can learn something.
 
 Every user who has multiple contacts will have some contacts who are much
-closer than others. In order to estimate the locations of users, we would like
-to find out which users are most likely to live nearby.  In this section, we
-investigate how various types of contacts correlate with proximity.
-All of the analysis in this section was done on the contacts of 249584 geo-located users.
+closer than others.
+%
+In order to estimate the locations of users, we would like
+to find out which users are most likely to live nearby.
+%
+In this section, we investigate how various types of contacts correlate with
+proximity.
+%
+All of the analysis in this section was done on the contacts of 249584
+geo-located users.
+%
 Contacts with a predicted location error that was greater than or equal to 1000
 miles were filtered out.
 
@@ -40,11 +48,10 @@ with.
 \label{fig:EdgeTypesCum}
 \end{figure}
 
-FIXME: add US-only line to one of these graphs for comparison to other papers
-
 Figure~\ref{fig:EdgeTypesCum} shows the cumulative distribution
 function(CDF) of the distance between a geo-located user and several types of
 contacts.
+%
 Distance is plotted on a logarithmic scale to show both local and
 global effects.
 

@@ -56,7 +56,6 @@ sets:
 Our crawler starts from a set of seed users and goes two steps out on the
 social graph.
 %
-% FIXME: clunky
 We created labels for the seed users and each of the steps along the way:
 
 \begin{description}
@@ -103,11 +102,13 @@ This left us with 1,695,784 geo-located users.
 To enable parallelization, we divided those users into 100 groups based on
 the two least significant digits in their Twitter user id, and randomly selected
 2500 users from each of the groups.
-
+%
 This gave us the 250,000 geo-located users that we planned to use for our
 analysis and experimentation.
+%
 After crawling these users' friends and followers, we found 416 users who did
 not have any neighbors with a location field that we could parse.
+%
 We filtered them out and used the remaining 249,584 for analysis and
 experimentation.
 % FIXME: is that right?
@@ -141,17 +142,19 @@ In the end, we collected just over 73 million Twitter user profiles.
     \hline
     % 249,584
     Selected Geo-located Users & 250 thousand & A randomly selected subset of
-    the geolocated users.  \\
-    % 894617
+    the geolocated users used for generating all the figures in
+    section~\ref{sec:analysis} and   \\
+    % 894,617
     Geocoding Training & 895 thousand & geo-located users who where not
-    selected and filled out the location field  \\
+    selected but who did fill out the location field of their profile \\
     % 10,081,957
-    Contacts & 10 million & Friends, followers, and mentions of selected
+    Contacts & 10 million & Friends, followers, and mentions of the selected
     geo-located users \\
     % 71,596,805 minus some of 250k
     Leafs & 71 million & The contacts of the contacts \\
 \end{tabular}
 \label{tab:DataTypes}
+\caption{FIXME: This needs work.}
 \end{table*}
 
 \section{Geocoding}

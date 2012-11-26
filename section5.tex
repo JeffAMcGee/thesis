@@ -23,12 +23,31 @@ followers had decodable locations.
 \label{fig:NearProbFit}
 \end{figure}
 
+\begin{table}[tb]
+\centering
+\begin{tabular}{l  r r r r}
+    Model
+    & aed@60
+    & aed@80
+    & aed@100
+    & acc@25 \\
+    \hline
+    Baseline & 8.41$\pm$.039 & 40.8$\pm$.20 & 426$\pm$3.8 & 55.7\%$\pm$.09\% \\
+    FriendLoc & 5.43$\pm$.030 & 21.4$\pm$.15 & 359$\pm$4.0 & 63.9\%$\pm$.11\% \\
+    Nearest & 7.49$\pm$.081 & 47.7$\pm$.52 & 572$\pm$4.4 & 56.9\%$\pm$.19\% \\
+\end{tabular}
+\caption{
+FIXME: explain this
+}
+\label{tab:results}
+\end{table}
+
 \subsection{Prediction}
 We investigate several implementations of the FriendlyLocation system:
 \begin{description}
-\item[FriendlyLocation Full] The MLE presented in the previous section with
-    additional information sources: UTC offset, the user-supplied location,
-    and the location of users who are not contacts.
+%\item[FriendlyLocation Full] The MLE presented in the previous section with
+%    additional information sources: UTC offset, the user-supplied location,
+%    and the location of users who are not contacts.
 \item[FriendlyLocation Basic] This is the system described in the previous
     section with only information from the locations of contacts.
 %\item[Median] Finds the median of the latitude and the median of the longitude
