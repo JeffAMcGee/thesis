@@ -134,16 +134,40 @@ more than one geo-located users.
 %
 In the end, we collected just over 73 million Twitter user profiles.
 
+\begin{table*}[tbh]
+\centering
+\begin{tabular}{l r l}
+    Data Set & Size & Description \\
+    \hline
+    % 249,584
+    Selected Geo-located Users & 250 thousand & A randomly selected subset of
+    the geolocated users.  \\
+    % 894617
+    Geocoding Training & 895 thousand & geo-located users who where not
+    selected and filled out the location field  \\
+    % 10,081,957
+    Contacts & 10 million & Friends, followers, and mentions of selected
+    geo-located users \\
+    % 71,596,805 minus some of 250k
+    Leafs & 71 million & The contacts of the contacts \\
+\end{tabular}
+\label{tab:DataTypes}
+\end{table*}
+
 \section{Geocoding}
 We used Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
-Gisgraphy does full-text search on the GeoNames\footnote{\url{http://www.geonames.org/}}
-database using Lucene. Since
-it runs locally it is not limited to a certain number of queries per day.
+%
+Gisgraphy does full-text search on the
+GeoNames\footnote{\url{http://www.geonames.org/}} database using Lucene.
+%
+Since it runs locally it is not limited to a certain number of queries per day.
+%
 Gisgraphy's geocoder returns ranked results based on a full text search
 over millions of geographical features such as countries, cities, and schools.
 
 The location field on a user's profile is just a text field that asks the user
 to respond to ``Where in the world are you?''.
+%
 Responses vary from precise latitude and longitude coordinates entered
 automatically by smartphone apps to jokes and nonsense.
 Our system does some preprocessing before sending user-submitted locations to
@@ -166,7 +190,7 @@ estimate the accuracy of a location returned by the geocoder.
 
 \begin{table}[tb]
 \centering
-\caption{Example Median Location Errors (in miles)}
+\caption{Example Median Location Errors (in miles).}
 \begin{tabular}{l r r}
 Location&Number of Users&Median Error\\ \hline
 ``Bronx''&438&4\\
@@ -195,10 +219,11 @@ We can compare the results of the geocoder to the location of the geo-located
 tweets for these users to quantify how accurate the geocoder is for certain
 types of locations.
 
-% FIXME: anytime you have a concept that you define in words, you should really
-% define it in math as well. For example, the "location error" should be a
-% clearly defined equation. Anywhere else you have similar definitions, use
-% math too.
+\emph{FIXME: anytime you have a concept that you define in words, you should
+    really define it in math as well. For example, the "location error" should
+    be a clearly defined equation. Anywhere else you have similar definitions,
+    use math too.
+}
 
 We define the \textbf{location error} to be the great circle distance between a
 user's home location and the location returned from the geocoder.
@@ -227,16 +252,22 @@ locations and location types.
 
 This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
+%
 We define the \textbf{predicted location error (PLE)} for a given location to
-be the median location error if it is one of the 17,370 locations that had three
-users; otherwise, it is the median location error for the location's type.
-For example one user had ``PDX,OR'' in his location field. Gisgraphy identifies
-this as ``Portland International Airport''. Since it is not one of the most
-common locations, its PLE is determined by its place type to be 258 miles as
-seen in Table~\ref{tab:MedianLocErr}.
-
-% FIXME: For the PLE of PDX,OR, I don't get the intuition. Why isn't the error
-% smaller since PDX is an airport? Seems like the error should be much smaller.
+be the median location error if it is one of the 17,370 locations that had
+three users; otherwise, it is the median location error for the location's
+type.
+%
+For example, one user had ``PDX,OR'' in his location field.
+%
+Gisgraphy identifies this as ``Portland International Airport''.
+%
+Since it is not one of the most common locations, its PLE is determined by its
+place type to be 258 miles as seen in Table~\ref{tab:MedianLocErr}.
+%
+An airport is a bad location name since airports tend to have regional names
+and people who report their location as an airport are likely to move around a
+lot.
 
 \begin{figure}[tb]
 \centering

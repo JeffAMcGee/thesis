@@ -18,6 +18,7 @@ followers had decodable locations.
 \includegraphics[width=\linewidth]{figures/fl_basic.pdf}
 \caption{
     FriendlyLocation against several baseline systems.
+    FIXME: remove some of these lines
 }
 \label{fig:NearProbFit}
 \end{figure}
@@ -33,7 +34,7 @@ We investigate several implementations of the FriendlyLocation system:
 %\item[Median] Finds the median of the latitude and the median of the longitude
 %f the 25 randomly selected contacts.
 \item[Backstrom] This is based on the MLE estimator presented in
-    \cite{backstro m2010find}. Some changes to the system were made to make it
+    \cite{backstrom2010find}. Some changes to the system were made to make it
     work. (FIXME: more here)
 \item[Omniscient] Returns the location of the contact that is closest to the
     geo-located user from the 25 users used for location prediction.
@@ -52,15 +53,6 @@ The comparison to the omniscient predictor shows that there is room for improvem
 Many users who have an incorrectly predicted location have at least one contact
 that is closer than the incorrectly predicted location.
 
-
-\begin{figure}[tb]
-\centering
-\includegraphics[width=\linewidth]{figures/fl_parts.pdf}
-\caption{
-    FIXME: This is looking at the effect of adding information. make this a table instead, remove some of the things
-}
-\label{fig:NearProbFit}
-\end{figure}
 
 \section{Additional Information}
 We investigated the effect of increasing numbers of contacts on the quality of

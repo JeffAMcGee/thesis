@@ -8,66 +8,85 @@
 
 \section{Introduction}
 
-FIXME: rewrite this whole file
+\emph{Comments are in italics.}
 
+\emph{Fix past and present tense. When should I use past, and when should I use
+present?}
 
-Online social networks are increasingly getting ``geographical.'' Millions of
-online
-social network users are voluntarily sharing their location through location
-sharing
-services like Foursquare, short text status updates
-through real-time microblogs, and photos in online image hosts. This location
-information is increasingly being
-incorporated in social media for providing localized content, location-aware
-recommendations, and other geo-spatial enabled services. The access to the
-trails and connections among millions of social media users provides an
-unprecedented opportunity to study the relationship between the geographical
-properties of social media users and the social relations connecting them.
+Online social networks are increasingly getting ``geographical.''
+%
+Millions of online social network users are voluntarily sharing their location
+through location sharing services like Foursquare, short text status updates
+through real-time microblogs, and photos in online image hosts.
+%
+This location information is increasingly being incorporated in social media
+for providing localized content, location-aware recommendations, and other
+geo-spatial enabled services.
+%
+The access to the trails and connections among millions of social media users
+provides an unprecedented opportunity to study the relationship between the
+geographical properties of social media users and the social relations
+connecting them.
 
 With high-quality geographic information, online services become more useful to
-the local community.  Online services can bring to light discussions about what
-the city council voted on last night.  Online services can identify, and react
-to, the crowd of people gathering for the big football game.  Online services
-can do a better job suggesting friends.  Online services can reconnect users
-with the community that the users neglected when they started spending their
-time online.
+the local community.
+%
+Online services can bring to light discussions about what the city council
+voted on last night.
+%
+Online services can identify, and react to, the crowd of people gathering for
+the big football game.
+%
+Online services can do a better job suggesting friends.
+%
+\emph{Too negative ->}
+Online services can reconnect users with the community that the users neglected
+when they started spending their time online.
 
-Geographic information is also useful for researchers.  In the past few years,
-there has been growth in research into topics such as geographical user
-clustering and location-based social networks.  As the accuracy of geographic
-information improves, it will open up new research opportunities.
+Geographic information is also useful for researchers.
+In the past few years, there has been growth in research into topics such as
+geographical user clustering and location-based social networks.
+%
+As the accuracy of geographic information improves, it will open up new
+research opportunities.
 
 In this paper, we investigate the interplay of distance and tie strength
-through an examination of FIXME million geo-encoded tweets and FIXME million user
-profiles collected from Twitter. Concretely, we investigate the relationship
-between the strength of the tie between a pair of users and the distance
-between the pair.  We identify several factors -- including following,
-mentioning, and actively engaging in conversations with another user -- that
-can strongly reveal the distance between a pair of users.
+through an examination of over 100 million geo-encoded tweets and 73 million
+user profiles collected from Twitter.
+%
+Concretely, we investigate the relationship between the strength of the tie
+between a pair of users and the distance between the pair.
+%
 
-FIXME: bimodal? The US data is bimodal, but the world data is not. Should we
-discuss this? Most other related papers only look at inside US.
+Based on this investigation, we identify several factors such as number of
+followers and how the users interact that can strongly reveal the distance
+between a pair of users, and use these factors to train a tree classifier to
+predict the distance between a pair of connected users.
+%
+We use the results of this classifier as the input to a maximum likelihood
+estimator to predict a user's location.
+%
+We find that this proposed method significantly improves the results of
+location estimation relative to a state-of-the-art technique.
+%
+FriendlyLocation correctly locates FIXME\% of users within 25 miles.
 
-We find a bimodal distribution in the distance between Twitter users, with one
-peak around 10 miles from people who live nearby, and another peak around 2500
-miles, further validating Twitter's use as both a social network (with
-geographically nearby friends) and as a news distribution network (with very
-distant relationships).  Figure~\ref{fig:EdgeTypes} gives a preview of this
-bimodal distribution for four basic types of relationships.  The red curve
-represents a strong, reciprocal friendship whereas the cyan line represents a
-relatively weak relationship. The red curve has more users at a distance of ten
-miles than the cyan line, indicating that reciprocal friendships are more
-likely to be local.
+Well-known research \cite{kwak2010why} shows that Twitter is both a social
+network and a form of news media.
+%
+Our technique allows us to distinguish between pairs of users who are likely
+to be friends in real life, and therefore connected for social reasons, and
+pairs of users who are distant and more likely to be connected for news
+distribution.
 
-Based on these findings, we propose and evaluate a framework for predicting
-location for users based on an analysis of the user's social network,
-which has great significance for augmenting traditional social media and
+\emph{
+... which has great significance for augmenting traditional social media and
 enriching location-based services with more refined and accurate location
-estimates.  FriendlyLocation correctly locates FIXME\% of users within 25 miles.
+estimates.
+}
+
 
 \section{Related Work}
-
-%FIXME: Mr. Cheng wrote some of this.
 
 The study of geographical properties of online social media users has drawn
 intensive attention in recent years.  Characterizing network properties in
@@ -86,20 +105,33 @@ connections, then their friends tend to be further away.  They also found that
 longer connections are equally likely to be part of a social triangle as
 shorter connections.
 
-We know of two previous systems that attempted to estimate the location of
-users on social networking sites.  In the first, Facebook researchers analyzed
+Several researchers in recent years have looked into predicting user locations
+in a social network based on the social graph.
+%
+In the best-known paper on this subject, Facebook researchers analyzed
 the physical distance between Facebook users' social relations and utilized the
 locations of a user's friends' to predict the user's geographical location
-\cite{backstrom2010find}.  They picked users who entered their street address
-in the location field of their profile and used this to predict the location of
-their friends using maximum likelihood estimation.  However, the information
-they used is generally not available outside of Facebook, since people rarely
-make their street address public.  Cheng et al. \cite{cheng2010you} propose a
+\cite{backstrom2010find}.
+%
+They picked users who entered their street address in the location field of
+their profile and used this to predict the location of their friends using
+maximum likelihood estimation.
+%
+However, the information they used is generally not available outside of
+Facebook, since people rarely make their street address public.
+%
+In a Transactions in GIS paper, Davis et all. \cite{davis2011infer}
+investigated a simple system that predicted location by taking a vote among
+the locations of the user's friends and picking the most popular location.
+%
+Recently, Li et al. proposed a system called the unified discriminative
+influence model which combined locations that a Twitter user mentioned with the
+locations of the user's followers.
+
+Cheng et al. \cite{cheng2010you} proposed a
 content-based system for locating users on Twitter. They find words that are
 highly concentrated in specific regions and build a model to calculate the
 probability that a user lives at a location.
-
-FIXME: add new papers here - especially the twitter ones
 
 Gilbert \cite{gilbert2009predicting} shows how the strength of a tie can be
 predicted by interaction patterns.  They had volunteers rate the strength of
@@ -109,11 +141,11 @@ correlated with physical proximity.
 
 There has also been some research into specific aspects of Twitter that is
 relevant to our work.  User behavior with regard to the location field in
-Twitter user profiles has been studied in \cite{hecht2011tweets}.  One of the
-early investigations into Twitter usage by Java \cite{java2007we} showed that
-people use twitter for chatter, conversations, sharing information, and
-reporting news.  This mixture of uses fits well with the bimodal distribution
-of friends and followers that we propose.
+Twitter user profiles has been studied in \cite{hecht2011tweets}.
+
+%One of the early investigations into Twitter usage by Java \cite{java2007we}
+%showed that people use twitter for chatter, conversations, sharing information,
+%and reporting news.
 
 Finally, Cranshaw et al. \cite{cranshaw2010bridging} solved the inverse of the
 problem we are investigating: they predicted the existence of a social network
