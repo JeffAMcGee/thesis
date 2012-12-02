@@ -69,11 +69,6 @@ We created labels for the seed users and each of the steps along the way:
 \end{description}
 
 
-% FIXME: Can you add a small table showing the datasets that you use? So it is
-% clearly that you have a big number. And it seems you have several types of
-% data -- all, training, test, ??? -- so showing each dataset clearly labeled
-% would help.
-
 \subsection{Data Collection}
 To investigate how social relation and geographical distance between the
 relations correlate, we sample a dataset from Twitter.
@@ -146,7 +141,8 @@ In the end, we collected just over 73 million Twitter user profiles.
     section~\ref{sec:analysis} and   \\
     % 894,617
     Geocoding Training & 895 thousand & geo-located users who where not
-    selected but who did fill out the location field of their profile \\
+    selected but who did fill out the location field of their profile 
+    \emph{this data set needs a better name}\\
     % 10,081,957
     Contacts & 10 million & Friends, followers, and mentions of the selected
     geo-located users \\
@@ -154,7 +150,7 @@ In the end, we collected just over 73 million Twitter user profiles.
     Leafs & 71 million & The contacts of the contacts \\
 \end{tabular}
 \label{tab:DataTypes}
-\caption{FIXME: This needs work.}
+\caption{FIXME: I'm not convinced this is a good way to do show the datasets. Should we merege this into the bulleted list in the previous subsection?}
 \end{table*}
 
 \section{Geocoding}

@@ -12,20 +12,24 @@ it must be fast and scalable.
 
 \subsection{Edge Length Prediction}
 
-% FIXME: Need to define what a regression tree is or give more intuition /
-% cites. Why did we pick it and not something else?
+\emph{
+  FIXME: Need to define what a regression tree is or give more intuition /
+  cites. Why did we pick it and not something else?
+}
 
-% FIXME: The method is written in more of an engineering we did this, then we
-% did this, then we did that, style. I would suggest moving to the front the
-% big-picture intuition -- how you want to use the social network to refine
-% location estimates, and how you will achieve that by estimating edge lengths,
-% considering neighbors, etc. Give us the flavor up front. Then say what are
-% the challenges to doing that ... e.g., how do we estimate edge lengths? What
-% are the problems with estimating edge lengths? errors? etc. how do we
-% estimate the user's location given his contacts? what are the challenges?
-% The main idea is to give the high-level goal, the challenges to achieving
-% that goal, then the details of how you overcome the challenges to achieve the
-% goal.
+\emph{
+  FIXME: The method is written in more of an engineering we did this, then we
+  did this, then we did that, style. I would suggest moving to the front the
+  big-picture intuition -- how you want to use the social network to refine
+  location estimates, and how you will achieve that by estimating edge lengths,
+  considering neighbors, etc. Give us the flavor up front. Then say what are
+  the challenges to doing that ... e.g., how do we estimate edge lengths? What
+  are the problems with estimating edge lengths? errors? etc. how do we
+  estimate the user's location given his contacts? what are the challenges?
+  The main idea is to give the high-level goal, the challenges to achieving
+  that goal, then the details of how you overcome the challenges to achieve the
+  goal.
+}
 
 Before we predict a user's location, we need a way to estimate the probability
 that a geo-located user is at a location given the position of their contact.
@@ -49,7 +53,8 @@ trained the regressor to predict the log of the distance.
 %
 The tree regressor was configured to not split leafs with fewer than 1000 data
 points to prevent over-fitting.
-% FIXME: this needs more, but I'm not sure what.
+
+\emph{this needs more, but I'm not sure what.}
 
 
 \subsection{Model}
