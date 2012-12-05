@@ -12,10 +12,6 @@
 % already, but it really needs to be expanded. Remember, your reader is not as
 % on top of this material as you are, so you need to do more handholding.
 
-% FIXME: For all figs, I think you may need a black/white legible version. I'm
-% worried about readers seeing lots of lines and not wanting to go back to the
-% screen PDF to tell the difference. What did Backstrom do for their FB paper?
-
 % FIXME: For all figs, you might want to add a takeaway sentence in the
 % caption. So if a reader only looks at the fig (without following along in the
 % text), they can learn something.
@@ -44,27 +40,45 @@ miles were filtered out.
 \caption{
 CDF of distance from geo-located users to users they have some contact
 with.
+%
+Reciprocal friends tend to be closer than other types of friendships.
 }
-\label{fig:EdgeTypesCum}
+\label{fig:EdgeTypesCuml}
 \end{figure}
 
-Figure~\ref{fig:EdgeTypesCum} shows the cumulative distribution
+Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
 function(CDF) of the distance between a geo-located user and several types of
 contacts.
 %
 Distance is plotted on a logarithmic scale to show both local and
 global effects.
+%
+On a logarithmic scale, the contacts are fairly evenly distributed from being
+nearby to being on the opposite side of the world.
+%
+For reciprocal friends, the 1\textsuperscript{st} quartile, median, and
+3\textsuperscript{rd} of the distances are 7.9 miles, 106 miles, and 720 miles
+respectively.
+%
+There is a relatively flat section in all the lines around 3,000 miles.
+%
+3,000 miles is longer than the distance between the east coast of the U.S. and the west coast, but shorter than the distance from the east coast of the U.S. to Europe, so there are few population centers that are this distance apart.
 
 In general, reciprocal friends are the closest, followed by followers, friends,
 and finally users who are just mentioned.
-37\% of reciprocal friends live within 25 miles while only 18\% of users
+%
+38\% of reciprocal friends live within 25 miles while only 18\% of users
 who are just mentioned live within that radius.
+%
 While it may seem that since being followed by someone and following someone
 should be identical, they are not.
+%
 Celebrity and news accounts on Twitter often have large numbers of followers,
 but they normally do not follow a large number of users.
+%
 Since the geo-located user was selected randomly, they are usually an average
 user and not a celebrity.
+%
 If they follow someone, it might be a celebrity; however, if someone follows
 them, it is probably someone who knows them.
 
@@ -76,21 +90,32 @@ them, it is probably someone who knows them.
 \caption{
 Histogram of distance to users for different types of relationships.
 The curves in this figure are the derivatives of the curves in
-Figure~\ref{fig:EdgeTypesCum}.
+Figure~\ref{fig:EdgeTypesCuml}.
 }
 \label{fig:EdgeTypes}
 \end{figure}
 
 To understand the distribution of contacts, we created a histogram of the distances between various types of contacts.
-We sorted the distances to contacts into 200 logarithmically
+We sorted the distances to contacts into 160 logarithmically
 scaled bins (40 bins for each power of 10).
+%
 Figure~\ref{fig:EdgeTypes} shows the result of plotting the histogram.
 %
 All four types of contacts follow roughly the same
 distribution: one peak around 10 miles from people who live nearby, and several
-other peeks between 100 and 10,000 miles. These peeks occur at the distances
-between major population centers.
+other peeks between 100 and 10,000 miles.
+%
+These peeks occur at the distances between major population centers.
 
+There is a local maximum in all the graphs at around 8 miles.
+%
+Since the contacts often list the name of their town, there is a small distance
+between the geocoded location of the town and the location of the geo-located
+user's tweets.
+%
+There aren't as many contacts in the 30 to 150 mile range, but then after 150
+miles, peaks start appearing for major cities.
+%
 One reasonable explanation for this is that Twitter is not just a social
 network; it is also a news distribution network as described in
 \cite{kwak2010why}.
@@ -120,26 +145,39 @@ friends or followers tend to be further away.
 Since the primary goal of this research is to predict the location of users, we
 focus our attention on the number of friends and followers a contact has rather
 than the numbers for the geo-located user.
+%
 We took each of the reciprocal friendships what we looked at in
 Section~\ref{sec:EdgeTypes} and put them into log-scaled bins based on their
 number of friends or followers that the contact had.
+%
 Figure~\ref{fig:EdgeCounts} shows the result of this procedure.
 
 In general, people who are more promiscuous followers and friends are less
-likely to live nearby. This makes sense because it is easy to meet 5 Twitter
-users in real life, but very few people know 500 Twitter users who live in the
-same town.
+likely to live nearby.
+%
+This makes sense because it is easy to meet 15 Twitter users in real life, but
+very few people know 1000 Twitter users who live in the same town.
+%
+Contacts with 10--99 followers were within 25 miles of their geo-loacted friend
+45\% of the time while contacts with 1000--9999 followers were nearby only 26\%
+of the time.
+%
+There was a similar result in the number of friends: the prorportion of local
+contacts went from 46\% down to 23\%.
 
 Mainstream media and celebrity accounts such as the New York Times and Lady
 Gaga have millions of followers while normal users rarely have more than a few
 hundred.
-Follower count is a good way to distinguish celebrity and news accounts which
-are useless for location prediction.
+%
+Follower count and friend count are good ways to distinguish celebrity and news
+accounts which are useless for location prediction.
 
+aoeu aoeu.
+
+\subsection{Are users closer to people they communicate with?}
 
 \ifdefined\THESIS
     \begin{figure*}[tb]
-    \subsection{Are users closer to people they communicate with?}
     \centering
     \includegraphics[width=\linewidth]{figures/com_types.pdf}
     \caption{
@@ -150,52 +188,79 @@ are useless for location prediction.
     \end{figure*}
 \fi
 
+
 \begin{table*}[tb]
 \centering
-\begin{tabular}{l | r r | r r | r r | r r}
-    & \multicolumn{2}{c}{I Talk}
-    & \multicolumn{2}{|c}{We Talk}
-    & \multicolumn{2}{|c}{You Talk}
-    & \multicolumn{2}{|c}{We Ignore} \\
-    \cline{2-9}
-    &local&count&local&count&local&count&local&count \\
+\begin{tabular}{l | r r | r r | r r | r r | r r}
+    & \multicolumn{2}{|c}{Both mention}
+    & \multicolumn{2}{|c}{Target mentions}
+    & \multicolumn{2}{|c}{Contact mentions}
+    & \multicolumn{2}{|c}{Both ignore}
+    & \multicolumn{2}{|c}{Overall} \\
+    \cline{2-11}
+    &local&count&local&count&local&count&local&count&local&count \\
     \hline
-    Just Follower & 40\%&2001 & 47\%&792 & 40\%&5958 & 25\%&216834 \\
-    Recip Friend & 42\%&28067 & 50\%&17903 & 45\%&21066 & 35\%&168973 \\
-    Just Friend & 21\%&23314 & 40\%&910 & 42\%&1884 & 21\%&212969 \\
-    Just Mentioned & 18\%&182978 & 36\%&4721 & & & & \\
+    Recip Friend & 42\%&28067 & 50\%&17903 & 45\%&21066 & 35\%&168973 & 38\%&236009 \\
+    Just Follower & 40\%&2001 & 47\%&792 & 40\%&5958 & 25\%&216834 & 25\%&225585 \\
+    Just Friend & 21\%&23314 & 40\%&910 & 42\%&1884 & 21\%&212969 & 21\%&239007 \\
+    Just Mentioned & 18\%&182978 & 36\%&4721 & & 0 & & 0 & 18\%&187699 \\
 \end{tabular}
 \caption{
-FIXME: explain this
-The effect of communication on tie strength.
-In these graphs, ``I'' refers to the geo-located user. ``You'' refers to their
+If geo-located users interact with their contacts, then they are more likely to
+live nearby.
+%
+In this table, ``I'' refers to the geo-located user. ``You'' refers to their
 contact.
+%
+\emph{Should I highlight cells in the table?, Should I color-code?}
 }
 \label{tab:ComTypes}
 \end{table*}
 
+We looked at the 100 most recent tweets for the geo-located users and one of
+each type of their contacts.
+%
+The edges were divided into groups based on whether the geo-located user
+mentioned the contact and whether the contact mentioned the geo-located user.
+%
+For each of the groups, we calculated the the percentage of contacts who are
+live within 25 miles of the targets and the number of edges in that group.
+%
+This is shown in Table~\ref{tab:ComTypes}.
+%
+Since contacts who were just mentioned were mentioned by the geo-located
+user by definition, the contact mentions and both ignore table cells are
+empty.
 
-Table~\ref{tab:ComTypes} shows the relationship between various types of
-communication patterns between the geo-located users and their contacts.
 In almost every case, increased communication increases the probability that
 two users live near each other.
+%
 There is one exception: when an average user mentions someone they follow who
-does not follow them back, it has no effect.
+does not follow them back, it has no effect---in both cases the contact is
+local 25\% of the time.
+%
 In other words, if a random user mentions a celebrity who does not bother to
-reply, they probably do not live in the same area. This can be seen by the blue
-and green lines that are right on top of each other in the Just Friend graph.
+reply, they probably do not live in the same area.
+%
 On the other hand, in the rare event that someone who is just a friend replies
 to their follower, then the probability that they live near each other is much
-higher.
+higher--it goes from 21\% to 42\%.
 
 The weakest type of contact is for users who were just mentioned, but never
-replied to. If the person is mentioned, then 36\% of users with no
+replied to.
+%
+If the person is mentioned, then 36\% of users with no
 friend/follow relationship who have a conversation live within 25 miles.
+%
 This is approximately equal to the 35\% of reciprocal friends who ignore each
 other and live within 25 miles.
+%
 Unsurprisingly, the strongest type of connection is reciprocal friends who
 communicate.
-
+%
+One challenge to using communication patterns as a source of information for
+location prediction is that the communication patterns that are correlated
+with proximity are rare.
 
 \subsection{Are users closer to private accounts?}
 

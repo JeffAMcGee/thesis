@@ -136,6 +136,7 @@ In the end, we collected just over 73 million Twitter user profiles.
     Data Set & Size & Description \\
     \hline
     % 249,584
+    \emph{is target users better than geo-located?}
     Selected Geo-located Users & 250 thousand & A randomly selected subset of
     the geolocated users used for generating all the figures in
     section~\ref{sec:analysis} and   \\
@@ -272,7 +273,18 @@ lot.
 \centering
 \includegraphics[width=\linewidth]{figures/mloc_mdist.pdf}
 \caption{
-Comparison between predicted location error (PLE) and the actual location error.
+Cumulative distribution function(CDF) of the distance between geo-located
+users' tweets and their geocoded self-reported location.
+%
+The distances are split into bins based on the predicted location error(PLE).
+%
+The blue lines show that locations with a low PLE tend to be accurate, and
+locations with a high PLE are rarely accurate.
+%
+The dotted line shows the values of the PLE for all the
+users in this graph.
+%
+63\% of these users have a PLE less than 10 miles.
 }
 \label{fig:DiffMlocMdist}
 \end{figure}
