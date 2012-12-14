@@ -31,9 +31,6 @@ geo-located users.
 Contacts with a predicted location error that was greater than or equal to 1000
 miles were filtered out.
 
-\subsection{What type of contact is closest?}
-\label{sec:EdgeTypes}
-
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_types_cuml.pdf}
@@ -45,6 +42,9 @@ Reciprocal friends tend to be closer than other types of friendships.
 }
 \label{fig:EdgeTypesCuml}
 \end{figure}
+
+\subsection{What type of contact is closest?}
+\label{sec:EdgeTypes}
 
 Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
 function(CDF) of the distance between a geo-located user and several types of
@@ -62,7 +62,9 @@ respectively.
 %
 There is a relatively flat section in all the lines around 3,000 miles.
 %
-3,000 miles is longer than the distance between the east coast of the U.S. and the west coast, but shorter than the distance from the east coast of the U.S. to Europe, so there are few population centers that are this distance apart.
+3,000 miles is longer than the distance between the east coast of the U.S. and
+the west coast, but shorter than the distance from the east coast of the U.S.
+to Europe, so there are few population centers that are this distance apart.
 
 In general, reciprocal friends are the closest, followed by followers, friends,
 and finally users who are just mentioned.
@@ -82,8 +84,6 @@ user and not a celebrity.
 If they follow someone, it might be a celebrity; however, if someone follows
 them, it is probably someone who knows them.
 
-\subsection{What is the distribution of contacts?}
-
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_types_norm.pdf}
@@ -94,6 +94,8 @@ Figure~\ref{fig:EdgeTypesCuml}.
 }
 \label{fig:EdgeTypes}
 \end{figure}
+
+\subsection{What is the distribution of contacts?}
 
 To understand the distribution of contacts, we created a histogram of the distances between various types of contacts.
 We sorted the distances to contacts into 160 logarithmically
@@ -129,9 +131,6 @@ In section~\ref{sec:model}, we use this idea that there are two types of
 contacts to build a predictive location model based on social ties.
 
 
-\subsection{Does the number of friends and followers a person have affect how
-close they are?}
-
 \begin{figure*}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_counts.pdf}
@@ -141,6 +140,9 @@ friends or followers tend to be further away.
 }
 \label{fig:EdgeCounts}
 \end{figure*}
+
+\subsection{Does the number of friends and followers a person have affect how
+close they are?}
 
 Since the primary goal of this research is to predict the location of users, we
 focus our attention on the number of friends and followers a contact has rather
@@ -174,8 +176,6 @@ accounts which are useless for location prediction.
 
 aoeu aoeu.
 
-\subsection{Are users closer to people they communicate with?}
-
 \ifdefined\THESIS
     \begin{figure*}[tb]
     \centering
@@ -192,11 +192,11 @@ aoeu aoeu.
 \begin{table*}[tb]
 \centering
 \begin{tabular}{l | r r | r r | r r | r r | r r}
-    & \multicolumn{2}{|c}{Both mention}
-    & \multicolumn{2}{|c}{Target mentions}
-    & \multicolumn{2}{|c}{Contact mentions}
-    & \multicolumn{2}{|c}{Both ignore}
-    & \multicolumn{2}{|c}{Overall} \\
+    & \multicolumn{2}{|c}{both mention}
+    & \multicolumn{2}{|c}{target mentions}
+    & \multicolumn{2}{|c}{contact mentions}
+    & \multicolumn{2}{|c}{both ignore}
+    & \multicolumn{2}{|c}{overall} \\
     \cline{2-11}
     &local&count&local&count&local&count&local&count&local&count \\
     \hline
@@ -216,6 +216,8 @@ contact.
 }
 \label{tab:ComTypes}
 \end{table*}
+
+\subsection{Are users closer to people they communicate with?}
 
 We looked at the 100 most recent tweets for the geo-located users and one of
 each type of their contacts.
@@ -262,8 +264,6 @@ One challenge to using communication patterns as a source of information for
 location prediction is that the communication patterns that are correlated
 with proximity are rare.
 
-\subsection{Are users closer to private accounts?}
-
 \begin{table}[tbh]
 \centering
 \begin{tabular}{l | r r | r r}
@@ -272,23 +272,32 @@ with proximity are rare.
     \cline{2-5}
     &local&count&local&count \\
     \hline
-    Just Follower & 25\%&204417 & 31\%&21168 \\
     Recip Friend & 37\%&211136 & 41\%&24873 \\
+    Just Follower & 25\%&204417 & 31\%&21168 \\
     Just Friend & 21\%&233849 & 39\%&5228 \\
     Just Mentioned & 18\%&183368 & 35\%&4331 \\
 \end{tabular}
 \caption{
+    Comparison between public accounts and private accounts on Twitter.
     Private accounts tend to be closer.
 }
 \label{tab:EdgeTypesProt}
 \end{table}
 
-Like many social networks, Twitter allows users to mark their account as
-protected. The specifics differ from network to network, but in Twitter's case
-a user has to be approved to follow a protected user.
+\subsection{Are users closer to private accounts?}
+
+Like many social networks, Twitter allows users to control the privacy settings
+on their account.
+%
+The specifics differ from network to network, but in Twitter's case
+a user can make their account private which means followers have to get
+permission to follow the account.
+%
 There are demographic differences between public and protected accounts.
+%
 For example, Gilbert \cite{gilbert2008network} demonstrates that rural users
 are more likely to make their accounts private than public accounts.
+%
 In the case of protected accounts on Twitter, basic information
 about their profile such as their location and the number of friends and
 followers is public, but their friends list, followers list, and the text of
@@ -304,20 +313,21 @@ reciprocal friends.
 On the other hand, if a protected account follows the geo-located user, they
 are only slightly more likely to be nearby.
 
-\subsection{If two of your friends live near each other, does that increase the
-chance that they live near you?}
-
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/near_triads.pdf}
 \caption{
 Comparison between distance to a mutual friend, labeled ``our'', and someone
 who is not a mutual friend, labeled ``my''.
-The figure in the upper-left corner shows the shape of the social graph we used
-to create this graph.
+If two contacts are mutual friends and live near each other, a target user is
+more likely to live near them than two contacts who live nearby but are not
+mutual friends.
 }
 \label{fig:NearTriads}
 \end{figure}
+
+\subsection{If two of your friends live near each other, does that increase the
+chance that they live near you?}
 
 In this section, we turn our attention to triangles of users.
 Finding useful relationships between the edges of a social triangle is tricky
@@ -327,51 +337,48 @@ that if two users are 1000 miles apart, then the third member of the triangle
 has to be at least 500 miles from one of the other two.
 Since this isn't a useful result, we designed a more complex experiment to
 analyze the relationship between the sides of the triangle.
-A script searched for a specific pattern in the social network of the
-reciprocal friends.  It needed four users who fit the following criteria:
+A script searched for a specific pattern in the social network of
+the target user's reciprocal friends: two people who were friends with each
+other and a third person who had no connection with the other two:
+
+\begin{center}
+\includegraphics[width=0.3\linewidth]{figures/near_triads_dia.pdf}
+\end{center}
+
+To help label the four users, we describe this social graph from the
+perspective of the target user:
+
 \begin{itemize}
-\item ``me'' is the geo-located user
-\item ``you'' is reciprocal friends with ``me''
+\item ``me'' is the target user
+\item ``you'' is the contact who is reciprocal friends with ``me''
 \item ``my'' has no relationship with ``you'' and is reciprocal friends with ``me''
 \item ``our'' is reciprocal friends with both ``me'' and ``you''
 \end{itemize}
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.4\linewidth]{figures/near_triads_dia.pdf}
-\label{fig:NearTriadsDia}
-\end{figure}
-
-\emph{integrate figure with text}
-
 We found this pattern for 147669 of the geo-located users.
+%
 If a user had multiple instances of this pattern, it picked one of them
 randomly so that particular users would not bias the results.
-Since our crawler only retrieved friend and follower information for at most
-seven reciprocal friends per user, it is reasonable to assume that this pattern
+%
+Since our crawler only retrieved friend and follower information for a few
+reciprocal friends per user, it is reasonable to assume that this pattern
 is much more common, but the sample is more than enough data to draw some
 conclusions.
 
-Figure~\ref{fig:NearTriads} shows a comparison between the ``my'' users and the
-``our'' users.
+Figure~\ref{fig:NearTriads} shows a comparison between distances to the ``my''
+users and the ``our'' users.
+%
 For each of the ``my'' users and the ``our'' users, we put them into one of
 four logarithmically scaled bins based on their distance from the ``you'' user.
-Then we plot the CDF for the distance to ``me'' for each user in the set. This
-allows us to investigate the effect of mutual friendship on distance.
+%
+Then we plot the CDF for the distance from the target to the ``my'' and ``our'' users.
+%
+This allows us to investigate the effect of mutual friendship on distance.
 We report one very simple result: if two of your friends are close (within 10
 miles), then whether they know each other or not is strongly affects how close
-you are to them. If they are farther apart, it doesn't matter.
-
-\subsection{Are some users closer to all of their friends and followers?}
-
-\begin{figure}[tb]
-\centering
-\includegraphics[width=\linewidth]{figures/locals_cmp.pdf}
-\caption{
-    FIXME: caption
-}
-\label{fig:LocalCmp}
-\end{figure}
+you are to them.
+%
+If they are farther apart, it doesn't matter.
 
 \begin{figure}[tb]
 \centering
@@ -380,26 +387,58 @@ you are to them. If they are farther apart, it doesn't matter.
 The colored lines show the distance to contacts split into groups based on the
 proportion of the contact's friends and followers who live near the contact.
 The dotted line shows the distance to contacts who have no locatable contacts.
+This graph is based on at most 10 leafs per contact.
+Contacts who have a high proportion of nearby leafs are much more likely to
+live near the target user.
 }
 \label{fig:Local10}
 \end{figure}
 
-\emph{reference li2012towards}
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/locals_cmp.pdf}
+\caption{
+    Distances to contacts with a local contact ratio better than the median LCR
+    for several numbers of leafs.
+    Although looking at more leafs makes users with a high LCR more likely to
+    be nearby, it probably doesn't justify how long it takes.
+}
+\label{fig:LocalCmp}
+\end{figure}
+
+\subsection{Are some users closer to all of their friends and followers?}
+\label{sec:closer}
 
 In the previous sections we only looked at the contacts of the geo-located
-users. In this section we will go two steps out on the social graph and
+users.
+%
+In this section we will go two steps out on the social graph and
 investigate the friends-of-friends.
 %
-For each of the contacts we calculated the distance to at most fifty followers.
+We want to know if some users are more localized than others.
+
+\textbf{Local Contact Ratio}(LCR) is the fraction of a user's followers who live
+within 25 miles of the contact.
 %
-\textbf{Local Contact Ratio} is the fraction of those followers who lived within 25 miles
-of the contact.
-%
-Around one in ten contacts did not have any followers with a location they were
+Around one in ten contacts did not have any followers with a location--they were
 treated as a separate group.
 %
 We repeated this procedure on the contacts' friends to produce
 Figure~\ref{fig:EdgeCounts}.
+
+\emph{Here's my formula, math me, maybe?}
+
+In \cite{li2012towards}, the authors model the probability distribution of
+user's followers using a gaussian distribution, and use this to build a
+location prediction system.
+%
+There are many other ways to analyze the leafs: average distance to the leafs,
+median distance to the leafs, fitting the distances to a curve such as a
+gaussian.
+%
+We are looking at location prediction anywhere in the world, which means
+contacts may be 10,000 miles away, and a location 10,000 miles away is nearly
+as bad as a loctation 1000 miles away.
 
 The figure shows that some users are much more local than other users.
 For example, a local newspaper may have thousands of followers and few friends,
@@ -409,7 +448,20 @@ of location, but in reality it is a great predictor.
 
 Of the factors we have investigated, this is the most strongly correlated with
 distance.
+\emph{Can you prove this?}
 One problem with this technique is that it is somewhat expensive to deal with
-the profiles two steps out on the social graph.
-It may be possible to achieve similar results by visiting fewer
-friends-of-friends.
+the large number of profiles two steps out on the social graph.
+%
+Our crawler originally looked at 100 leafs per contact because Twitter's API
+will return up to 100 profiles at a time, but .
+%
+In Figure~\ref{fig:LocalCmp}, we compare contacts with a high LCR calculated
+using at most 100 leafs per contact to at most 10 leafs per contact.
+%
+The percentage of contacts within 25 miles with a good LCR based on 10 leafs,
+20 leafs, and 100 leafs was 53\%, 55\%, and 58\%, respectively.
+%
+All of these are noticably closer than reciprocal friends who are within 25
+miles 38\% of the time.
+
+

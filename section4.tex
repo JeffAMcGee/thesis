@@ -13,11 +13,6 @@ it must be fast and scalable.
 \subsection{Edge Length Prediction}
 
 \emph{
-  FIXME: Need to define what a regression tree is or give more intuition /
-  cites. Why did we pick it and not something else?
-}
-
-\emph{
   FIXME: The method is written in more of an engineering we did this, then we
   did this, then we did that, style. I would suggest moving to the front the
   big-picture intuition -- how you want to use the social network to refine
@@ -26,9 +21,15 @@ it must be fast and scalable.
   the challenges to doing that ... e.g., how do we estimate edge lengths? What
   are the problems with estimating edge lengths? errors? etc. how do we
   estimate the user's location given his contacts? what are the challenges?
+  %
   The main idea is to give the high-level goal, the challenges to achieving
   that goal, then the details of how you overcome the challenges to achieve the
   goal.
+}
+
+\emph{
+  FIXME: Need to define what a regression tree is or give more intuition /
+  cites. Why did we pick it and not something else?
 }
 
 Before we predict a user's location, we need a way to estimate the probability
@@ -132,10 +133,19 @@ for friendship and distance presented in \cite{backstrom2010find}.
 \subsection{System}
 We used this model to build a Maximum Likelihood Estimator.
 
+\begin{algorithm}[tbh]
+  \SetAlgoLined
+  %\KwData{this text}
+  %\KwResult{how to write algorithm with \LaTeX2e }
+  randomly pick up to 25 of the user's contacts\;
+  initialization\;
+  \ForEach{contact in contacts}{
+    }
+  \caption{How to write algorithms}
+\end{algorithm}
 
 We use this to create a simple procedure for estimating the location for a user:
 \begin{enumerate}
-\item Randomly pick up to 25 of the user's contacts.
 \item For each of those contacts:
 \begin{enumerate}
     \item Geocode the location field and calculate the the predicted error.
@@ -153,4 +163,5 @@ target user lives at that location using the maximum likelihood estimator.
 
 FIXME: formula for MLE, and description
 FIXME: more here
+FIXME: non-independent as seen in~\ref{sec:closer}
 
