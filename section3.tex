@@ -26,7 +26,7 @@ In this section, we investigate how various types of contacts correlate with
 proximity.
 %
 All of the analysis in this section was done on the contacts of the 249584
-geo-located users.
+target users.
 %
 Contacts with a predicted location error that was greater than or equal to 1000
 miles were filtered out.
@@ -35,7 +35,7 @@ miles were filtered out.
 \centering
 \includegraphics[width=\linewidth]{figures/edge_types_cuml.pdf}
 \caption{
-CDF of distance from geo-located users to users they have some contact
+CDF of distance from target users to users they have some contact
 with.
 %
 Reciprocal friends tend to be closer than other types of friendships.
@@ -47,7 +47,7 @@ Reciprocal friends tend to be closer than other types of friendships.
 \label{sec:EdgeTypes}
 
 Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
-function(CDF) of the distance between a geo-located user and several types of
+function(CDF) of the distance between a target user and several types of
 contacts.
 %
 Distance is plotted on a logarithmic scale to show both local and
@@ -78,7 +78,7 @@ should be identical, they are not.
 Celebrity and news accounts on Twitter often have large numbers of followers,
 but they normally do not follow a large number of users.
 %
-Since the geo-located user was selected randomly, they are usually an average
+Since the target user was selected randomly, they are usually an average
 user and not a celebrity.
 %
 If they follow someone, it might be a celebrity; however, if someone follows
@@ -112,7 +112,7 @@ These peeks occur at the distances between major population centers.
 There is a local maximum in all the graphs at around 8 miles.
 %
 Since the contacts often list the name of their town, there is a small distance
-between the geocoded location of the town and the location of the geo-located
+between the geocoded location of the town and the location of the target
 user's tweets.
 %
 There aren't as many contacts in the 30 to 150 mile range, but then after 150
@@ -146,7 +146,7 @@ close they are?}
 
 Since the primary goal of this research is to predict the location of users, we
 focus our attention on the number of friends and followers a contact has rather
-than the numbers for the geo-located user.
+than the numbers for the target user.
 %
 We took each of the reciprocal friendships what we looked at in
 Section~\ref{sec:EdgeTypes} and put them into log-scaled bins based on their
@@ -181,7 +181,7 @@ aoeu aoeu.
     \centering
     \includegraphics[width=\linewidth]{figures/com_types.pdf}
     \caption{
-    CDF of the distance between a geo-located user and various types of contacts
+    CDF of the distance between a target user and various types of contacts
     piloted on a logarithmic scale.
     }
     \label{fig:ComTypes}
@@ -206,10 +206,10 @@ aoeu aoeu.
     Just Mentioned & 18\%&182978 & 36\%&4721 & & 0 & & 0 & 18\%&187699 \\
 \end{tabular}
 \caption{
-If geo-located users interact with their contacts, then they are more likely to
+If target users interact with their contacts, then they are more likely to
 live nearby.
 %
-In this table, ``I'' refers to the geo-located user. ``You'' refers to their
+In this table, ``I'' refers to the target user. ``You'' refers to their
 contact.
 %
 \emph{Should I highlight cells in the table?, Should I color-code?}
@@ -219,18 +219,18 @@ contact.
 
 \subsection{Are users closer to people they communicate with?}
 
-We looked at the 100 most recent tweets for the geo-located users and one of
-each type of their contacts.
+We looked at the 100 most recent tweets for the targets and one of their
+contacts for each type of their contacts.
 %
-The edges were divided into groups based on whether the geo-located user
-mentioned the contact and whether the contact mentioned the geo-located user.
+The edges were divided into groups based on whether the target user
+mentioned the contact and whether the contact mentioned the target user.
 %
 For each of the groups, we calculated the the percentage of contacts who are
 live within 25 miles of the targets and the number of edges in that group.
 %
 This is shown in Table~\ref{tab:ComTypes}.
 %
-Since contacts who were just mentioned were mentioned by the geo-located
+Since contacts who were just mentioned were mentioned by the target
 user by definition, the contact mentions and both ignore table cells are
 empty.
 
@@ -310,7 +310,7 @@ Since users generally only allow people they know to follow a protected
 account, this brings the users almost as close together as if they were
 reciprocal friends.
 %
-On the other hand, if a protected account follows the geo-located user, they
+On the other hand, if a protected account follows the target user, they
 are only slightly more likely to be nearby.
 
 \begin{figure}[tb]
@@ -355,7 +355,7 @@ perspective of the target user:
 \item ``our'' is reciprocal friends with both ``me'' and ``you''
 \end{itemize}
 
-We found this pattern for 147669 of the geo-located users.
+We found this pattern for 147669 of the target users.
 %
 If a user had multiple instances of this pattern, it picked one of them
 randomly so that particular users would not bias the results.
@@ -409,7 +409,7 @@ live near the target user.
 \subsection{Are some users closer to all of their friends and followers?}
 \label{sec:closer}
 
-In the previous sections we only looked at the contacts of the geo-located
+In the previous sections we only looked at the contacts of the target
 users.
 %
 In this section we will go two steps out on the social graph and

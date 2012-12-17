@@ -43,13 +43,13 @@ The other arrows show who follows whom.
 Any given contact can be categorized into precisely one of these four disjoint
 sets:
 \begin{description}
-\item[reciprocal friend] The geo-located user follows this user and is followed
+\item[reciprocal friend] The target user follows this user and is followed
     back.
-\item[just friend] The geo-located user follows this user and is not followed
+\item[just friend] The target user follows this user and is not followed
     back.
-\item[just follower] The geo-located user is followed by this user, but does
+\item[just follower] The target user is followed by this user, but does
     not follow them.
-\item[just mentioned] The users do not follow each other, but the geo-located
+\item[just mentioned] The users do not follow each other, but the target
     user mentioned the name of the other user in a tweet.
 \end{description}
 
@@ -62,10 +62,13 @@ We created labels for the seed users and each of the steps along the way:
 \item[geo-located users] These users choose to use Twitter's location sharing
     features, which means that we have precise latitude and longitude
     coordinates for their location.
+\item[target users] These are a randomly chosen subset of the geo-loacted users
+    who have at least one contact.
 \item[located contacts] These are the 25 randomly chosen contacts of
-    geo-located users who have locations that we can decode.
-\item[leafs] These are at most 100 of the contacts of the located contacts.
-    The geo-located users were excluded to make the graph acyclic.
+    target users who have locations that we can decode.
+\item[leaves] These are at most 100 of the contacts of the located contacts.
+    The target users were excluded so that we could investigate the
+    relationships between distances to leaves and target users.
 \end{description}
 
 
@@ -98,7 +101,7 @@ To enable parallelization, we divided those users into 100 groups based on
 the two least significant digits in their Twitter user id, and randomly selected
 2500 users from each of the groups.
 %
-This gave us the 250,000 geo-located users that we planned to use for our
+This gave us the 250,000 target users that we planned to use for our
 analysis and experimentation.
 %
 After crawling these users' friends and followers, we found 416 users who did
@@ -111,7 +114,7 @@ experimentation.
 
 \emph{How many contacts per target user?}
 
-For all of those geo-located users, the crawler used Twitter's API to download
+For all of the target users, the crawler used Twitter's API to download
 the users' 100 most recent tweets, a list of friend ids, and a list of follower ids.
 The crawler also downloaded the profiles for up to 100 friends, followers, and
 people they mention in their tweets.
@@ -129,7 +132,7 @@ contacts.
 %
 Since the Twitter social network graph has a large strongly connected
 component, there are a significant number of users who are contacts or leafs for
-more than one geo-located users.
+more than one target user.
 %
 In the end, we collected just over 73 million Twitter user profiles.
 
@@ -139,17 +142,16 @@ In the end, we collected just over 73 million Twitter user profiles.
     Data Set & Size & Description \\
     \hline
     % 249,584
-    \emph{is target users better than geo-located?}
-    Selected Geo-located Users & 250 thousand & A randomly selected subset of
+    Target 250 thousand & A randomly selected subset of
     the geolocated users used for generating all the figures in
     section~\ref{sec:analysis} and   \\
     % 894,617
     Geocoding Training & 895 thousand & geo-located users who where not
-    selected but who did fill out the location field of their profile 
+    target but who did fill out the location field of their profile
     \emph{this data set needs a better name}\\
     % 10,081,957
-    Contacts & 10 million & Friends, followers, and mentions of the selected
-    geo-located users \\
+    Contacts & 10 million & Friends, followers, and mentions of the target
+    users \\
     % 71,596,805 minus some of 250k
     Leafs & 71 million & The contacts of the contacts \\
 \end{tabular}

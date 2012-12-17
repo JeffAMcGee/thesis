@@ -55,7 +55,7 @@ The regression tree was trained on several of the features from the previous
 section that are correlated with users living near each other:
 \begin{itemize}
 \item the type of contact
-\item if the geo-located user mentioned the contact
+\item if the target user mentioned the contact
 \item if the contact had a protected account
 \item the contact's follower count
 \item the quality of the contact's lactation
@@ -103,7 +103,7 @@ First, we needed a model for the density of Twitter users.
     pContact(group,dist) = \frac{nebrEdges(group,dist)}{strangeEdges(dist) \times numberGroups}
 \]
 
-We calculated the distance between every geo-located user and every contact
+We calculated the distance between every target user and every contact
 (even for contacts and users who had no relationship).
 %
 In order to speed up this calculation, we divided the world into a \.1 degree
