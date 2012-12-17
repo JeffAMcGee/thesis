@@ -7,37 +7,50 @@
 Based on the questions we answered in the previous section, we have enough
 information to build a system for location prediction, which we call
 FriendlyLocation.
-Since the location prediction system will be run on a large number of of users,
+Since the location prediction system will be run on a large number of users,
 it must be fast and scalable.
 
 \subsection{Edge Length Prediction}
 
-\emph{
-  FIXME: The method is written in more of an engineering we did this, then we
-  did this, then we did that, style. I would suggest moving to the front the
-  big-picture intuition -- how you want to use the social network to refine
-  location estimates, and how you will achieve that by estimating edge lengths,
-  considering neighbors, etc. Give us the flavor up front. Then say what are
-  the challenges to doing that ... e.g., how do we estimate edge lengths? What
-  are the problems with estimating edge lengths? errors? etc. how do we
-  estimate the user's location given his contacts? what are the challenges?
-  %
-  The main idea is to give the high-level goal, the challenges to achieving
-  that goal, then the details of how you overcome the challenges to achieve the
-  goal.
-}
+We need to seperate the best contacts, who are likely to be nearby, from
+bad contacts who are likely to be far away.
+The factors that we investigated in the previous section indicate when someone
+is likely to be nearby, but they don't guarantee it.
+There are pairs of users who are reciprocal friends with a small number of
+followers, a high local contact ratio, have conversations, and still live on
+opposite sides of the globe.
+Another problem with this data is that some of these factors are correlated
+with each other; users with lots of followers tend to have a low local contact
+ratio.
+Finally, celebrity accounts may be useless for determining which city a person
+is from, but they might still suggest the user's home continent.
 
-\emph{
-  FIXME: Need to define what a regression tree is or give more intuition /
-  cites. Why did we pick it and not something else?
-}
+In \cite{backstrom2010find}, the authors present a model of the relationship
+between distance and friendship that treats all of the edges the same.
+%
+We can improve the accuracy of this model by weighting some edges more strongly
+than others.
+%
+We have several pieces of information, and want to map it to a single, extremely
+noisy value: the distance to a contact.
+%
+This is a regression problem, but several of the input values are correlated,
+binary, or non-linear, so linear regression is unlikely to work well.
+%
+\emph{more on why not other regression models?}
+%
+We chose to use a decision tree regressor based on the CART algorithm
+(classification and regression trees) to distiguish the best edges from the
+worst.
+A decsision tree regressor works similiar to the well-known decision tree
+classifier, except that it produces real numbers as output instead of discrete
+classes.
+During training, the training data is recursivly split based on the input
+variable with the most predictive power to build a binary tree.
+Each of the internal nodes have a cutoff for one of the input variables, and
+the leaves of the tree have a predicted value.
+\emph{This needs a better explaination or none at all.}
 
-Before we predict a user's location, we need a way to estimate the probability
-that a geo-located user is at a location given the position of their contact.
-%
-To achieve this, we trained a regression tree to predict the distance between a
-user and a contact.
-%
 The regression tree was trained on several of the features from the previous
 section that are correlated with users living near each other:
 \begin{itemize}
@@ -54,8 +67,12 @@ trained the regressor to predict the log of the distance.
 %
 The tree regressor was configured to not split leafs with fewer than 1000 data
 points to prevent over-fitting.
-
-\emph{this needs more, but I'm not sure what.}
+%
+The predictor does not do a great job of predicting the actual distance to a
+contact; there's simply too much noise.
+%
+However, it does do an excelent job of seperating the closest pairs of users
+from the most distant pairs as we will show in the next section.
 
 
 \subsection{Model}
