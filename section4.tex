@@ -150,15 +150,14 @@ for friendship and distance presented in \cite{backstrom2010find}.
 \subsection{System}
 We used this model to build a Maximum Likelihood Estimator.
 
-\begin{algorithm}[tbh]
-  \SetAlgoLined
-  %\KwData{this text}
-  %\KwResult{how to write algorithm with \LaTeX2e }
-  randomly pick up to 25 of the user's contacts\;
-  initialization\;
-  \ForEach{contact in contacts}{
-    }
-  \caption{How to write algorithms}
+
+\begin{algorithm}
+  \caption{FriendlyLocation \label{alg:friendloc}}
+  \begin{algorithmic}[0]
+  \ForAll{$contact \in contacts$}
+   \State $sum\gets sum+i$
+  \EndFor
+  \end{algorithmic}
 \end{algorithm}
 
 We use this to create a simple procedure for estimating the location for a user:
