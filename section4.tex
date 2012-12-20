@@ -10,7 +10,7 @@ FriendlyLocation.
 Since the location prediction system will be run on a large number of users,
 it must be fast and scalable.
 
-\subsection{Edge Length Prediction}
+\section{Edge Length Prediction}
 
 We need to seperate the best contacts, who are likely to be nearby, from
 bad contacts who are likely to be far away.
@@ -92,7 +92,7 @@ However, it does do an excelent job of seperating the closest pairs of users
 from the most distant pairs as we will show in the next section.
 
 
-\subsection{Model}
+\section{Model}
 \label{sec:model}
 
 In this section, we build a model for the probability that a user, who we refer
@@ -186,7 +186,7 @@ into one group instead of ten equal groups, this would reduce to the model
 for friendship and distance presented in \cite{backstrom2010find}.
 
 
-\subsection{System}
+\section{System}
 We used this model to build a Maximum Likelihood Estimator.
 
 

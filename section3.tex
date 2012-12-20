@@ -20,7 +20,7 @@ target users.
 Contacts with a predicted location error that was greater than or equal to 1000
 miles were filtered out.
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_types_cuml.pdf}
 \caption{
@@ -32,7 +32,7 @@ Reciprocal friends tend to be closer than other types of friendships.
 \label{fig:EdgeTypesCuml}
 \end{figure}
 
-\subsection{What type of contact is closest?}
+\section{What type of contact is closest?}
 \label{sec:EdgeTypes}
 
 Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
@@ -73,7 +73,7 @@ user and not a celebrity.
 If they follow someone, it might be a celebrity; however, if someone follows
 them, it is probably someone who knows them.
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_types_norm.pdf}
 \caption{
@@ -84,7 +84,7 @@ Figure~\ref{fig:EdgeTypesCuml}.
 \label{fig:EdgeTypes}
 \end{figure}
 
-\subsection{What is the distribution of contacts?}
+\section{What is the distribution of contacts?}
 
 To understand the distribution of contacts, we create a histogram of the
 distances between various types of contacts.
@@ -121,7 +121,7 @@ In section~\ref{sec:model}, we use this idea that there are two types of
 contacts to build a predictive location model based on social ties.
 
 
-\begin{figure*}[tb]
+\begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_counts.pdf}
 \caption{
@@ -129,9 +129,9 @@ A comparison between number of followers and proximity---people who have more
 friends or followers tend to be further away.
 }
 \label{fig:EdgeCounts}
-\end{figure*}
+\end{figure}
 
-\subsection{Does the number of friends and followers a person have affect how
+\section{Does the number of friends and followers a person have affect how
 close they are?}
 
 Since the primary goal of this research is to predict the location of users, we
@@ -167,7 +167,7 @@ accounts which are useless for location prediction.
 aoeu aoeu.
 
 \ifdefined\THESIS
-    \begin{figure*}[tb]
+    \begin{figure}[tbh]
     \centering
     \includegraphics[width=\linewidth]{figures/com_types.pdf}
     \caption{
@@ -175,11 +175,11 @@ aoeu aoeu.
     ploted on a logarithmic scale.
     }
     \label{fig:ComTypes}
-    \end{figure*}
+    \end{figure}
 \fi
 
 
-\begin{table*}[tb]
+\begin{table}[tbh]
 \centering
 \begin{tabular}{l | r r | r r | r r | r r | r r}
     & \multicolumn{2}{|c}{both mention}
@@ -205,9 +205,9 @@ contact.
 \emph{Should I highlight cells in the table?, Should I color-code?}
 }
 \label{tab:ComTypes}
-\end{table*}
+\end{table}
 
-\subsection{Are users closer to people they communicate with?}
+\section{Are users closer to people they communicate with?}
 
 We look at the 100 most recent tweets for the targets and one of their
 contacts for each type of their contacts.
@@ -274,7 +274,7 @@ with proximity are rare.
 \label{tab:EdgeTypesProt}
 \end{table}
 
-\subsection{Are users closer to private accounts?}
+\section{Are users closer to private accounts?}
 
 Like many social networks, Twitter allows users to control the privacy settings
 on their account.
@@ -303,7 +303,7 @@ reciprocal friends.
 On the other hand, if a protected account follows the target user, they
 are only slightly more likely to be nearby.
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/near_triads.pdf}
 \caption{
@@ -316,7 +316,7 @@ mutual friends.
 \label{fig:NearTriads}
 \end{figure}
 
-\subsection{If two of your friends live near each other, does that increase the
+\section{If two of your friends live near each other, does that increase the
 chance that they live near you?}
 
 In this section, we turn our attention to triangles of users.
@@ -370,7 +370,7 @@ you are to them.
 %
 If they are farther apart, it doesn't matter.
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/locals_10.pdf}
 \caption{
@@ -384,7 +384,7 @@ live near the target user.
 \label{fig:Local10}
 \end{figure}
 
-\begin{figure}[tb]
+\begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/locals_cmp.pdf}
 \caption{
@@ -396,7 +396,7 @@ live near the target user.
 \label{fig:LocalCmp}
 \end{figure}
 
-\subsection{Are some users closer to all of their friends and followers?}
+\section{Are some users closer to all of their friends and followers?}
 \label{sec:closer}
 
 In the previous sections we only looked at the contacts of the target
