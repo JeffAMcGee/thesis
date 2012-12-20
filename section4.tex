@@ -14,14 +14,18 @@ it must be fast and scalable.
 
 We need to seperate the best contacts, who are likely to be nearby, from
 bad contacts who are likely to be far away.
+%
 The factors that we investigated in the previous section indicate when someone
 is likely to be nearby, but they don't guarantee it.
+%
 There are pairs of users who are reciprocal friends with a small number of
-followers, a high local contact ratio, have conversations, and still live on
+followers, a high local friend ratio, have conversations, and still live on
 opposite sides of the globe.
+%
 Another problem with this data is that some of these factors are correlated
-with each other; users with lots of followers tend to have a low local contact
+with each other; users with lots of followers tend to have a low friend contact
 ratio.
+%
 Finally, celebrity accounts may be useless for determining which city a person
 is from, but they might still suggest the user's home continent.
 
@@ -34,32 +38,45 @@ than others.
 We have several pieces of information, and want to map it to a single, extremely
 noisy value: the distance to a contact.
 %
-This is a regression problem, but several of the input values are correlated,
-binary, or non-linear, so linear regression is unlikely to work well.
+This could be looked at as a classification problem where you want to classify
+edges as local or non-local, but the problem is there is a smooth continuum
+from local to non-local, and semi-local friends can be useful for location
+prediction.
+%
+As a result, we model this as a regression problem.
+%
+Since most of the input features are correlated and either binary or non-linear,
+linear regression is unlikely to work well.
 %
 \emph{more on why not other regression models?}
 %
 We chose to use a decision tree regressor based on the CART algorithm
 (classification and regression trees) to distiguish the best edges from the
 worst.
+%
 A decsision tree regressor works similiar to the well-known decision tree
 classifier, except that it produces real numbers as output instead of discrete
 classes.
+%
 During training, the training data is recursivly split based on the input
 variable with the most predictive power to build a binary tree.
-Each of the internal nodes have a cutoff for one of the input variables, and
-the leaves of the tree have a predicted value.
-\emph{This needs a better explaination or none at all.}
+%
+Each of the internal nodes of this tree have a cutoff for one of the input
+variables, and the leaves of the tree have a predicted value.
+%
+\emph{Does this need a better explaination? Can we assume people know decision
+trees?}
 
 The regression tree was trained on several of the features from the previous
 section that are correlated with users living near each other:
 \begin{itemize}
 \item the type of contact
-\item if the target user mentioned the contact
+\item if the target mentioned the contact
+\item if the contact mentioned the target
 \item if the contact had a protected account
-\item the contact's follower count
-\item the quality of the contact's lactation
-\item the contact's local contact ratio
+\item the contact's follower and friend count
+\item the PLE of the contact's location
+\item the contact's local friend ratio
 \end{itemize}
 %
 Since the distances between users varied by several orders of magnitude, we
@@ -82,32 +99,54 @@ In this section, we build a model for the probability that a user, who we refer
 to as the target user, lives at a specific location given the approximate
 location of his contacts.
 %
-In the previous sections, we looked at the probability that a contact lived a
+In the previous sections, we looked at the probability that a contact lives a
 certain distance from a given user.
 %
 Location prediction requires the probability that the user lives at a specific
 location.
 
+MAGIC
+
+\[
+\pContact{_i}(dist) = \frac{\nebrEdges{_i}(dist)}{\stgrEdges(dist)}
+\]
 
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
 \caption{
-After splitting edges into groups based their predicted distance, each group was fit to a curve. Here are four of the ten curves.
+After splitting edges into groups based on their predicted distance, each group
+was fit to a curve. Here are four of the ten curves and their curves of best
+fit. The other six curves of best fit are shown as faint dotted lines. The
+decision tree does a reasonable job of seperating the best edges from the worst
+edges.
 }
 \label{fig:NearProbFit}
 \end{figure}
 
-First, we needed a model for the density of Twitter users.
+
+We ran the decsision tree regressor on the training data to create a set of
+tuples $T = (d_i, p_i)$ for $d_i \in D$ and $p_i \in P$ where $d_i$ is the
+actual length of the edge, and $p_i$ is the value predicted by the decision
+tree.
+%
+We split $T$ into $k$ quantiles on the boundaries $\{q_0,\cdots,q_k\}$ as
+follows:
+
 \[
-    pContact(group,dist) = \frac{nebrEdges(group,dist)}{strangeEdges(dist) \times numberGroups}
+    q_i =
+    \begin{cases}
+        P_{(1+\lfloor i|T|/k \rfloor)}, & i=<k \\
+        \infty & i=k
+    \end{cases}
 \]
 
-We calculated the distance between every target user and every contact
+First, we needed a model for the density of Twitter users.
+We calculate the distance between every target user and every contact
 (even for contacts and users who had no relationship).
 %
-In order to speed up this calculation, we divided the world into a \.1 degree
-by \.1 degree grid, and counted the number of of contacts in each of the spots
+In order to speed up this calculation, we divide the world into a \.1 degree
+by \.1 degree grid, and count the number of of contacts in each of the spots
 on the grid.
 %
 We took the distances between users and sorted them into 360 logarithmically
@@ -118,7 +157,7 @@ the grid boxes, and therefore, noisy. Distances greater than 10,000 miles are
 on the opposite side of the world.)
 %
 We fit this segment to a power law curve, which gives us a way to estimate
-strangeEdges.
+$\stgrEdges$.
 
 % Put more about fit_stgrs
 The edges were sorted by the distance that the tree regressor predicted and
@@ -128,12 +167,12 @@ We split the edges in these groups into 480 logarithmically-scaled bins from 1
 to 10,000 miles based on the length of the edge.
 %
 We divided the number of edges that actually existed at each distance by the
-number of edges that could have existed as predicted by strangeEdges.
+number of edges that could have existed as predicted by $\stgrEdges$.
 %
 We fit it to this curve:
 %
 \[
-pContact(group, dist) = a_{group} \times (b_{group}+dist)^{-c_{group}}
+\pContact(g, dist) = a_{g} \times (b_{g}+dist)^{-c_{g}}
 \]
 
 Four of the ten curves from one of the five evaluation groups and their lines

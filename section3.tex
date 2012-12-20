@@ -5,17 +5,6 @@
     \label{sec:analysis}
 \fi
 
-% FIXME: For each subsection finding (e.g., "What is the distribution of
-% contacts?") you need to add more intuition/analysis. Walk the reader through
-% each figure. Highlight some actual numbers from the figures in the text. Tell
-% us what those numbers mean. Tell me what I should learn. You do some of this
-% already, but it really needs to be expanded. Remember, your reader is not as
-% on top of this material as you are, so you need to do more handholding.
-
-% FIXME: For all figs, you might want to add a takeaway sentence in the
-% caption. So if a reader only looks at the fig (without following along in the
-% text), they can learn something.
-
 Every user who has multiple contacts will have some contacts who are much
 closer than others.
 %
@@ -78,7 +67,7 @@ should be identical, they are not.
 Celebrity and news accounts on Twitter often have large numbers of followers,
 but they normally do not follow a large number of users.
 %
-Since the target user was selected randomly, they are usually an average
+Since the target user is selected randomly, they are usually an average
 user and not a celebrity.
 %
 If they follow someone, it might be a celebrity; however, if someone follows
@@ -97,8 +86,9 @@ Figure~\ref{fig:EdgeTypesCuml}.
 
 \subsection{What is the distribution of contacts?}
 
-To understand the distribution of contacts, we created a histogram of the distances between various types of contacts.
-We sorted the distances to contacts into 160 logarithmically
+To understand the distribution of contacts, we create a histogram of the
+distances between various types of contacts.
+We sort the distances to contacts into 160 logarithmically
 scaled bins (40 bins for each power of 10).
 %
 Figure~\ref{fig:EdgeTypes} shows the result of plotting the histogram.
@@ -182,7 +172,7 @@ aoeu aoeu.
     \includegraphics[width=\linewidth]{figures/com_types.pdf}
     \caption{
     CDF of the distance between a target user and various types of contacts
-    piloted on a logarithmic scale.
+    ploted on a logarithmic scale.
     }
     \label{fig:ComTypes}
     \end{figure*}
@@ -219,13 +209,13 @@ contact.
 
 \subsection{Are users closer to people they communicate with?}
 
-We looked at the 100 most recent tweets for the targets and one of their
+We look at the 100 most recent tweets for the targets and one of their
 contacts for each type of their contacts.
 %
-The edges were divided into groups based on whether the target user
+The edges are divided into groups based on whether the target user
 mentioned the contact and whether the contact mentioned the target user.
 %
-For each of the groups, we calculated the the percentage of contacts who are
+For each of the groups, we calculate the the percentage of contacts who
 live within 25 miles of the targets and the number of edges in that group.
 %
 This is shown in Table~\ref{tab:ComTypes}.
@@ -401,7 +391,7 @@ live near the target user.
     Distances to contacts with a local contact ratio better than the median LCR
     for several numbers of leafs.
     Although looking at more leafs makes users with a high LCR more likely to
-    be nearby, it probably doesn't justify how long it takes.
+    be nearby, it probably doesn't justify how long it takes to compute.
 }
 \label{fig:LocalCmp}
 \end{figure}
@@ -417,16 +407,28 @@ investigate the friends-of-friends.
 %
 We want to know if some users are more localized than others.
 
-\textbf{Local Contact Ratio}(LCR) is the fraction of a user's followers who live
-within 25 miles of the contact.
+\textbf{Local Contact Ratio}(LCR) is the fraction of a user's contacts
+who live near the user.
 %
-Around one in ten contacts did not have any followers with a location--they were
-treated as a separate group.
+For a contact at location $l_c$ and a set of their contacts' locations L, we
+formally define LCR as follows:
+\[
+    \LCR(l_c,L) = { |\{ l_i \mid l_i \in L \land |l_i-l_c|<25 \}|
+                    \over |L| }
+\]
 %
-We repeated this procedure on the contacts' friends to produce
-Figure~\ref{fig:EdgeCounts}.
+We picked a cutoff distance of 25 miles to distinguish between local and non-local
+contacts.
+25 miles is as seen in Figure~\ref{fig:EdgeCounts}.
+%
+The distance cutoff is somewhat arbitrary, but it doesn't seem to matter much
+in practice since we are really trying to distinguish between contacts who are
+hundreds of miles away and contacts who live in the same town.
+%
+Around one in ten contacts did not have any contacts with a location from the
+contacts we looked at--they were treated as a separate group.
 
-\emph{Here's my formula, math me, maybe?}
+\emph{Do we want to look at other metrics similar to local contact ratio?}
 
 In \cite{li2012towards}, the authors model the probability distribution of
 user's followers using a gaussian distribution, and use this to build a
@@ -463,5 +465,4 @@ The percentage of contacts within 25 miles with a good LCR based on 10 leafs,
 %
 All of these are noticably closer than reciprocal friends who are within 25
 miles 38\% of the time.
-
 
