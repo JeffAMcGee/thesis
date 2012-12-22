@@ -22,29 +22,27 @@
 
 \indent With the rise of volunteered user location information through services
 like Foursquare, Google Latitude, and Facebook Places, we face unprecedented
-access to the real-world connections among millions of social media users. This
-location information is increasingly incorporated into social media for
+access to the real-world connections among millions of social media users.
+%
+This location information is increasingly incorporated into social media for
 providing localized content, location-aware recommendations, and other
 geo-spatial enabled services.
-In this paper, we investigate the interplay of
-distance and tie strength through an examination of FIXME million geo-encoded
-tweets collected from Twitter and FIXME million user profiles. Concretely, we
-investigate the relationship between the strength of the tie between a pair of
-users, and the distance between the pair. We identify several factors --
-including following, mentioning, and actively engaging in conversations with
-another user -- that can strongly reveal the distance between a pair of users.
-We find a bimodal distribution in Twitter, with one peak around 10 miles from
-people who live nearby, and another peak around 2500 miles(FIXME), further validating
-Twitter's use as both a social network (with geographically nearby friends) and
-as a news distribution network (with very distant relationships).
-
-FIXME: do we really have enough of a bimodal distribution?
-
-Based on these findings, we propose and evaluate a method for predicting
-location for users based purely on an analysis of the user's social network,
-which has great significance for augmenting traditional social media and
-enriching location-based services with more refined and accurate location
-estimates.
-
+%
+In this paper, we investigate the relationship between the strength of the tie
+between a pair of users, and the distance between the pair through an
+examination of over 100 million geo-encoded tweets and
+over 73 million user profiles collected from Twitter.
+%
+Based on this investigation, we identify several factors such as number of
+followers and how the users interact that can strongly reveal the distance
+between a pair of users, and use these factors to train a decsision tree to
+distinguish between users who are likely to live nearby and pairs of users who
+are likely to live in different areas.
+%
+We use the results of this decision tree as the input to a maximum likelihood
+estimator to predict a user's location.
+%
+We find that this proposed method significantly improves the results of
+location estimation relative to a state-of-the-art technique.
 
 \pagebreak{}

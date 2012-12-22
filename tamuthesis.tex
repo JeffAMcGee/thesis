@@ -38,7 +38,20 @@
 \DeclareMathOperator{\median}{median}
 \DeclareMathOperator{\PLE}{PLE}
 \DeclareMathOperator{\LCR}{LCR}
+\DeclareMathOperator{\MLELocation}{MLELocation}
 \DeclareMathOperator{\haversin}{haversin}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\renewcommand{\algorithmicthen}{}
+
+\algnewcommand\algorithmicinput{\textbf{Input:}}
+\algnewcommand\Input{\item[\algorithmicinput]}
+\algnewcommand\algorithmicoutput{\textbf{Output:}}
+\algnewcommand\Output{\item[\algorithmicoutput]}
+\algnewcommand\algorithmiccontinue{\textbf{continue}}
+\algnewcommand\Continue{\algorithmiccontinue}
+
+\algdef{SE}[FOR]{ForEach}{EndFor}[1]{\algorithmicfor\ #1\ }{\algorithmicend\ \algorithmicfor}%
+
 
 % Hyperref setup below.  You should be able to get away with using uncommenting just the first line.
 \usepackage[hidelinks]{hyperref}
@@ -84,9 +97,9 @@
 %\include{nomenclature}
 %\include{lists}  % This is simply a file that formats and adds your toc, lof, and lot, please do not edit this unless you have a specific need. .
 
-% instructions to convert from www paper to thesis:
-% replace figure* with figure
-% change subsections to sections
+% instructions to convert from thesis to acm format:
+% replace figure with figure*
+% change sections to subsections
 
 \include{section1}
 \include{section2}
@@ -95,7 +108,7 @@
 \include{section5}
 \include{conclusion}
 
-%\include{bibliography}
+\include{bibliography}
 %\include{appendices}
 
 

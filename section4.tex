@@ -96,6 +96,7 @@ from the most distant pairs as we will show in the next section.
 \label{sec:model}
 
 In this section, we build a model for the probability that a user, who we refer
+%
 to as the target user, lives at a specific location given the approximate
 location of his contacts.
 %
@@ -104,44 +105,13 @@ certain distance from a given user.
 %
 Location prediction requires the probability that the user lives at a specific
 location.
-
-MAGIC
-
-\[
-\pContact{_i}(dist) = \frac{\nebrEdges{_i}(dist)}{\stgrEdges(dist)}
-\]
-
-\begin{figure}[tb]
-\centering
-\includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
-\caption{
-After splitting edges into groups based on their predicted distance, each group
-was fit to a curve. Here are four of the ten curves and their curves of best
-fit. The other six curves of best fit are shown as faint dotted lines. The
-decision tree does a reasonable job of seperating the best edges from the worst
-edges.
-}
-\label{fig:NearProbFit}
-\end{figure}
-
-
-We ran the decsision tree regressor on the training data to create a set of
-tuples $T = (d_i, p_i)$ for $d_i \in D$ and $p_i \in P$ where $d_i$ is the
-actual length of the edge, and $p_i$ is the value predicted by the decision
-tree.
 %
-We split $T$ into $k$ quantiles on the boundaries $\{q_0,\cdots,q_k\}$ as
-follows:
+We can find that by comparing the distribution of Twitter users to the various
+types of contacts.
 
-\[
-    q_i =
-    \begin{cases}
-        P_{(1+\lfloor i|T|/k \rfloor)}, & i=<k \\
-        \infty & i=k
-    \end{cases}
-\]
 
 First, we needed a model for the density of Twitter users.
+%
 We calculate the distance between every target user and every contact
 (even for contacts and users who had no relationship).
 %
@@ -159,22 +129,57 @@ on the opposite side of the world.)
 We fit this segment to a power law curve, which gives us a way to estimate
 $\stgrEdges$.
 
-% Put more about fit_stgrs
-The edges were sorted by the distance that the tree regressor predicted and
-split into ten equal groups.
+Next, we need to model the probability that two users are contacts.
 %
+We ran the decsision tree regressor on the training data to create a set of
+tuples $T = (d_i, p_i)$ for $d_i \in D$ and $p_i \in P$ where $d_i$ is the
+actual length of the edge, and $p_i$ is the value predicted by the decision
+tree.
+%
+We split $T$ into $k$ quantiles on the boundaries $\{q_0,\cdots,q_k\}$ as
+follows:
+
+\[
+    q_i =
+    \begin{cases}
+        P_{(1+\lfloor i|T|/k \rfloor)}, & i=<k \\
+        \infty & i=k
+    \end{cases}
+\]
+
 We split the edges in these groups into 480 logarithmically-scaled bins from 1
 to 10,000 miles based on the length of the edge.
 %
 We divided the number of edges that actually existed at each distance by the
 number of edges that could have existed as predicted by $\stgrEdges$.
-%
-We fit it to this curve:
-%
+
 \[
-\pContact(g, dist) = a_{g} \times (b_{g}+dist)^{-c_{g}}
+\pContact{_i}(dist) = \frac{\nebrEdges{_i}(dist)}{\stgrEdges(dist)}
 \]
 
+
+We fit $pContact$ to the curve from \cite{backstrom2010find}:
+\[
+    \pContact{_i}(dist) = a_{i} \times (b_{i}+dist)^{-c_{i}}
+\]
+
+
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
+\caption{
+After splitting edges into groups based on their predicted distance, each group
+was fit to a curve. Here are four of the ten curves and their curves of best
+fit. The other six curves of best fit are shown as faint dotted lines. The
+decision tree does a reasonable job of seperating the best edges from the worst
+edges.
+}
+\label{fig:NearProbFit}
+\end{figure}
+
+This gave us 10 different curves for the probability that a certain type of
+contact exists between a pair of users.
+%
 Four of the ten curves from one of the five evaluation groups and their lines
 of best fit are shown in Figure~\ref{fig:NearProbFit}.
 %
@@ -189,32 +194,31 @@ for friendship and distance presented in \cite{backstrom2010find}.
 \section{System}
 We used this model to build a Maximum Likelihood Estimator.
 
+\[
+    \MLELocation(L,P) = \argmax_{l_i \in L}
+    \prod_{j=1}^{|L|} blah
+\]
 
 \begin{algorithm}
+  %\label{alg:friendloc}
   \caption{FriendlyLocation \label{alg:friendloc}}
   \begin{algorithmic}[0]
-  \ForAll{$contact \in contacts$}
-   \State $sum\gets sum+i$
+  \Input{The contacts $contacts$}
+  \Output{The predicted location}
+  \State locations = list()
+  \State predictedDists = list()
+  \ForEach{contact \textbf{in} contacts}
+      \If{contact.location \textbf{is} None}
+        \State \Continue
+      \EndIf
+      \State locations.append(contact.location)
+      \State dist = regressionTree.predict(contact.features)
+      \State predictedDists.append(dist)
   \EndFor
+  \State best = MLELocation(locations,predictedDists)
+  \State \Return locations[best]
   \end{algorithmic}
 \end{algorithm}
-
-We use this to create a simple procedure for estimating the location for a user:
-\begin{enumerate}
-\item For each of those contacts:
-\begin{enumerate}
-    \item Geocode the location field and calculate the the predicted error.
-    \item Ignore the contact if they have no decodable location information.
-    Approximately one third of the contacts are ignored.
-    \item Use the regression tree to estimate the length of the edge.
-    \item Determine which of the ten groups this edge is in to find the curve
-        for the probability that the contact lives near the
-\end{enumerate}
-\item For each of the contacts' locations calculate the probability that the
-target user lives at that location using the maximum likelihood estimator.
-\item FIXME: (For some versions we added in UTC offset, reported location, and stranger prob)
-\item Pick the location with the highest probability.
-\end{enumerate}
 
 FIXME: formula for MLE, and description
 FIXME: more here

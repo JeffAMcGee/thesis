@@ -75,7 +75,7 @@ them, it is probably someone who knows them.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/edge_types_norm.pdf}
+\includegraphics[width=.7\linewidth]{figures/edge_types_norm.pdf}
 \caption{
 Histogram of distance to users for different types of relationships.
 The curves in this figure are the derivatives of the curves in
@@ -180,9 +180,10 @@ aoeu aoeu.
 
 
 \begin{table}[tbh]
+\scriptsize
 \centering
 \begin{tabular}{l | r r | r r | r r | r r | r r}
-    & \multicolumn{2}{|c}{both mention}
+    & \multicolumn{2}{c}{both mention}
     & \multicolumn{2}{|c}{target mentions}
     & \multicolumn{2}{|c}{contact mentions}
     & \multicolumn{2}{|c}{both ignore}
@@ -190,10 +191,10 @@ aoeu aoeu.
     \cline{2-11}
     &local&count&local&count&local&count&local&count&local&count \\
     \hline
-    Recip Friend & 42\%&28067 & 50\%&17903 & 45\%&21066 & 35\%&168973 & 38\%&236009 \\
-    Just Follower & 40\%&2001 & 47\%&792 & 40\%&5958 & 25\%&216834 & 25\%&225585 \\
-    Just Friend & 21\%&23314 & 40\%&910 & 42\%&1884 & 21\%&212969 & 21\%&239007 \\
-    Just Mentioned & 18\%&182978 & 36\%&4721 & & 0 & & 0 & 18\%&187699 \\
+    recip friend & 42\%&28067 & 50\%&17903 & 45\%&21066 & 35\%&168973 & 38\%&236009 \\
+    just follower & 40\%&2001 & 47\%&792 & 40\%&5958 & 25\%&216834 & 25\%&225585 \\
+    just friend & 21\%&23314 & 40\%&910 & 42\%&1884 & 21\%&212969 & 21\%&239007 \\
+    just mentioned & 18\%&182978 & 36\%&4721 & & 0 & & 0 & 18\%&187699 \\
 \end{tabular}
 \caption{
 If target users interact with their contacts, then they are more likely to
@@ -419,7 +420,7 @@ formally define LCR as follows:
 %
 We picked a cutoff distance of 25 miles to distinguish between local and non-local
 contacts.
-25 miles is as seen in Figure~\ref{fig:EdgeCounts}.
+25 miles is \emph{blah} as seen in Figure~\ref{fig:EdgeCounts}.
 %
 The distance cutoff is somewhat arbitrary, but it doesn't seem to matter much
 in practice since we are really trying to distinguish between contacts who are
