@@ -26,8 +26,8 @@ Another problem with this data is that some of these factors are correlated
 with each other; users with lots of followers tend to have a low friend contact
 ratio.
 %
-Finally, celebrity accounts may be useless for determining which city a person
-is from, but they might still suggest the user's home continent.
+Finally, distant accounts like celebrities may be useless for determining which
+city a person is from, but they might still suggest the user's home continent.
 
 In \cite{backstrom2010find}, the authors present a model of the relationship
 between distance and friendship that treats all of the edges the same.
@@ -105,26 +105,26 @@ certain distance from a given user.
 %
 Location prediction requires the probability that the user lives at a specific
 location.
+\emph{Do we need more explanation here?}
 %
-We can find that by comparing the distribution of Twitter users to the various
-types of contacts.
-
+We can find that by comparing the distribution of Twitter users to the
+distrubution of the contacts.
 
 First, we needed a model for the density of Twitter users.
 %
 We calculate the distance between every target user and every contact
 (even for contacts and users who had no relationship).
 %
-In order to speed up this calculation, we divide the world into a \.1 degree
-by \.1 degree grid, and count the number of of contacts in each of the spots
+In order to speed up this calculation, we divide the world into a $.1$ degree
+by $.1$ degree grid, and count the number of of contacts in each of the spots
 on the grid.
 %
 We took the distances between users and sorted them into 360 logarithmically
 scaled bins between 10 miles and 10,000 miles.
 %
-(Every edge less than 10 miles was ignored because it was around the size of
-the grid boxes, and therefore, noisy. Distances greater than 10,000 miles are
-on the opposite side of the world.)
+(Every edge less than 10 miles was ignored when fitting the curve because it
+was around the size of the grid boxes, and therefore, noisy. Distances greater
+than 10,000 miles are on the opposite side of the world.)
 %
 We fit this segment to a power law curve, which gives us a way to estimate
 $\stgrEdges$.
@@ -136,14 +136,14 @@ tuples $T = (d_i, p_i)$ for $d_i \in D$ and $p_i \in P$ where $d_i$ is the
 actual length of the edge, and $p_i$ is the value predicted by the decision
 tree.
 %
-We split $T$ into $k$ quantiles on the boundaries $\{q_0,\cdots,q_k\}$ as
+We split $T$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
 follows:
 
 \[
     q_i =
     \begin{cases}
-        P_{(1+\lfloor i|T|/k \rfloor)}, & i=<k \\
-        \infty & i=k
+        P_{(1+\lfloor i|T|/m \rfloor)}, & i=<m \\
+        \infty & i=m
     \end{cases}
 \]
 
@@ -157,12 +157,15 @@ number of edges that could have existed as predicted by $\stgrEdges$.
 \pContact{_i}(dist) = \frac{\nebrEdges{_i}(dist)}{\stgrEdges(dist)}
 \]
 
-
 We fit $pContact$ to the curve from \cite{backstrom2010find}:
 \[
     \pContact{_i}(dist) = a_{i} \times (b_{i}+dist)^{-c_{i}}
 \]
 
+\emph{explain how we picked of the ten curves a bucket would be in.}
+\[
+    q_i<=d<q_{i+1}
+\]
 
 \begin{figure}[tbh]
 \centering
@@ -195,8 +198,8 @@ for friendship and distance presented in \cite{backstrom2010find}.
 We used this model to build a Maximum Likelihood Estimator.
 
 \[
-    \MLELocation(L,P) = \argmax_{l_i \in L}
-    \prod_{j=1}^{|L|} blah
+    \MLELocation(L,P) = \argmax_{l^g_i \in L}
+    \prod_{j=1}^{|L|} \pContact()
 \]
 
 \begin{algorithm}
@@ -220,7 +223,8 @@ We used this model to build a Maximum Likelihood Estimator.
   \end{algorithmic}
 \end{algorithm}
 
-FIXME: formula for MLE, and description
-FIXME: more here
-FIXME: non-independent as seen in~\ref{sec:closer}
+\emph{formula for MLE, and description,
+more here,
+non-independent as seen in~\ref{sec:closer}
+}
 

@@ -14,7 +14,7 @@ to find out which users are most likely to live nearby.
 In this section, we investigate how various types of contacts correlate with
 proximity.
 %
-All of the analysis in this section was done on the contacts of the 249584
+All of the analysis in this section was done on the contacts of the 249,584
 target users.
 %
 Contacts with a predicted location error that was greater than or equal to 1000
@@ -95,11 +95,7 @@ Figure~\ref{fig:EdgeTypes} shows the result of plotting the histogram.
 %
 All four types of contacts follow roughly the same
 distribution: one peak around 10 miles from people who live nearby, and several
-other peeks between 100 and 10,000 miles.
-%
-These peeks occur at the distances between major population centers.
-
-There is a local maximum in all the graphs at around 8 miles.
+other peaks between 100 and 10,000 miles.
 %
 Since the contacts often list the name of their town, there is a small distance
 between the geocoded location of the town and the location of the target
@@ -111,6 +107,7 @@ miles, peaks start appearing for major cities.
 One reasonable explanation for this is that Twitter is not just a social
 network; it is also a news distribution network as described in
 \cite{kwak2010why}.
+%
 This distribution suggests that users have two types of contacts: people who
 they met in real life, and people who they met online or know about via
 mainstream media.
@@ -138,7 +135,7 @@ Since the primary goal of this research is to predict the location of users, we
 focus our attention on the number of friends and followers a contact has rather
 than the numbers for the target user.
 %
-We took each of the reciprocal friendships what we looked at in
+We took each of the reciprocal friendships that we looked at in
 Section~\ref{sec:EdgeTypes} and put them into log-scaled bins based on their
 number of friends or followers that the contact had.
 %
@@ -239,7 +236,7 @@ On the other hand, in the rare event that someone who is just a friend replies
 to their follower, then the probability that they live near each other is much
 higher--it goes from 21\% to 42\%.
 
-The weakest type of contact is for users who were just mentioned, but never
+The weakest type of contact is users who were just mentioned, but never
 replied to.
 %
 If the person is mentioned, then 36\% of users with no
@@ -346,7 +343,7 @@ perspective of the target user:
 \item ``our'' is reciprocal friends with both ``me'' and ``you''
 \end{itemize}
 
-We found this pattern for 147669 of the target users.
+We found this pattern for 147,669 of the target users.
 %
 If a user had multiple instances of this pattern, it picked one of them
 randomly so that particular users would not bias the results.
@@ -366,7 +363,7 @@ Then we plot the CDF for the distance from the target to the ``my'' and ``our'' 
 %
 This allows us to investigate the effect of mutual friendship on distance.
 We report one very simple result: if two of your friends are close (within 10
-miles), then whether they know each other or not is strongly affects how close
+miles), then whether they know each other or not strongly affects how close
 you are to them.
 %
 If they are farther apart, it doesn't matter.
@@ -408,19 +405,23 @@ investigate the friends-of-friends.
 %
 We want to know if some users are more localized than others.
 
+\emph{motivate this}
+
 \textbf{Local Contact Ratio}(LCR) is the fraction of a user's contacts
 who live near the user.
 %
 For a contact at location $l_c$ and a set of their contacts' locations L, we
 formally define LCR as follows:
+\emph{can I make the absolute value smaller to clean up the pipe space pipe?}
 \[
-    \LCR(l_c,L) = { |\{ l_i \mid l_i \in L \land |l_i-l_c|<25 \}|
+    \LCR(l_c,L) = { |\{ l_i \in L \mid |l_i-l_c|<25 \}|
                     \over |L| }
 \]
 %
 We picked a cutoff distance of 25 miles to distinguish between local and non-local
 contacts.
-25 miles is \emph{blah} as seen in Figure~\ref{fig:EdgeCounts}.
+25 miles is about the distance where the bulk of local users ends as seen in
+Figure~\ref{fig:EdgeCounts}.
 %
 The distance cutoff is somewhat arbitrary, but it doesn't seem to matter much
 in practice since we are really trying to distinguish between contacts who are
@@ -429,7 +430,7 @@ hundreds of miles away and contacts who live in the same town.
 Around one in ten contacts did not have any contacts with a location from the
 contacts we looked at--they were treated as a separate group.
 
-\emph{Do we want to look at other metrics similar to local contact ratio?}
+\emph{Do we want to talk about other metrics similar to local contact ratio?}
 
 In \cite{li2012towards}, the authors model the probability distribution of
 user's followers using a gaussian distribution, and use this to build a
