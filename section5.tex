@@ -10,12 +10,13 @@ and how many FriendlyLocation chooses to use.
 We used five-fold cross validation on the target users to evaluate the system.
 We evaluated the FriendlyLocation system against the 249,584 target users.
 
+\emph{define aed and acc}
+
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/fl_basic.pdf}
 \caption{
     FriendlyLocation against several baseline systems.
-    FIXME: remove some of these lines
 }
 \label{fig:baseline}
 \end{figure}
@@ -28,13 +29,16 @@ We evaluated the FriendlyLocation system against the 249,584 target users.
     Baseline & 8.41$\pm$.039 & 40.8$\pm$.20 & 426$\pm$3.8 & 55.7\%$\pm$.09\% \\
     Nearest & 7.50$\pm$.072 & 47.8$\pm$.52 & 573$\pm$4.5 & 56.9\%$\pm$.17\% \\
     FriendLoc Basic & 5.43$\pm$.030 & 21.4$\pm$.15 & 359$\pm$3.8 & 63.9\%$\pm$.11\% \\
-    FriendLoc+Time Zone \\
-    FriendLoc+Location \\
-    FriendLoc Extended & 4.72$\pm$.028 & 16.1$\pm$.19 & 317$\pm$3.1 & 66.7\%$\pm$.10\% \\
+    FriendLoc+Time Zone & 5.46$\pm$.025 & 21.4$\pm$.11 & 354$\pm$4.8 & 63.9\%$\pm$.06\% \\
+    FriendLoc+Location & 4.78$\pm$.025 & 16.6$\pm$.22 & 331$\pm$3.1 & 66.5\%$\pm$.08\% \\
 \end{tabular}
 \caption{
-    results with standard deviation from five-fold cross validation
-FIXME: explain this more
+    Results of our location prediction system when compared to a baseline.
+    The value after the $\pm$ is the standard deviation from the five-fold
+    cross-validation.
+    Including the target user's time zone information does not improve the
+    results, but using the target user's reported location, if they gave one,
+    makes for significantly better results.
 }
 \label{tab:results}
 \end{table}
@@ -53,9 +57,8 @@ We investigate several implementations of the FriendlyLocation system:
 \item[FriendlyLocation + Time Zone] This is the system described in the previous
     section plus the target user's time zone information.
 \item[FriendlyLocation + Location] This is the system described in the previous
-    section plus the target user's reported location.
-\item[FriendlyLocation Extended] This adds time zone information and the target
-    user's actual location to the basic system.
+    section plus the target user's reported location is included in the
+    estimation.
 \end{description}
 
 Our basic FriendlyLocation system predicts the location within 25 miles 63.9\% of
@@ -63,7 +66,7 @@ the time.
 %
 Our basic system preforms significantly better than the baseline implementations.
 %
-Unfortunately, when the predictor is wrong, it can be very wrong.
+Unfortunately, when the predictor is wrong, it can be very wrong. \emph{More here.}
 %
 %The comparison to the omniscient predictor shows that there is room for improvement.
 %
@@ -99,13 +102,14 @@ For each of the target users, we moved the user's location based on
 reverse geocoding away from the user's actual median location based on the
 difference between the PLEs.
 %
-For example, the median PLE for a target user was FIXME, and the median
-PLE for a contact was FIXME miles.
+For example, the median PLE for a target user was 5.9 miles, and the median
+PLE for a contact was 6.7 miles.
 %
-This means that we need to add FIXME miles of noise to a target user
-with a PLE of FIXME.
+This means that we need to add .8 miles of noise to a target user
+with a PLE of 5.9 so that the quality of the geo-located target user's location
+would match the quality of normal Twitter users.
 %
-We also removed the location field from FIXME\% of the target users to
+We also removed the location field from 17\% of the target users to
 make the proportion of target users with a location match the general
 Twitter population.
 

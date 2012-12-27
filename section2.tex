@@ -235,6 +235,9 @@ types of locations.
 
 We define the \textbf{location error} to be the great circle distance between a
 user's home location and the location returned from the geocoder.
+%\[
+%LE = |l^h - l^g|
+%\]
 %
 The location error for a user can vary from less than a mile to over ten
 thousand miles.
@@ -260,7 +263,7 @@ locations and location types.
 
 \emph{work in progress ahead}
 
-We model each location returned by the geocoder as a tuple $(x^g_i,y^g_i,p_i,t_i)$,
+We treat each location returned by the geocoder as a tuple $(l^g_i,p_i,t_i)$,
 where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
 $t_i$ is the id of the type of place.
 
