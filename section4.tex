@@ -132,8 +132,9 @@ $\stgrEdges$.
 Next, we need to model the probability that two users are contacts.
 %
 We ran the decsision tree regressor on the training data to create a set of
-tuples $T = (d_i, p_i)$ for $d_i \in D$ and $p_i \in P$ where $d_i$ is the
-actual length of the edge, and $p_i$ is the value predicted by the decision
+tuples $T = (d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where
+$d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by
+the decision
 tree.
 %
 We split $T$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
@@ -142,7 +143,7 @@ follows:
 \[
     q_i =
     \begin{cases}
-        P_{(1+\lfloor i|T|/m \rfloor)}, & i=<m \\
+        D^p_{(1+\lfloor i|T|/m \rfloor)}, & i=<m \\
         \infty & i=m
     \end{cases}
 \]

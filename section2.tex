@@ -234,11 +234,12 @@ types of locations.
 
 
 We define the \textbf{location error} to be the great circle distance between a
-user's home location and the location returned from the geocoder.
-%\[
-%LE = |l^h - l^g|
-%\]
-%
+user's home location and the location returned from the geocoder:
+
+\[
+e_i = |l^h_i - l^g_i|
+\]
+
 The location error for a user can vary from less than a mile to over ten
 thousand miles.
 %
@@ -261,14 +262,6 @@ median is not just an average.
 Table~\ref{tab:MedianLocErr} shows the median location error for a few example
 locations and location types.
 
-\emph{work in progress ahead}
-
-We treat each location returned by the geocoder as a tuple $(l^g_i,p_i,t_i)$,
-where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
-$t_i$ is the id of the type of place.
-
-\emph{Can I express PLE in math?}
-
 This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
 %
@@ -287,6 +280,31 @@ place type to be 258 miles as seen in Table~\ref{tab:MedianLocErr}.
 An airport is a bad location name since airports tend to have regional names
 and people who report their location as an airport are likely to move around a
 lot.
+
+\emph{transition here}
+
+\newcommand{\geotuple}{{(l^g_i,p_i,t_i,e_i) \in T}}
+
+We treat the locations returned by the geocoder as a set of tuples $\geotuple$,
+where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
+$t_i$ is the id of the type of place, and $e_i$ is the location error.
+
+For notational convienience, we define a set of places $F$ that have at least
+three users:
+\emph{is there a better way to say this?}
+\[
+    F = \{ p_i \mid \geotuple \land |\{(l^g_j,p_j,t_j,e_j) \in T|p_i==p_j\}| \geq 3 \}
+\]
+
+This lets us define $PLE$ as a function of a place and type of place:
+\[
+    PLE(p,t) =
+    \begin{cases}
+        \median(\{e_i |\geotuple \land p_i=p\})  & p \in F \\
+        \median(\{e_i |\geotuple \land t_i=t \land p_i \notin F\})  & p \notin F \\
+    \end{cases}
+\
+\]
 
 \begin{figure}[tb]
 \centering
