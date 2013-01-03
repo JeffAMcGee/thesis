@@ -48,7 +48,8 @@ As a result, we model this as a regression problem.
 Since most of the input features are correlated and either binary or non-linear,
 linear regression is unlikely to work well.
 %
-\emph{more on why not other regression models?}
+In addition, the data is dense and low-dimensional, so Support Vector Machines
+do not work well.
 %
 We chose to use a decision tree regressor based on the CART algorithm
 (classification and regression trees) to distiguish the best edges from the
@@ -95,20 +96,18 @@ from the most distant pairs as we will show in the next section.
 \section{Model}
 \label{sec:model}
 
-In this section, we build a model for the probability that a user, who we refer
-%
-to as the target user, lives at a specific location given the approximate
-location of his contacts.
-%
 In the previous sections, we looked at the probability that a contact lives a
 certain distance from a given user.
 %
+In this section, we build a model for the probability that a user, who we refer
+to as the target user, lives at a specific location given the approximate
+location of his contacts.
+%
 Location prediction requires the probability that the user lives at a specific
 location.
-\emph{Do we need more explanation here?}
 %
-We can find that by comparing the distribution of Twitter users to the
-distrubution of the contacts.
+We can find that probability by comparing the distribution of Twitter users to
+the distrubution of the contacts.
 
 First, we needed a model for the density of Twitter users.
 %
@@ -132,18 +131,18 @@ $\stgrEdges$.
 Next, we need to model the probability that two users are contacts.
 %
 We ran the decsision tree regressor on the training data to create a set of
-tuples $T = (d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where
+tuples $R = (d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where
 $d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by
 the decision
 tree.
 %
-We split $T$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
+We split $R$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
 follows:
 
 \[
     q_i =
     \begin{cases}
-        D^p_{(1+\lfloor i|T|/m \rfloor)}, & i=<m \\
+        D^p_{(1+\lfloor i|R|/m \rfloor)}, & i=<m \\
         \infty & i=m
     \end{cases}
 \]

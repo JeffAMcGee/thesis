@@ -403,18 +403,16 @@ users.
 In this section we will go two steps out on the social graph and
 investigate the friends-of-friends.
 %
-We want to know if some users are more localized than others.
-
-\emph{motivate this}
-
+We want to know if some users are more localized than others, so we compare
+contacts with lots of local contacts to contacts with mostly distant contacts.
+%
 \textbf{Local Contact Ratio}(LCR) is the fraction of a user's contacts
 who live near the user.
 %
 For a contact at location $l_c$ and a set of their contacts' locations L, we
 formally define LCR as follows:
-\emph{can I make the absolute value smaller to clean up the pipe space pipe?}
 \[
-    \LCR(l_c,L) = { |\{ l_i \in L \mid |l_i-l_c|<25 \}|
+    \LCR(l_c,L) = { |\{ l_i \in L : |l_i-l_c|<25 \}|
                     \over |L| }
 \]
 %
@@ -430,8 +428,6 @@ hundreds of miles away and contacts who live in the same town.
 Around one in ten contacts did not have any contacts with a location from the
 contacts we looked at--they were treated as a separate group.
 
-\emph{Do we want to talk about other metrics similar to local contact ratio?}
-
 In \cite{li2012towards}, the authors model the probability distribution of
 user's followers using a gaussian distribution, and use this to build a
 location prediction system.
@@ -442,7 +438,17 @@ gaussian.
 %
 We are looking at location prediction anywhere in the world, which means
 contacts may be 10,000 miles away, and a location 10,000 miles away is nearly
-as bad as a loctation 1000 miles away.
+as bad as a loctation 1000 miles away, so average is obviously not useful.
+%
+The disadvantage to using the median is more subtle.
+%
+As seen in Figure~\ref{fig:EdgeTypesCuml}, the median distance to a contact is
+often in the 100--1000 mile range, and only about a third of contacts are
+actually local.
+%
+This means that median distance to leafs does a reasnoble job of seperating the
+worst contacts from the average contacts, but local contact ratio does a better
+job of identifying the very best contacts.
 
 The figure shows that some users are much more local than other users.
 For example, a local newspaper may have thousands of followers and few friends,
@@ -450,14 +456,17 @@ but the people who follow a newspaper are generally local.
 According to the other factors we looked at, the newspaper is a bad predictor
 of location, but in reality it is a great predictor.
 
-Of the factors we have investigated, this is the most strongly correlated with
-distance.
-\emph{Can you prove this?}
+Of the factors we have investigated, this is the one that is most strongly
+correlated with distance---in the next section we will see that local contact
+ratio ends up at the top of a decision tree to seperate local contacts from
+non-local contacts.
+%
 One problem with this technique is that it is somewhat expensive to deal with
 the large number of profiles two steps out on the social graph.
 %
 Our crawler originally looked at 100 leafs per contact because Twitter's API
-will return up to 100 profiles at a time, but .
+will return up to 100 profiles at a time, but fetching and saving all those
+profiles is slow.
 %
 In Figure~\ref{fig:LocalCmp}, we compare contacts with a high LCR calculated
 using at most 100 leafs per contact to at most 10 leafs per contact.

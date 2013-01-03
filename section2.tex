@@ -62,9 +62,13 @@ We created labels for the seed users and each of the steps along the way:
 \item[geo-located users] These users choose to use Twitter's location sharing
     features, which means that we have precise latitude and longitude
     coordinates for their location.
-\item[\emph{needs a name}] \emph{geo-located users for understanding geo-coding}
 \item[target users] These are a randomly chosen subset of the geo-loacted users
     who have at least one contact.
+\item[geocoder calibration users] These are geo-located users who filled out thei
+    location field with a location we could decode, but were not selected to be
+    part of the target users. They are used to differentiate between
+    high-quality locations and low-quality locations that are likely to be
+    wrong.
 \item[located contacts] These are the 25 randomly chosen contacts of
     target users who have locations that we can decode.
 \item[leaves] These are at most 100 of the contacts of the located contacts.
@@ -72,8 +76,6 @@ We created labels for the seed users and each of the steps along the way:
     that the distances to contacts would be independent from the distances to
     leaves.
 \end{description}
-
-\emph{neighbors vs located contacts}
 
 
 \section{Data Collection}
@@ -88,80 +90,76 @@ Feature to disclose their location.
 The crawler sampled over one hundred million geo-coded tweets by monitoring
 Twitter's public streaming API for all of May 2012.
 % 118,464,320 lines including keepalive newlines and non-status messages.
-In the dataset, users are filtered who have strict privacy settings, have
-neither friends nor followers, or posted fewer than three tweets in the sampled
-dataset.
-For each user with geo-coded tweets, we use the median latitude and median
-longitude of the locations of the user's tweets as an approximation of her home
-location.
+We kept the tweets from the users who posted at least three tweets, which left
+us with 1758101 Twitter users.
+%
+For each of these users with geo-coded tweets, we use the median latitude and
+median longitude of the locations of the user's tweets as an approximation of
+her home location.
+%
 Some Twitter accounts, such as accounts that posted jobs, would
 move around faster than a human could possibly move.
+%
 To account for this, the crawler calculated the distance between each tweet and
 the user's home location.
+%
 The crawler ignored users if the median distance from their tweets to their
-home location was greater than 50 miles.
-This left us with 1,695,784 geo-located users.
-To enable parallelization, we divided those users into 100 groups based on
-the two least significant digits in their Twitter user id, and randomly selected
-2500 users from each of the groups.
+home location is greater than 50 miles.
 %
-This gave us the 250,000 target users that we planned to use for our
-analysis and experimentation.
+This only removed 3.4\% of the geo-located users.
 %
-After crawling these users' friends and followers, we found 416 users who did
-not have any neighbors with a location field that we could parse.
+We also removed an additional 2.9\% of the geo-located users who did not have
+any contacts with locationns we could decode, which left us with 1.6 million
+Twitter users with a known location.
 %
-We filtered them out and used the remaining 249,584 for analysis and
-experimentation.
+We randomly selected 249,584 of these users for analysis and experimentation.
+\footnote{We originally selected 250,000 users, but had to remove 416 of them.
+These users had contacts with locations, but none of their contacts had
+meaningful locations.}
+%
+Almost all of the experiments in this paper are based on these target
+users.
 
+%To enable parallelization, we divided those users into 100 groups based on
+%the two least significant digits in their Twitter user id, and randomly selected
+%2500 users from each of the groups.
 
-\emph{How many contacts per target user?}
+% distribution of the contacts
+%     med  avg      std
+%rfrd 62.0 132.7148 278.394
+%jfol 35.0 143.4844 456.629
+%jfrd 78.0 153.5700 241.222
+%jats  5.0   7.0764   8.060
 
 For all of the target users, the crawler used Twitter's API to download
 the users' 100 most recent tweets, a list of friend ids, and a list of follower ids.
-The crawler also downloaded the profiles for up to 100 friends, followers, and
-people they mention in their tweets.
 %
-If they had over 100 in total, it chose a random sample of 100 profiles that
-included at most 25 of each of the four types of contacts defined previously:
-reciprocal friends, just friends, just followers, and just mentioned.
+Most of the target users had plenty of contacts of each of the four types.
 %
-From that 100, we picked at most 25 contacts with locations we could decode to
-be the located contacts. For those located contacts, we downloaded their
-friends, followers, and tweets.
+The median number of reciprocal friends is 62, and the average is 132.
 %
-We finished this process by downloading 100 profiles of the contacts of the
-contacts.
+The average numbers are higher because the number of contacts a user has
+follows a heavy-tailed distribution.
+%
+The medians for other types of contacts are 35 just followers, 78 just friends,
+and 7 just mentioned.
+%
+If a user had over 25 contacts in any of the four types of contacts, the
+crawler chose a random sample of 25 from each of the types of contacts, and
+downloaded the profiles for up to 100 total contacts per target user.
+%
+From that 100, we randomly picked at most 25 contacts with locations we could
+decode to be the located contacts. For those located contacts, we downloaded
+their friends, followers, and tweets.
+%
+We finished this process by downloading up to 100 profiles of the contacts of
+the contacts.
 %
 Since the Twitter social network graph has a large strongly connected
 component, there are a significant number of users who are contacts or leafs for
 more than one target user.
 %
 In the end, we collected just over 73 million Twitter user profiles.
-
-%\begin{table}[tbh]
-%\centering
-%\begin{tabular}{l r l}
-%    Data Set & Size & Description \\
-%    \hline
-%    % 249,584
-%    Target 250 thousand & A randomly selected subset of
-%    the geolocated users used for generating all the figures in
-%    section~\ref{sec:analysis} and   \\
-%    % 894,617
-%    Geocoding Training & 895 thousand & geo-located users who where not
-%    target but who did fill out the location field of their profile
-%    \emph{this data set needs a better name}\\
-%    % 10,081,957
-%    Contacts & 10 million & Friends, followers, and mentions of the target
-%    users \\
-%    % 71,596,805 minus some of 250k
-%    Leafs & 71 million & The contacts of the contacts \\
-%\end{tabular}
-%\label{tab:DataTypes}
-%\caption{\emph{I'm not convinced this is a good way to do show the datasets.
-%Should we merege this into the bulleted list in the previous subsection?}}
-%\end{table}
 
 \section{Geocoding}
 We used Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
@@ -220,19 +218,20 @@ A Stream&739&2373\\
 \label{tab:MedianLocErr}
 \end{table}
 
-Since we only selected 250,000 of the 1,695,784 users who posted tweets with
+Since we only selected a fraction of the 1.7 million users who posted tweets with
 location information for location prediction and analysis, the remaining users
-could be used for evaluating the geocoder.
+could be used for calibrating the geocoder.
 %
 894,617 of the users who posted geo-located tweets also filled in the
-the free-response location field with something that the geocoder was able to
+the free-response location field with something that the geocoder is able to
 decode.
 %
+These users form the geocoder calibration group.
+
 We can compare the results of the geocoder to the location of the geo-located
 tweets for these users to quantify how accurate the geocoder is for certain
 types of locations.
-
-
+%
 We define the \textbf{location error} to be the great circle distance between a
 user's home location and the location returned from the geocoder:
 
@@ -333,4 +332,5 @@ location error is less than 1000 miles for 85\% of the users.
 The cyan line shows the results of removing locations with a PLE greater than
 or equal to 1000 miles.
 After removing only 10\% of the users, 93\% of them are within 1000 miles.
-\emph{What?}
+
+\emph{What? 10\%+85\% does not make sense.}
