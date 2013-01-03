@@ -7,8 +7,15 @@
 Based on the questions we answered in the previous section, we have enough
 information to build a system for location prediction, which we call
 FriendlyLocation.
+%
 Since the location prediction system will be run on a large number of users,
 it must be fast and scalable.
+%
+In Chapter~\ref{chap:eval} we will evaluate this system using five-fold cross
+validation.
+%
+In this chapter we will use the numbers from one of the five folds to make
+the descriptions more concrete.
 
 \section{Edge Length Prediction}
 
@@ -86,12 +93,26 @@ trained the regressor to predict the log of the distance.
 The tree regressor was configured to not split leafs with fewer than 1000 data
 points to prevent over-fitting.
 %
+The top three levels of a decision tree are shown in Figure~\ref{fig:TreeTop}.
+%
 The predictor does not do a great job of predicting the actual distance to a
 contact; there's simply too much noise.
 %
 However, it does do an excelent job of seperating the closest pairs of users
 from the most distant pairs as we will show in the next section.
 
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=\linewidth]{figures/tree_top.pdf}
+\caption{
+    The top three levels of the decision tree. This decsion tree will predict a
+    distance of 839 miles for a contact with a local contact ratio of .2 and
+    2800 friends. It will predict a much-closer distance of 43.7 miles for a
+    user with a local contact ratio of .5 and a predicted location error of 10
+    miles.
+}
+\label{fig:TreeTop}
+\end{figure}
 
 \section{Model}
 \label{sec:model}
