@@ -7,6 +7,8 @@
 
 \section{Definitions}
 
+\jam{Talk about how geo-located users are different.}
+
 Before going into the details of the data collection, we first define a few
 terms to simplify the process of explaining how the data was collected.
 %
@@ -280,17 +282,17 @@ An airport is a bad location name since airports tend to have regional names
 and people who report their location as an airport are likely to move around a
 lot.
 
-\emph{transition here}
-
 \newcommand{\geotuple}{{(l^g_i,p_i,t_i,e_i) \in T}}
 
-We treat the locations returned by the geocoder as a set of tuples $\geotuple$,
+We will now formally define predicted location error.
+%
+We treat the locationsreturned by the geocoder as a set of tuples $\geotuple$,
 where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
 $t_i$ is the id of the type of place, and $e_i$ is the location error.
 
 For notational convenience, we define a set of places $F$ that have at least
 three users:
-\emph{is there a better way to say this?}
+\jam{is there a better way to say this?}
 \[
     F = \{ p_i \mid \geotuple \land |\{(l^g_j,p_j,t_j,e_j) \in T|p_i==p_j\}| \geq 3 \}
 \]
@@ -327,10 +329,13 @@ users in this graph.
 
 Figure~\ref{fig:DiffMlocMdist} shows the result of using the PLE to ignore
 users who have low quality locations such as ``Pluto''.
+%
 The solid black line represents the normal results of geocoding where the
 location error is less than 1000 miles for 85\% of the users.
+%
 The cyan line shows the results of removing locations with a PLE greater than
 or equal to 1000 miles.
+%
 After removing only 10\% of the users, 93\% of them are within 1000 miles.
 
-\emph{What? 10\%+85\% does not make sense.}
+\jam{What? 10\%+85\% does not make sense.}
