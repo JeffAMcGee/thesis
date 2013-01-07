@@ -147,11 +147,11 @@ likely to live nearby.
 This makes sense because it is easy to meet 15 Twitter users in real life, but
 very few people know 1000 Twitter users who live in the same town.
 %
-Contacts with 10--99 followers were within 25 miles of their geo-loacted friend
+Contacts with 10--99 followers were within 25 miles of their geo-located friend
 45\% of the time while contacts with 1000--9999 followers were nearby only 26\%
 of the time.
 %
-There was a similar result in the number of friends: the prorportion of local
+There was a similar result in the number of friends: the proportion of local
 contacts went from 46\% down to 23\%.
 
 Mainstream media and celebrity accounts such as the New York Times and Lady
@@ -169,7 +169,7 @@ aoeu aoeu.
     \includegraphics[width=\linewidth]{figures/com_types.pdf}
     \caption{
     CDF of the distance between a target user and various types of contacts
-    ploted on a logarithmic scale.
+    plotted on a logarithmic scale.
     }
     \label{fig:ComTypes}
     \end{figure}
@@ -429,16 +429,16 @@ Around one in ten contacts did not have any contacts with a location from the
 contacts we looked at--they were treated as a separate group.
 
 In \cite{li2012towards}, the authors model the probability distribution of
-user's followers using a gaussian distribution, and use this to build a
+user's followers using a Gaussian distribution, and use this to build a
 location prediction system.
 %
 There are many other ways to analyze the leafs: average distance to the leafs,
 median distance to the leafs, fitting the distances to a curve such as a
-gaussian.
+Gaussian.
 %
 We are looking at location prediction anywhere in the world, which means
 contacts may be 10,000 miles away, and a location 10,000 miles away is nearly
-as bad as a loctation 1000 miles away, so average is obviously not useful.
+as bad as a location 1000 miles away, so average is obviously not useful.
 %
 The disadvantage to using the median is more subtle.
 %
@@ -446,7 +446,7 @@ As seen in Figure~\ref{fig:EdgeTypesCuml}, the median distance to a contact is
 often in the 100--1000 mile range, and only about a third of contacts are
 actually local.
 %
-This means that median distance to leafs does a reasnoble job of seperating the
+This means that median distance to leafs does a reasonable job of separating the
 worst contacts from the average contacts, but local contact ratio does a better
 job of identifying the very best contacts.
 
@@ -458,7 +458,7 @@ of location, but in reality it is a great predictor.
 
 Of the factors we have investigated, this is the one that is most strongly
 correlated with distance---in the next section we will see that local contact
-ratio ends up at the top of a decision tree to seperate local contacts from
+ratio ends up at the top of a decision tree to separate local contacts from
 non-local contacts.
 %
 One problem with this technique is that it is somewhat expensive to deal with
@@ -474,6 +474,6 @@ using at most 100 leafs per contact to at most 10 leafs per contact.
 The percentage of contacts within 25 miles with a good LCR based on 10 leafs,
 20 leafs, and 100 leafs was 53\%, 55\%, and 58\%, respectively.
 %
-All of these are noticably closer than reciprocal friends who are within 25
+All of these are noticeably closer than reciprocal friends who are within 25
 miles 38\% of the time.
 

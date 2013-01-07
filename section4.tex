@@ -19,7 +19,7 @@ the descriptions more concrete.
 
 \section{Edge Length Prediction}
 
-We need to seperate the best contacts, who are likely to be nearby, from
+We need to separate the best contacts, who are likely to be nearby, from
 bad contacts who are likely to be far away.
 %
 The factors that we investigated in the previous section indicate when someone
@@ -59,20 +59,20 @@ In addition, the data is dense and low-dimensional, so Support Vector Machines
 do not work well.
 %
 We chose to use a decision tree regressor based on the CART algorithm
-(classification and regression trees) to distiguish the best edges from the
+(classification and regression trees) to distinguish the best edges from the
 worst.
 %
-A decsision tree regressor works similiar to the well-known decision tree
+A decision tree regressor works similar to the well-known decision tree
 classifier, except that it produces real numbers as output instead of discrete
 classes.
 %
-During training, the training data is recursivly split based on the input
+During training, the training data is recursively split based on the input
 variable with the most predictive power to build a binary tree.
 %
 Each of the internal nodes of this tree have a cutoff for one of the input
 variables, and the leaves of the tree have a predicted value.
 %
-\emph{Does this need a better explaination? Can we assume people know decision
+\emph{Does this need a better explanation? Can we assume people know decision
 trees?}
 
 The regression tree was trained on several of the features from the previous
@@ -98,14 +98,14 @@ The top three levels of a decision tree are shown in Figure~\ref{fig:TreeTop}.
 The predictor does not do a great job of predicting the actual distance to a
 contact; there's simply too much noise.
 %
-However, it does do an excelent job of seperating the closest pairs of users
+However, it does do an excellent job of separating the closest pairs of users
 from the most distant pairs as we will show in the next section.
 
 \begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/tree_top.pdf}
 \caption{
-    The top three levels of the decision tree. This decsion tree will predict a
+    The top three levels of the decision tree. This decision tree will predict a
     distance of 839 miles for a contact with a local contact ratio of .2 and
     2800 friends. It will predict a much-closer distance of 43.7 miles for a
     user with a local contact ratio of .5 and a predicted location error of 10
@@ -124,38 +124,76 @@ In this section, we build a model for the probability that a user, who we refer
 to as the target user, lives at a specific location given the approximate
 location of his contacts.
 %
-Location prediction requires the probability that the user lives at a specific
-location.
+We will extend the model presented in \cite{backstrom2010find}.
+%
+Here's how they described their curve for the probability of friendship as a
+function of distance:
+\begin{quote}
+To generate this curve, we aggregate over all individuals, computing the
+distance between all $8.1 \times 10^{12}$ pairs of individuals with known
+addresses.
+We then bucket by intervals of 0.1 miles to compute the total number of pairs
+and the number of pairs for which an edge is present, plotting the ratio. It
+turns out that we can get a good fit to a curve of the form $a(b+x)^{-c}$.
+The exponent very close to $c=-1$ suggests that, at medium to long-range
+distances, the probability of friendship is roughly inversely proportional to
+distance.
+\end{quote}
+
+There are several differences between what they did and what we are doing.
+%
+First, the data we have is from around the world, so we consider distances up
+to 10,000 miles apart instead of stopping at 1,000 miles.
+%
+The data is a lot noisier in the 1,000--10,000 mile range because of the
+distribution of land and oceans on the earth.
+%
+Next, their dataset had street addresses for approximately 2.9 million
+Americans, and they used the friendships between users with street addresses to
+do the calculation.
+%
+Since our geolocated users rarely have connections with other geolocated users
+we use the geocoded locations of their contacts, which are less accurate than
+street addresses since the locations are usually city names.
+%
+Finally, the most important difference is that we are not treating all the
+edges like they are the same, so we can't fit just one curve.
+
+Location prediction with a maximum likelihood estimator requires an estimate of
+the probability that a user lives at a specific location.
 %
 We can find that probability by comparing the distribution of Twitter users to
-the distrubution of the contacts.
-
+the distribution of the contacts.
+%
 First, we needed a model for the density of Twitter users.
 %
 We calculate the distance between every target user and every contact
 (even for contacts and users who had no relationship).
 %
-In order to speed up this calculation, we divide the world into a $.1$ degree
-by $.1$ degree grid, and count the number of of contacts in each of the spots
-on the grid.
+We call the number of target and contact pairs that are $d$ miles apart
+$\strangerEdges(d)$.
+
+% We aren't doing this anymore.
+%In order to speed up this calculation, we divide the world into a $.1$ degree
+%by $.1$ degree grid, and count the number of of contacts in each of the spots
+%on the grid.
 %
-We took the distances between users and sorted them into 360 logarithmically
-scaled bins between 10 miles and 10,000 miles.
+%We took the distances between users and sorted them into 360 logarithmically
+%scaled bins between 10 miles and 10,000 miles.
 %
-(Every edge less than 10 miles was ignored when fitting the curve because it
-was around the size of the grid boxes, and therefore, noisy. Distances greater
-than 10,000 miles are on the opposite side of the world.)
+%(Every edge less than 10 miles was ignored when fitting the curve because it
+%was around the size of the grid boxes, and therefore, noisy. Distances greater
+%than 10,000 miles are on the opposite side of the world.)
 %
-We fit this segment to a power law curve, which gives us a way to estimate
-$\stgrEdges$.
+%We fit this segment to a power law curve, which gives us a way to estimate
+%the distribution of Twitter users.
 
 Next, we need to model the probability that two users are contacts.
 %
-We ran the decsision tree regressor on the training data to create a set of
+We ran the decision tree regressor on the training data to create a set of
 tuples $R = (d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where
 $d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by
-the decision
-tree.
+the decision tree.
 %
 We split $R$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
 follows:
@@ -168,24 +206,27 @@ follows:
     \end{cases}
 \]
 
-We split the edges in these groups into 480 logarithmically-scaled bins from 1
-to 10,000 miles based on the length of the edge.
-%
-We divided the number of edges that actually existed at each distance by the
-number of edges that could have existed as predicted by $\stgrEdges$.
-
+This lets us find $\contactEdges$, which is the number of users who fit in a
+quantile $i$ and had an actual distance of $d$
 \[
-\pContact{_i}(dist) = \frac{\nebrEdges{_i}(dist)}{\stgrEdges(dist)}
+    \contactEdges(i,d) = |\{
+            (d^a_i,d^p_i) \in R |
+            d==d^a_i \wedge q_i<=d^p_i<q_{i+1}
+        \}|
 \]
 
-We fit $pContact$ to the curve from \cite{backstrom2010find}:
+By comparing the number of edges that could have existed to the number of edges
+that actually exist at a specific distance and in a specific quantile, we can
+find the probability that a contact at a specific distance is in a quantile:
+
 \[
-    \pContact{_i}(dist) = a_{i} \times (b_{i}+dist)^{-c_{i}}
+\pContact(i,d) = \frac{\contactEdges(i,d)}{\strangerEdges(d)}
 \]
 
-\emph{explain how we picked of the ten curves a bucket would be in.}
+For each of the quantiles, we can fit $pContact$ to the curve from
+\cite{backstrom2010find}:
 \[
-    q_i<=d<q_{i+1}
+    \pContact(i,d) = a_{i} (b_{i}+d)^{-c_{i}}
 \]
 
 \begin{figure}[tbh]
@@ -195,11 +236,16 @@ We fit $pContact$ to the curve from \cite{backstrom2010find}:
 After splitting edges into groups based on their predicted distance, each group
 was fit to a curve. Here are four of the ten curves and their curves of best
 fit. The other six curves of best fit are shown as faint dotted lines. The
-decision tree does a reasonable job of seperating the best edges from the worst
+decision tree does a reasonable job of separating the best edges from the worst
 edges.
 }
 \label{fig:NearProbFit}
 \end{figure}
+
+%We split the edges in these groups into 480 logarithmically-scaled bins from 1
+%to 10,000 miles based on the length of the edge.
+
+\emph{Why 10?}
 
 This gave us 10 different curves for the probability that a certain type of
 contact exists between a pair of users.
@@ -219,7 +265,7 @@ for friendship and distance presented in \cite{backstrom2010find}.
 We used this model to build a Maximum Likelihood Estimator.
 
 \[
-    \MLELocation(L,P) = \argmax_{l^g_i \in L}
+    \MLELocation(L,P) = \argmax_{l^g_j \in L}
     \prod_{j=1}^{|L|} \pContact()
 \]
 

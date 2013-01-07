@@ -62,9 +62,9 @@ We created labels for the seed users and each of the steps along the way:
 \item[geo-located users] These users choose to use Twitter's location sharing
     features, which means that we have precise latitude and longitude
     coordinates for their location.
-\item[target users] These are a randomly chosen subset of the geo-loacted users
+\item[target users] These are a randomly chosen subset of the geo-located users
     who have at least one contact.
-\item[geocoder calibration users] These are geo-located users who filled out thei
+\item[geocoder calibration users] These are geo-located users who filled out their
     location field with a location we could decode, but were not selected to be
     part of the target users. They are used to differentiate between
     high-quality locations and low-quality locations that are likely to be
@@ -109,7 +109,7 @@ home location is greater than 50 miles.
 This only removed 3.4\% of the geo-located users.
 %
 We also removed an additional 2.9\% of the geo-located users who did not have
-any contacts with locationns we could decode, which left us with 1.6 million
+any contacts with locations we could decode, which left us with 1.6 million
 Twitter users with a known location.
 %
 We randomly selected 249,584 of these users for analysis and experimentation.
@@ -288,7 +288,7 @@ We treat the locations returned by the geocoder as a set of tuples $\geotuple$,
 where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
 $t_i$ is the id of the type of place, and $e_i$ is the location error.
 
-For notational convienience, we define a set of places $F$ that have at least
+For notational convenience, we define a set of places $F$ that have at least
 three users:
 \emph{is there a better way to say this?}
 \[
