@@ -322,20 +322,25 @@ locations with a high PLE are rarely accurate.
 The dotted line shows the values of the PLE for all the
 users in this graph.
 %
-63\% of these users have a PLE less than 10 miles.
+63\% of these users have a PLE less than 10 miles, and 90\% have a PLE
+less than 1000.
 }
 \label{fig:DiffMlocMdist}
 \end{figure}
 
-Figure~\ref{fig:DiffMlocMdist} shows the result of using the PLE to ignore
-users who have low quality locations such as ``Pluto''.
+The blue curves in Figure~\ref{fig:DiffMlocMdist} show a comparison of the PLE
+and the actual location error for 155,930 of the target users (these are the
+target users who also filled out the location field of their profile).
 %
-The solid black line represents the normal results of geocoding where the
-location error is less than 1000 miles for 85\% of the users.
+90\% of these users have a PLE that is less than 1000 miles.
 %
-The cyan line shows the results of removing locations with a PLE greater than
-or equal to 1000 miles.
+85\% of the target users live within 1000 miles of the location returned by
+the geocoder, but after removing only the 10\% of them who have a PLE greater
+than 1000 miles, 93\% of the remaining users live within 1000 miles of the
+location the geocoder returns.
 %
-After removing only 10\% of the users, 93\% of them are within 1000 miles.
-
-\jam{What? 10\%+85\% does not make sense.}
+In all of the future experiments, we treat locations with a PLE that is greater
+than 1000 as if no location had been supplied.
+%
+This filters out worthless locations such as ``Pluto'', while keeping somewhat
+vague, but still potentialy useful locations such as ``California''.
