@@ -8,10 +8,9 @@
 We evaluate the system against several baseline implementations, and evaluate
 how the performance of the system varies with the number of contacts a user has
 and how many FriendlyLocation chooses to use.
-We used five-fold cross validation on the target users to evaluate the system.
+We use five-fold cross validation on the target users to evaluate the system.
 We evaluated the FriendlyLocation system against the 249,584 target users.
 
-\jam{define aed and acc}
 
 \begin{figure}[tb]
 \centering
@@ -62,18 +61,60 @@ We investigate several implementations of the FriendlyLocation system:
     estimation.
 \end{description}
 
-Our basic FriendlyLocation system predicts the location within 25 miles 63.9\% of
-the time.
-%
-Our basic system preforms significantly better than the baseline implementations.
-%
-Unfortunately, when the predictor is wrong, it can be very wrong. \jam{More here.}
+\jam{Do we want to include the omniscient predictor that magically picks the
+closest contact?}
 %
 %The comparison to the omniscient predictor shows that there is room for improvement.
 %
 %Many users who have an incorrectly predicted location have at least one contact
 %that is closer than the incorrectly predicted location.
 
+We evaluate the system against the metrics used in previous works:
+accuracy at 25 miles (ACC) which was used in \cite{backstrom2010find}
+and average error distance (AED) proposed in \cite{cheng2010you} and
+extended in \cite{li2012towards}.
+%
+Following the notational conventions from \cite{li2012towards}, we define ACC
+and AED for a set of users $u \in U$ with $\Err(u)$ as the distance between a
+target user's home location and the predicted location.
+
+Accuracy is the fraction of users who live within 25 miles of their predicted
+location:
+\[
+    \ACC(U) = { |\{ u \in U : \Err(u)\le25 \}| \over |U| }
+\]
+
+Average error distance (reported as AED@100\%) is as follows:
+\[
+    \AED(U) = { \sum_{u \in U} \Err(u) \over |U| }
+\]
+
+We also use the extension of AED created by \cite{li2012towards}:
+\begin{quote}
+However, as AED is easily affected by outliers in results, we report AED at
+different percentiles (60\%, 80\% and 100\%) of users ranked by their error
+distances. E.g., AED@60\% is the average error distance of the top 60\% of
+users ranked by their error distances.
+\end{quote}
+The effect of outliers that they mention is even larger in our work than theirs
+because we are using locations from around the world instead of focusing on
+just the U.S.
+
+We evaluated the system using five-fold cross validation.
+%
+For each of the folds, we ran the tree classifier and generated the curves for
+pContact from the training data.
+%
+\jam{fb and strangers}
+%
+As seen in Table~\ref{tab:results} our basic FriendlyLocation system predicts
+the location within 25 miles 63.9\% of
+the time.
+%
+Our basic system preforms significantly better than the baseline implementations.
+%
+Unfortunately, when the predictor is wrong, it can be very wrong. \jam{More here.}
+%
 
 \section{Additional Information}
 Many Twitter users fill out the text-based location field.

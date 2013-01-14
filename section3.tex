@@ -132,12 +132,15 @@ friends or followers tend to be further away.
 close they are?}
 
 Since the primary goal of this research is to predict the location of users, we
-focus our attention on the number of friends and followers a contact has rather
-than the numbers for the target user.
+want to be able to discern the differences between contacts.
+%
+When looking at number of friends and followers, we focus our attention on the
+number of friends and followers a contact has rather than the numbers for the
+target user.
 %
 We took each of the reciprocal friendships that we looked at in
-Section~\ref{sec:EdgeTypes} and put them into log-scaled bins based on their
-number of friends or followers that the contact had.
+Section~\ref{sec:EdgeTypes} and put them into five log-scaled bins based on
+the number of friends or followers that the contact had.
 %
 Figure~\ref{fig:EdgeCounts} shows the result of this procedure.
 
@@ -160,8 +163,6 @@ hundred.
 %
 Follower count and friend count are good ways to distinguish celebrity and news
 accounts which are useless for location prediction.
-
-\jam{I think I wanted something here.}
 
 \ifdefined\THESIS
     \begin{figure}[tbh]
@@ -409,10 +410,10 @@ contacts with lots of local contacts to contacts with mostly distant contacts.
 \textbf{Local Contact Ratio}(LCR) is the fraction of a user's contacts
 who live near the user.
 %
-For a contact at location $l_c$ and a set of their contacts' locations L, we
+For a contact at location $l^c$ and a set of their contacts' locations L, we
 formally define LCR as follows:
 \[
-    \LCR(l_c,L) = { |\{ l_i \in L : |l_i-l_c|<25 \}|
+    \LCR(l^c,L) = { |\{ l_i \in L : |l_i-l^c|<25 \}|
                     \over |L| }
 \]
 %

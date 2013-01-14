@@ -171,7 +171,7 @@ We calculate the distance between every target user and every contact
 (even for contacts and users who had no relationship).
 %
 We call the number of target and contact pairs that are $d$ miles apart
-$\strangerEdges(d)$.
+$\edges(d)$.
 
 % We aren't doing this anymore.
 %In order to speed up this calculation, we divide the world into a $.1$ degree
@@ -188,6 +188,12 @@ $\strangerEdges(d)$.
 %We fit this segment to a power law curve, which gives us a way to estimate
 %the distribution of Twitter users.
 
+\jam{curve per leaf}
+
+% i index in R, decision tree tuples
+% j index in Q, quantile boundaries
+% k index in 
+
 Next, we need to model the probability that two users are contacts.
 %
 We ran the decision tree regressor on the training data to create a set of
@@ -199,19 +205,25 @@ We split $R$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
 follows:
 
 \[
-    q_i =
+    q_j =
     \begin{cases}
-        D^p_{(1+\lfloor i|R|/m \rfloor)}, & i=<m \\
-        \infty & i=m
+        D^p_{(1+\lfloor j|R|/m \rfloor)}, & j=<m \\
+        \infty & j=m
     \end{cases}
 \]
 
-This lets us find $\contactEdges$, which is the number of users who fit in a
-quantile $i$ and had an actual distance of $d$
+The quantile for a specific predicted distance $d^p_i$ can be found by
+comparing it to the boundaries:
 \[
-    \contactEdges(i,d) = |\{
-            (d^a_i,d^p_i) \in R |
-            d==d^a_i \wedge q_i<=d^p_i<q_{i+1}
+    \quantile(d^p_i) = \max_{j \in \{0,\dots,m\}} \{j: d^p<q_j\}
+\]
+
+This lets us find $\contactEdges$, which is the number of users who fit in a
+quantile $j$ and had an actual distance of $d$
+\[
+    \contactEdges(j,d) = |\{
+            (d^a_i,d^p_i) \in R :
+            d=d^a_i \wedge j=\quantile(d^p_i)
         \}|
 \]
 
@@ -220,13 +232,13 @@ that actually exist at a specific distance and in a specific quantile, we can
 find the probability that a contact at a specific distance is in a quantile:
 
 \[
-\pContact(i,d) = \frac{\contactEdges(i,d)}{\strangerEdges(d)}
+\pContact(j,d) = \frac{\contactEdges(j,d)}{\edges(d)}
 \]
 
-For each of the quantiles, we can fit $pContact$ to the curve from
+For each of the quantiles, we can fit $\pContact$ to the curve from
 \cite{backstrom2010find}:
 \[
-    \pContact(i,d) = a_{i} (b_{i}+d)^{-c_{i}}
+    \pContact(j,d) = a_{j} (b_{j}+d)^{-c_{j}}
 \]
 
 \begin{figure}[tbh]
@@ -242,10 +254,7 @@ edges.
 \label{fig:NearProbFit}
 \end{figure}
 
-%We split the edges in these groups into 480 logarithmically-scaled bins from 1
-%to 10,000 miles based on the length of the edge.
-
-\jam{Why 10?}
+\jam{Why 10? too few - not enough data, too many, just noise}
 
 This gave us 10 different curves for the probability that a certain type of
 contact exists between a pair of users.
@@ -261,12 +270,31 @@ into one group instead of ten equal groups, this would reduce to the model
 for friendship and distance presented in \cite{backstrom2010find}.
 
 
-\section{System}
-We used this model to build a Maximum Likelihood Estimator.
 
+\section{System}
+We used this model to build a maximum-likelihood estimator.
+
+\cite{backstrom2010find}
+
+\jam{cite backstrom:}
 \[
-    \MLELocation(L,P) = \argmax_{l^g_j \in L}
-    \prod_{j=1}^{|L|} \pContact()
+    \prod_{(u,v) \in E} p(|l_u-l_v|) \prod_{(u,v) \notin E} 1-p(|l_u-l_v|)
+\]
+
+$L^c$ is the set of all contacts
+\[
+    \pStrangers(l) = \prod_{l^c \in L^c}1-p(|l-l_c|)
+\]
+pStrangers is shown in Figure~\ref{fig:NearProbFit}.
+
+L is the set of locations of the contacts, and P is the set of predicted
+distances for the contacts
+\[
+    \MLELocation(L,P) = \argmax_{l^c_i \in L}
+    \left(
+        \pStrangers(l^c_i)
+        \prod_{l^c_j \in L,p_j \in P} \pContact(\quantile(p_j),|l^c_i-l^c_j|)
+    \right)
 \]
 
 \begin{algorithm}
@@ -294,4 +322,16 @@ We used this model to build a Maximum Likelihood Estimator.
 more here,
 non-independent as seen in~\ref{sec:closer}
 }
+
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=\linewidth]{figures/stranger_mat.png}
+\caption{
+    This is the probability that a user lives at a location based on the people
+    who they have no contact with. Dark areas have lower probability, and light
+    areas have a higher probability.
+    \jam{blah}
+}
+\label{fig:StrangerMat}
+\end{figure}
 
