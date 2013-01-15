@@ -26,11 +26,12 @@ We evaluated the FriendlyLocation system against the 249,584 target users.
 \begin{tabular}{l  r r r r}
     Model & aed@60 & aed@80 & aed@100 & acc@25 \\
     \hline
-    Baseline & 8.41$\pm$.039 & 40.8$\pm$.20 & 426$\pm$3.8 & 55.7\%$\pm$.09\% \\
+    Baseline & 8.41$\pm$.038 & 40.8$\pm$.20 & 426$\pm$3.9 & 55.7\%$\pm$.09\% \\
     Nearest & 7.73$\pm$.117 & 50.3$\pm$.39 & 594$\pm$9.3 & 56.5\%$\pm$.22\% \\
-    FriendLoc Basic & 5.35$\pm$.009 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.06\% \\
-    FriendLoc+Time Zone & 5.33$\pm$.008 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
-    FriendLoc+Location & 4.54$\pm$.012 & 15.7$\pm$.28 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
+    FriendLoc-Strangers & 5.79$\pm$.028 & 25.2$\pm$.18 & 377$\pm$4.3 & 62.4\%$\pm$.09\% \\
+    FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
+    FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
+    FriendLoc+Location & 4.54$\pm$.011 & 15.7$\pm$.27 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
 \end{tabular}
 \caption{
     Results of our location prediction system when compared to a baseline.

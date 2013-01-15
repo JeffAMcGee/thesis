@@ -212,6 +212,9 @@ follows:
     \end{cases}
 \]
 
+\jam{explain order statistic notation, $X_{(2)}$ means the second smallest
+element in $X$}
+
 The quantile for a specific predicted distance $d^p_i$ can be found by
 comparing it to the boundaries:
 \[
@@ -270,32 +273,79 @@ into one group instead of ten equal groups, this would reduce to the model
 for friendship and distance presented in \cite{backstrom2010find}.
 
 
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=\linewidth]{figures/stranger_mat.png}
+\caption{
+    This is the probability that a user lives at a location based on the people
+    who they have no contact with. Dark areas have lower probability, and light
+    areas have a higher probability.
+}
+\label{fig:StrangerMat}
+\end{figure}
 
-\section{System}
-We used this model to build a maximum-likelihood estimator.
 
-\cite{backstrom2010find}
-
-\jam{cite backstrom:}
+\section{Location Prediction System}
+We used this model to improve a maximum-likelihood estimator proposed by
+Backstrom et al. in \cite{backstrom2010find}.
+%
+The predictor they propose expressed in our notation is
 \[
-    \prod_{(u,v) \in E} p(|l_u-l_v|) \prod_{(u,v) \notin E} 1-p(|l_u-l_v|)
-\]
-
-$L^c$ is the set of all contacts
-\[
-    \pStrangers(l) = \prod_{l^c \in L^c}1-p(|l-l_c|)
-\]
-pStrangers is shown in Figure~\ref{fig:NearProbFit}.
-
-L is the set of locations of the contacts, and P is the set of predicted
-distances for the contacts
-\[
-    \MLELocation(L,P) = \argmax_{l^c_i \in L}
+    \Backstrom(L^c) = \argmax_{l^c_i \in L}
     \left(
-        \pStrangers(l^c_i)
-        \prod_{l^c_j \in L,p_j \in P} \pContact(\quantile(p_j),|l^c_i-l^c_j|)
+        \prod_{l^c_j \in L^c} {\p(|l^c_i-l^c_j|) \over 1-\p(l^c_i-l^c_j) }
+        \prod_{l^s_k \in L^s} 1-\p(|l^c_i-l^s_k|)
     \right)
 \]
+where $L^c$ is the set of locations of a user's contacts, $L^s$ is the set
+of all strangers' locations, and $\p$ is the probabilty of friendship given
+distance.
+
+The last product in that formula is only a function of the location $l^c_i$ and
+the locations of the strangers; it does not depend on any other information
+about the target user's contacts.
+%
+As suggested in \cite{backstrom2010find}, this can be pre-computed for every
+location.
+%
+For convienience, we refer to this as $\pStrangers$:
+\[
+    \pStrangers(l) = \prod_{l^s \in L^s}1-p(|l-l^s|)
+\]
+Figure~\ref{fig:StrangerMat} shows $\pStrangers$ for every location on earth.
+%
+\jam{Do we even need to show this graph? It's not new research, but I think it
+does help the reader understand pStrangers.}
+%
+Major cities have the lowest probability for $\pStrangers$.
+%
+It may seem counter-intuitive that areas with low population density have a
+higher probability, but consider this example: if someone has ten friends in
+New York City and ten friends in a small town in upstate New York, they are
+more likely to live in the small town, and just happen to know people in the
+big city.
+
+We propose improving their system by adding in information from the decision
+tree.
+%
+We do this by replacing the probability of being a contact based purely on
+distance ($p$) to the probability we found in the previous section
+($pContact$).
+%
+We now have a formula for predicting the best location given $L$, the set of
+locations of the contacts, and $P$, the set of predicted distances to the same
+contacts:
+\[
+    \FriendLoc(L,P) = \argmax_{l^c_i \in L}
+    \left(
+        \pStrangers(l^c_i)
+        \prod_{l^c_j \in L,p_j \in P}
+        {\pContact(\quantile(p_j),|l^c_i-l^c_j|) \over (1-p(|l^c_i-l^c_j|))}
+    \right)
+\]
+
+Algorithm~\ref{alg:friendloc} shows all the pieces from this section and the
+previous section tied together.
 
 \begin{algorithm}
   %\label{alg:friendloc}
@@ -313,25 +363,10 @@ distances for the contacts
       \State dist = regressionTree.predict(contact.features)
       \State predictedDists.append(dist)
   \EndFor
-  \State best = MLELocation(locations,predictedDists)
+  \State best = FriendLoc(locations,predictedDists)
   \State \Return locations[best]
   \end{algorithmic}
 \end{algorithm}
 
-\jam{formula for MLE, and description,
-more here,
-non-independent as seen in~\ref{sec:closer}
-}
-
-\begin{figure}[tbh]
-\centering
-\includegraphics[width=\linewidth]{figures/stranger_mat.png}
-\caption{
-    This is the probability that a user lives at a location based on the people
-    who they have no contact with. Dark areas have lower probability, and light
-    areas have a higher probability.
-    \jam{blah}
-}
-\label{fig:StrangerMat}
-\end{figure}
+\jam{locations of contacts are non-independent as seen in~\ref{sec:closer}. Where do we want to talk about this?}
 
