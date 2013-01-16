@@ -277,11 +277,9 @@ Backstrom et al. in \cite{backstrom2010find}.
 %
 The predictor they propose expressed in our notation is
 \[
-    \Backstrom(L^c) = \argmax_{l^c_i \in L}
-    \left(
-        \prod_{l^c_j \in L^c} {\p(|l^c_i-l^c_j|) \over 1-\p(l^c_i-l^c_j) }
-        \prod_{l^s_k \in L^s} 1-\p(|l^c_i-l^s_k|)
-    \right)
+    \Backstrom(l,L^c) = 
+        \prod_{l^c \in L^c} {\p(|l-l^c|) \over 1-\p(l-l^c) }
+        \prod_{l^s \in L^s} 1-\p(|l-l^s|)
 \]
 where $L^c$ is the set of locations of a user's contacts, $L^s$ is the set
 of all strangers' locations, and $\p$ is the probabilty of friendship given
@@ -322,15 +320,13 @@ We now have a formula for predicting the best location given $L$, the set of
 locations of the contacts, and $P$, the set of predicted distances to the same
 contacts:
 \[
-    \FriendLoc(L,P) = \argmax_{l^c_i \in L}
-    \left(
-        \pStrangers(l^c_i)
-        \prod_{l^c_j \in L,p_j \in P}
-        {\pContact(\quantile(p_j),|l^c_i-l^c_j|) \over (1-p(|l^c_i-l^c_j|))}
-    \right)
+    \FriendLoc(l,L,P) =
+        \left(
+            \prod_{l^c_k \in L,p_k \in P}
+            {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
+        \right)
+        \pStrangers(l)
 \]
-\jam{Consider defining this without argmax to make it easier to change things
-in the evaluation section.}
 
 Algorithm~\ref{alg:friendloc} shows all the pieces from this section and the
 previous section tied together.
@@ -351,7 +347,7 @@ previous section tied together.
       \State dist = regressionTree.predict(contact.features)
       \State predictedDists.append(dist)
   \EndFor
-  \State best = FriendLoc(locations,predictedDists)
+  \State best = argmax(FriendLoc(locations,predictedDists))
   \State \Return locations[best]
   \end{algorithmic}
 \end{algorithm}

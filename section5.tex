@@ -163,9 +163,28 @@ make the proportion of target users with a location match the general
 Twitter population.
 
 \jam{After doing this\dots}
+\[
+    \pLocation(l)
+    \left(
+        \prod_{l^c_k \in L,p_k \in P}
+        {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
+    \right)
+    \pStrangers(l)
+\]
+
 
 \section{Time Zone}
 \jam{blah}
+
+\jam{After doing this\dots}
+\[
+    \pTimeZone(l)
+    \left(
+        \prod_{l^c_k \in L,p_k \in P}
+        {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
+    \right)
+    \pStrangers(l)
+\]
 
 \section{Ignoring Strangers}
 Calculating $\pStrangers$ is very expensive.
@@ -177,18 +196,17 @@ We investigate the FriendlyLocation system without this information, by running
 prediction without multiplying by $\pStrangers$ when calculating the overall
 probability for each location:
 \[
-    \argmax_{l^c_i \in L}
-    \left(
-        \prod_{l^c_j \in L,p_j \in P}
-        \pContact(\quantile(p_j),|l^c_i-l^c_j|)
-    \right)
+    \prod_{l^c_k \in L,p_k \in P} \pContact(\quantile(p_k),|l-l^c_k|)
 \]
+As seen in Table~\ref{tab:results}, removing this information results in a
+slightly worse prediction.
+%
+There is a trade-off to be made here, and it may not be worth the time it takes
+to calculate $\pStrangers$.
 
 \section{Random Bits}
-\jam{do we want to do us-only evaluation?}
 
-\jam{eval for small number of hand-picked and random contacts?  In general,
-using more contacts ought to produce better results.}
+\jam{do we want to do us-only evaluation?}
 
 \jam{ Although we limited the crawler to 25 randomly-picked contacts per target
 user, if FriendlyLocation is going to be used as part of a larger system, the
