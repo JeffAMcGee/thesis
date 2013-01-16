@@ -5,70 +5,18 @@
     \section{Evaluation}
 \fi
 
-We evaluate the system against several baseline implementations, and evaluate
-how the performance of the system varies with the number of contacts a user has
-and how many FriendlyLocation chooses to use.
+We evaluate the system against a baseline implementation, and we investigate
+several modifications to the system.
+%
 We use five-fold cross validation on the target users to evaluate the system.
 We evaluated the FriendlyLocation system against the 249,584 target users.
 
-
-\begin{figure}[tb]
-\centering
-\includegraphics[width=\linewidth]{figures/fl_basic.pdf}
-\caption{
-    FriendlyLocation against several baseline systems.
-}
-\label{fig:baseline}
-\end{figure}
-
-\begin{table}[tb]
-\centering
-\begin{tabular}{l  r r r r}
-    Model & aed@60 & aed@80 & aed@100 & acc@25 \\
-    \hline
-    Baseline & 8.41$\pm$.038 & 40.8$\pm$.20 & 426$\pm$3.9 & 55.7\%$\pm$.09\% \\
-    Nearest & 7.73$\pm$.117 & 50.3$\pm$.39 & 594$\pm$9.3 & 56.5\%$\pm$.22\% \\
-    FriendLoc-Strangers & 5.79$\pm$.028 & 25.2$\pm$.18 & 377$\pm$4.3 & 62.4\%$\pm$.09\% \\
-    FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
-    FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
-    FriendLoc+Location & 4.54$\pm$.011 & 15.7$\pm$.27 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
-\end{tabular}
-\caption{
-    Results of our location prediction system when compared to a baseline.
-    The value after the $\pm$ is the standard deviation from the five-fold
-    cross-validation.
-    Including the target user's time zone information does not improve the
-    results, but using the target user's reported location, if they gave one,
-    makes for significantly better results.
-}
-\label{tab:results}
-\end{table}
-
-\section{Prediction}
-We investigate several implementations of the FriendlyLocation system:
-\begin{description}
-\item[Baseline] This is based on the MLE estimator presented in
-    \cite{backstrom2010find}. Some changes to the system had to be made to make it
-    work on Twitter's directed graph. (Facebook friendships are always
-    reciprocal.)
-\item[Nearest Contact] This predictor chooses the location of the contact that
-    the tree regressor picks as the closest contact.
-\item[FriendlyLocation Basic] This is the system described in the previous
-    section with only information from the locations of contacts.
-\item[FriendlyLocation + Time Zone] This is the system described in the previous
-    section plus the target user's time zone information.
-\item[FriendlyLocation + Location] This is the system described in the previous
-    section plus the target user's reported location is included in the
-    estimation.
-\end{description}
-
-\jam{Do we want to include the omniscient predictor that magically picks the
-closest contact?}
+For each of the folds, we ran the tree classifier and generated a new set of
+curves for pContact from the training data.
 %
-%The comparison to the omniscient predictor shows that there is room for improvement.
-%
-%Many users who have an incorrectly predicted location have at least one contact
-%that is closer than the incorrectly predicted location.
+We did not recalculate pStrangers or the probability as a function of distance
+used for the baseline, since these are fairly independent of the selected set
+of users.
 
 We evaluate the system against the metrics used in previous works:
 accuracy at 25 miles (ACC) which was used in \cite{backstrom2010find}
@@ -101,14 +49,72 @@ The effect of outliers that they mention is even larger in our work than theirs
 because we are using locations from around the world instead of focusing on
 just the U.S.
 
-We evaluated the system using five-fold cross validation.
+We investigate several implementations of the FriendlyLocation system along
+with two baseline systems, which we will discuss in upcoming sections:
+\begin{description}
+\item[Baseline] This is based on the MLE estimator presented in
+    \cite{backstrom2010find}. Some changes to the system had to be made to make it
+    work on Twitter's directed graph. (Facebook friendships are always
+    reciprocal.)
+\item[Nearest Contact] This predictor chooses the location of the contact that
+    the tree regressor picks as the closest contact.
+\item[FriendlyLocation Basic] This is the system described in the previous
+    section with only information from the locations of contacts.
+\item[FriendlyLocation - Strangers] This is the system described in the previous
+    section without $pStrangers$.
+\item[FriendlyLocation + Time Zone] This is the system described in the previous
+    section plus the target user's time zone information.
+\item[FriendlyLocation + Location] This is the system described in the previous
+    section plus the target user's reported location is included in the
+    estimation.
+\end{description}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/fl_basic.pdf}
+\caption{
+    FriendlyLocation against several baseline systems.
+}
+\label{fig:results}
+\end{figure}
+
+\begin{table}[tb]
+\centering
+\begin{tabular}{l  r r r r}
+    Model & aed@60 & aed@80 & aed@100 & acc@25 \\
+    \hline
+    Baseline & 8.41$\pm$.038 & 40.8$\pm$.20 & 426$\pm$3.9 & 55.7\%$\pm$.09\% \\
+    Nearest & 7.73$\pm$.117 & 50.3$\pm$.39 & 594$\pm$9.3 & 56.5\%$\pm$.22\% \\
+    FriendLoc$-$Strangers & 5.79$\pm$.028 & 25.2$\pm$.18 & 377$\pm$4.3 & 62.4\%$\pm$.09\% \\
+    FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
+    FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
+    FriendLoc+Location & 4.54$\pm$.011 & 15.7$\pm$.27 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
+\end{tabular}
+\caption{
+    Results of our location prediction system when compared to a baseline.
+    The value after the $\pm$ is the standard deviation from the five-fold
+    cross-validation.
+    Including the target user's time zone information does not improve the
+    results, but using the target user's reported location, if they gave one,
+    makes for significantly better results.
+}
+\label{tab:results}
+\end{table}
+
+\section{Basic FriendlyLocation}
+
+Figure~\ref{fig:results} and Table~\ref{tab:results} show our system compared
+to a baseline implementation.
+
+\jam{Do we want to include the omniscient predictor that magically picks the
+closest contact?}
 %
-For each of the folds, we ran the tree classifier and generated the curves for
-pContact from the training data.
+%The comparison to the omniscient predictor shows that there is room for improvement.
 %
-\jam{fb and strangers}
+%Many users who have an incorrectly predicted location have at least one contact
+%that is closer than the incorrectly predicted location.
 %
-As seen in Table~\ref{tab:results} our basic FriendlyLocation system predicts
+As seen in the table our basic FriendlyLocation system predicts
 the location within 25 miles 63.9\% of
 the time.
 %
@@ -117,7 +123,7 @@ Our basic system preforms significantly better than the baseline implementations
 Unfortunately, when the predictor is wrong, it can be very wrong. \jam{More here.}
 %
 
-\section{Additional Information}
+\section{Location Field}
 Many Twitter users fill out the text-based location field.
 %
 If this user-reported data is good, there is no reason to spend time
@@ -156,26 +162,34 @@ We also removed the location field from 17\% of the target users to
 make the proportion of target users with a location match the general
 Twitter population.
 
-\jam{discuss adding other factors}
+\jam{After doing this\dots}
+
+\section{Time Zone}
+\jam{blah}
+
+\section{Ignoring Strangers}
+Calculating $\pStrangers$ is very expensive.
+%
+It only has to be computed once, but if you wanted to do location prediction on
+a different social network, it would need to be recomputed.
+%
+We investigate the FriendlyLocation system without this information, by running
+prediction without multiplying by $\pStrangers$ when calculating the overall
+probability for each location:
+\[
+    \argmax_{l^c_i \in L}
+    \left(
+        \prod_{l^c_j \in L,p_j \in P}
+        \pContact(\quantile(p_j),|l^c_i-l^c_j|)
+    \right)
+\]
+
+\section{Random Bits}
 \jam{do we want to do us-only evaluation?}
 
-The final step of the evaluation is to investigate if FriendlyLocation would
-work with a smaller number of profiles than 25.
-%
-\jam{eval for small number of hand-picked and random contacts}
-%
-In general, using more contacts ought to produce better results.
-%
-Although we limited the crawler to 25 randomly-picked contacts per target
+\jam{eval for small number of hand-picked and random contacts?  In general,
+using more contacts ought to produce better results.}
+
+\jam{ Although we limited the crawler to 25 randomly-picked contacts per target
 user, if FriendlyLocation is going to be used as part of a larger system, the
-crawler should pick users based on relationship type before crawling.
-
-%Before removing contacts without location information, we sorted the users into
-%groups based on the number of contacts the had.
-%Next, we ran the FriendlyLocation predictor against each of them.
-%Figure~\ref{fig:LulResults} shows the results of prediction.
-%The quality of the results from the predictor was lower for users with fewer
-%than 50 contacts; however, as contacts increased beyond that, it had no
-%significant effect on the results.
-
-
+crawler should pick users based on relationship type before crawling.}

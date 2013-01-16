@@ -173,23 +173,6 @@ We calculate the distance between every target user and every contact
 We call the number of target and contact pairs that are $d$ miles apart
 $\edges(d)$.
 
-% We aren't doing this anymore.
-%In order to speed up this calculation, we divide the world into a $.1$ degree
-%by $.1$ degree grid, and count the number of of contacts in each of the spots
-%on the grid.
-%
-%We took the distances between users and sorted them into 360 logarithmically
-%scaled bins between 10 miles and 10,000 miles.
-%
-%(Every edge less than 10 miles was ignored when fitting the curve because it
-%was around the size of the grid boxes, and therefore, noisy. Distances greater
-%than 10,000 miles are on the opposite side of the world.)
-%
-%We fit this segment to a power law curve, which gives us a way to estimate
-%the distribution of Twitter users.
-
-\jam{curve per leaf}
-
 % i index in R, decision tree tuples
 % j index in Q, quantile boundaries
 % k index in 
@@ -257,8 +240,11 @@ edges.
 \label{fig:NearProbFit}
 \end{figure}
 
-\jam{Why 10? too few - not enough data, too many, just noise}
-
+We choose to use only 10 quantiles.
+%
+\jam{Why 10? too few - not enough data, too many, little benefit, 10 is easy to
+visualize}
+%
 This gave us 10 different curves for the probability that a certain type of
 contact exists between a pair of users.
 %
@@ -343,6 +329,8 @@ contacts:
         {\pContact(\quantile(p_j),|l^c_i-l^c_j|) \over (1-p(|l^c_i-l^c_j|))}
     \right)
 \]
+\jam{Consider defining this without argmax to make it easier to change things
+in the evaluation section.}
 
 Algorithm~\ref{alg:friendloc} shows all the pieces from this section and the
 previous section tied together.
@@ -368,5 +356,6 @@ previous section tied together.
   \end{algorithmic}
 \end{algorithm}
 
-\jam{locations of contacts are non-independent as seen in~\ref{sec:closer}. Where do we want to talk about this?}
+\jam{locations of contacts are not independent as seen in~\ref{sec:closer}, but
+this formula really assumes they are. Where do we want to talk about this?}
 
