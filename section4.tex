@@ -185,7 +185,9 @@ $d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by
 the decision tree.
 %
 We split $R$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
-follows:
+follows:\footnote{The notation used for order statistic may need some
+explaination.  $X_{n}$ is the $n^th$ element in the set $X$ when sorted in
+increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
 
 \[
     q_j =
@@ -195,8 +197,6 @@ follows:
     \end{cases}
 \]
 
-\jam{explain order statistic notation, $X_{(2)}$ means the second smallest
-element in $X$}
 
 The quantile for a specific predicted distance $d^p_i$ can be found by
 comparing it to the boundaries:
@@ -240,16 +240,14 @@ edges.
 \label{fig:NearProbFit}
 \end{figure}
 
-We choose to use only 10 quantiles.
-%
 \jam{Why 10? too few - not enough data, too many, little benefit, 10 is easy to
 visualize}
+
+We choose to split into ten quantiles, which gave us ten different curves for the
+probability that a certain type of contact exists between a pair of users.
 %
-This gave us 10 different curves for the probability that a certain type of
-contact exists between a pair of users.
-%
-Four of the ten curves from one of the five evaluation groups and their lines
-of best fit are shown in Figure~\ref{fig:NearProbFit}.
+Four of the ten curves from one of the folds from the five-fold evaluation and
+their lines of best fit are shown in Figure~\ref{fig:NearProbFit}.
 %
 The best contacts are orders of magnitude more
 likely to live near a target user than the worst contacts.
@@ -257,7 +255,11 @@ likely to live near a target user than the worst contacts.
 If the predictions from the tree regressor were ignored, and users were placed
 into one group instead of ten equal groups, this would reduce to the model
 for friendship and distance presented in \cite{backstrom2010find}.
-
+%
+We choose ten because it was large enough to distinguish between the curves.
+%
+Larger numbers of quantiles give no benefit since the curves we are
+fitting are so noisy as can be seen in Figure~\ref{fig:NearProbFit}.
 
 \begin{figure}[tbh]
 \centering
