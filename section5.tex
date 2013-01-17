@@ -89,6 +89,7 @@ with two baseline systems, which we will discuss in upcoming sections:
     FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
     FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
     FriendLoc+Location & 4.54$\pm$.011 & 15.7$\pm$.27 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
+    FriendLoc+Cutoff & 4.56$\pm$.026 & 15.1$\pm$.22 & 343$\pm$4.2 & 67.4\%$\pm$.08\% \\
 \end{tabular}
 \caption{
     Results of our location prediction system when compared to a baseline.
@@ -122,6 +123,37 @@ Our basic system preforms significantly better than the baseline implementations
 %
 Unfortunately, when the predictor is wrong, it can be very wrong. \jam{More here.}
 %
+
+\section{Time Zone}
+When the predictor is wrong, it is often wrong by thousands of miles.
+%
+All users on Twitter have a time zone setting for their account which is used
+to display the times that tweets were posted.
+%
+The time zone is set automatically when a user registers, and the user can
+change it, but it is still not always correct.
+%
+
+
+We modified the formula for $\FriendLoc$ to include $\pTimeZone$ as follows and
+re-ran the evaluation.
+\[
+    \pTimeZone(l)
+    \left(
+        \prod_{l^c_k \in L,p_k \in P}
+        {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
+    \right)
+    \pStrangers(l)
+\]
+The evaluation results for this formula are in the ``FriendLoc+Time Zone'' row
+of Table~\ref{tab:results}.
+%
+Unfortunately, adding the time zone information does not improve the location
+prediction.
+%
+Part of the problem is that the time zone settings are often wrong--over 9\% of
+the target users have a time zone setting in the hemisphere opposite their home
+location.
 
 \section{Location Field}
 Many Twitter users fill out the text-based location field.
@@ -162,7 +194,25 @@ We also removed the location field from 17\% of the target users to
 make the proportion of target users with a location match the general
 Twitter population.
 
-\jam{After doing this\dots}
+After doing this, we can use the user-supplied location of the user we are
+going to predict.
+%
+We investigate two different ways of using this information.
+%
+The simpler of the two, which we refer to as ``FriendLoc+Cutoff'' in
+Table~\ref{tab:results}.
+%
+If the PLE for the target user's geocoded location is less than or equal to 25
+miles, then we use the geocoded location as the actual location; otherwise, we
+ignore the geocoded location and just use $\FriendLoc$t diff to find the location.
+%
+This method locates 67.4\% of users within 25 miles, and is the best method
+that we found.
+
+We also looked at including the geocoded location in the maximum-likelihood
+estimation.
+%
+
 \[
     \pLocation(l)
     \left(
@@ -171,20 +221,9 @@ Twitter population.
     \right)
     \pStrangers(l)
 \]
+\jam{Do we want ``Friendloc+Location''? It helped, but it is not as good as the
+    cutoff and more complicated.}
 
-
-\section{Time Zone}
-\jam{blah}
-
-\jam{After doing this\dots}
-\[
-    \pTimeZone(l)
-    \left(
-        \prod_{l^c_k \in L,p_k \in P}
-        {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
-    \right)
-    \pStrangers(l)
-\]
 
 \section{Ignoring Strangers}
 Calculating $\pStrangers$ is very expensive.
