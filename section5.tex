@@ -104,25 +104,38 @@ with two baseline systems, which we will discuss in upcoming sections:
 
 \section{Basic FriendlyLocation}
 
-Figure~\ref{fig:results} and Table~\ref{tab:results} show our system compared
-to a baseline implementation.
-
-\jam{Do we want to include the omniscient predictor that magically picks the
-closest contact?}
+Table~\ref{tab:results} shows our system compared to a baseline implementation.
 %
-%The comparison to the omniscient predictor shows that there is room for improvement.
-%
-%Many users who have an incorrectly predicted location have at least one contact
-%that is closer than the incorrectly predicted location.
-%
-As seen in the table our basic FriendlyLocation system predicts
-the location within 25 miles 63.9\% of
-the time.
+As seen in the table our basic FriendlyLocation system predicts the location
+within 25 miles 63.9\% of the time.
 %
 Our basic system preforms significantly better than the baseline implementations.
 %
-Unfortunately, when the predictor is wrong, it can be very wrong. \jam{More here.}
+The results are more impressive when you look at it in terms of average error
+distance.
 %
+The baseline system has an average error distance of 40.8 for the best 80\% of
+predictions, and our basic system has an average error distance of 21.4.
+%
+This means that our system is better at making good estimates better than it is
+at making bad estimates good.
+%
+Unfortunately, when the predictor is wrong, it can be very wrong.
+%
+As seen in Figure~\ref{fig:results}, around a tenth of the predictions are worse
+than 1000 miles for all of the predictors.
+%
+Some of this inaccuracy may be caused by inaccurate training data, but there is
+no real way to know.
+
+\jam{Do we want to include the omniscient predictor that magically picks the
+closest contact?
+%
+The comparison to the omniscient predictor shows that there is room for improvement.
+%
+Many users who have an incorrectly predicted location have at least one contact
+that is closer than the incorrectly predicted location.
+}
 
 \section{Time Zone}
 When the predictor is wrong, it is often wrong by thousands of miles.
@@ -133,12 +146,25 @@ to display the times that tweets were posted.
 The time zone is set automatically when a user registers, and the user can
 change it, but it is still not always correct.
 %
-
-
+The time zone information is made availible on the Twitter API as the offset
+in seconds from UTC.
+%
+We compared the longitudes of the target users to the UTC offset for their
+profiles.
+%
+We put the target users into one of 24 groups based on x, the target user's
+longitude and z, the UTC offset measured in hours:
+${(\lfloor {x\over15}\rfloor-z+24)\mod{24}}$.
+%
+We found that 72\% of Twitter users fit into either group 0 or 1.
+%
+We define $\pTimeZone$ to be the fraction of the target users who fit into one
+of the 24 groups.
+%
 We modified the formula for $\FriendLoc$ to include $\pTimeZone$ as follows and
 re-ran the evaluation.
 \[
-    \pTimeZone(l)
+    \pTimeZone(l,z)
     \left(
         \prod_{l^c_k \in L,p_k \in P}
         {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
@@ -148,12 +174,21 @@ re-ran the evaluation.
 The evaluation results for this formula are in the ``FriendLoc+Time Zone'' row
 of Table~\ref{tab:results}.
 %
-Unfortunately, adding the time zone information does not improve the location
-prediction.
+We hoped that the time zone would help us avoid locations on the wrong side of
+the world; unfortunately, adding the time zone information does not improve the
+location prediction.
 %
-Part of the problem is that the time zone settings are often wrong--over 9\% of
+Part of the problem is that the time zone settings are often wrong---over 9\% of
 the target users have a time zone setting in the hemisphere opposite their home
 location.
+%
+The actual time zones on the earth have lines that are much more complex than
+the simple metric we used, but they rarely differ by more than an hour one way
+or the other.
+%
+Since this showed so little benefit, it is unlikely to be improved by better
+time zone lines.
+\jam{Do we want the time zone section?}
 
 \section{Location Field}
 Many Twitter users fill out the text-based location field.
@@ -209,12 +244,20 @@ ignore the geocoded location and just use $\FriendLoc$t diff to find the locatio
 This method locates 67.4\% of users within 25 miles, and is the best method
 that we found.
 
-We also looked at including the geocoded location in the maximum-likelihood
-estimation.
+We also look at including the geocoded location in the maximum-likelihood
+estimation similar to what we did for time zones.
 %
-
+The same data that was used to generate Figure~\ref{fig:DiffMlocMdist} can be
+used to calculate the probability that a user lives a certain distance from
+their geocoded location.
+%
+We take the location error, which is the distance between a user's home
+location and geocoded location, for all the target users with a location the
+geocoder can decode, and find the distrubution of these errors.
+%
+This lets us add $\pLocation$ into the maximum-likelihood estimator:
 \[
-    \pLocation(l)
+    \pLocation(|l-l^g|)
     \left(
         \prod_{l^c_k \in L,p_k \in P}
         {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
