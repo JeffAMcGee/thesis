@@ -1,0 +1,99 @@
+\documentclass[letterpaper]{article}
+\usepackage{aaai}
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\frenchspacing
+\pdfinfo{
+/Title (blah)
+/Subject (blah)
+/Author (blah)}
+\setcounter{secnumdepth}{0}  
+
+\usepackage{graphicx,float,wrapfig}
+\usepackage{amsmath}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\DeclareMathOperator{\pContact}{pContact}
+\DeclareMathOperator{\pLocation}{pContact}
+\DeclareMathOperator{\pTimeZone}{pTimeZone}
+\DeclareMathOperator{\pStrangers}{pStrangers}
+\DeclareMathOperator{\edges}{edges}
+\DeclareMathOperator{\contactEdges}{contactEdges}
+\DeclareMathOperator{\median}{median}
+\DeclareMathOperator{\PLE}{PLE}
+\DeclareMathOperator{\LCR}{LCR}
+\DeclareMathOperator{\FriendLoc}{FriendLoc}
+\DeclareMathOperator{\Backstrom}{Backstrom}
+\DeclareMathOperator{\p}{p}
+\DeclareMathOperator{\haversin}{haversin}
+\DeclareMathOperator{\Err}{Err}
+\DeclareMathOperator{\AED}{AED}
+\DeclareMathOperator{\ACC}{ACC}
+\DeclareMathOperator{\quantile}{quantile}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\renewcommand{\algorithmicthen}{}
+
+\algnewcommand\algorithmicinput{\textbf{Input:}}
+\algnewcommand\Input{\item[\algorithmicinput]}
+\algnewcommand\algorithmicoutput{\textbf{Output:}}
+\algnewcommand\Output{\item[\algorithmicoutput]}
+\algnewcommand\algorithmiccontinue{\textbf{continue}}
+\algnewcommand\Continue{\algorithmiccontinue}
+
+\algdef{SE}[FOR]{ForEach}{EndFor}[1]{\algorithmicfor\ #1\ }{\algorithmicend\ \algorithmicfor}
+
+\hyphenation{Four-square}
+\hyphenation{Face-book}
+
+\newcommand{\url}[1]{\texttt{#1}}
+\newcommand{\jam}[1]{\emph{#1}}
+%\newcommand{\jam}[1]{}
+
+
+\begin{document}
+\title{FriendlyLocation: Predicting Locations in Social Media Using Tie Strength}
+\author{For blind review}
+\maketitle
+\begin{abstract}
+\begin{quote}
+With the rise of volunteered user location information through services
+like Foursquare, Google Latitude, and Facebook Places, we face unprecedented
+access to the real-world connections among millions of social media users.
+%
+This location information is increasingly incorporated into social media for
+providing localized content, location-aware recommendations, and other
+geo-spatial enabled services.
+%
+In this paper, we investigate the relationship between the strength of the tie
+between a pair of users, and the distance between the pair through an
+examination of over 100 million geo-encoded tweets and
+over 73 million user profiles collected from information publicly
+posted to Twitter.
+%
+Based on this investigation, we identify several factors such as number of
+followers and how the users interact that can strongly reveal the distance
+between a pair of users, and use these factors to train a decision tree to
+distinguish between users who are likely to live nearby and pairs of users who
+are likely to live in different areas.
+%
+We use the results of this decision tree as the input to a maximum likelihood
+estimator to predict a user's location.
+%
+We find that this proposed method significantly improves the results of
+location estimation relative to a state-of-the-art technique.
+%
+Our system reduces the average error distance for 80\% of Twitter users from 40
+miles to 21 miles using only information from the user's friends and
+friends-of-friends.
+\end{quote}
+\end{abstract}
+
+\input{section1}
+\input{section2}
+\input{section3}
+\input{section4}
+\input{section5}
+\input{conclusion}
+
+\end{document}
