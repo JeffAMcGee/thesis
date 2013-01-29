@@ -1,9 +1,5 @@
-\ifdefined\THESIS
-    \chapter{\uppercase{Evaluation}}
-    \label{chap:eval}
-\else
-    \section{Evaluation}
-\fi
+\flchap{Evaluation}
+\label{chap:eval}
 
 We evaluate the system against a baseline implementation, and we investigate
 several modifications to the system.
@@ -12,9 +8,9 @@ We use five-fold cross validation on the target users to evaluate the system.
 We evaluated the FriendlyLocation system against the 249,584 target users.
 
 For each of the folds, we ran the tree classifier and generated a new set of
-curves for pContact from the training data.
+curves for $\pContact$ from the training data.
 %
-We did not recalculate pStrangers or the probability as a function of distance
+We did not recalculate $\pStrangers$ or the probability as a function of distance
 used for the baseline, since these are fairly independent of the selected set
 of users.
 
@@ -62,8 +58,10 @@ with two baseline systems, which we will discuss in upcoming sections:
     section with only information from the locations of contacts.
 \item[FriendlyLocation - Strangers] This is the system described in the previous
     section without $pStrangers$.
+\ifdefined\THESIS
 \item[FriendlyLocation + Time Zone] This is the system described in the previous
     section plus the target user's time zone information.
+\fi
 \item[FriendlyLocation + Location] This is the system described in the previous
     section plus the target user's reported location is included in the
     estimation.
@@ -78,7 +76,7 @@ with two baseline systems, which we will discuss in upcoming sections:
 \label{fig:results}
 \end{figure}
 
-\begin{table}[tb]
+\begin{table*}[tb]
 \centering
 \begin{tabular}{l  r r r r}
     Model & aed@60 & aed@80 & aed@100 & acc@25 \\
@@ -87,7 +85,9 @@ with two baseline systems, which we will discuss in upcoming sections:
     Nearest & 7.73$\pm$.117 & 50.3$\pm$.39 & 594$\pm$9.3 & 56.5\%$\pm$.22\% \\
     FriendLoc$-$Strangers & 5.79$\pm$.028 & 25.2$\pm$.18 & 377$\pm$4.3 & 62.4\%$\pm$.09\% \\
     FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
+\ifdefined\THESIS
     FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
+\fi
     FriendLoc+Location & 4.54$\pm$.011 & 15.7$\pm$.27 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
     FriendLoc+Cutoff & 4.56$\pm$.026 & 15.1$\pm$.22 & 343$\pm$4.2 & 67.4\%$\pm$.08\% \\
 \end{tabular}
@@ -100,9 +100,9 @@ with two baseline systems, which we will discuss in upcoming sections:
     makes for significantly better results.
 }
 \label{tab:results}
-\end{table}
+\end{table*}
 
-\section{Basic FriendlyLocation}
+\flsec{Basic FriendlyLocation}
 
 Table~\ref{tab:results} shows our system compared to a baseline implementation.
 %
@@ -137,7 +137,8 @@ Many users who have an incorrectly predicted location have at least one contact
 that is closer than the incorrectly predicted location.
 }
 
-\section{Time Zone}
+\ifdefined\THESIS
+\flsec{Time Zone}
 When the predictor is wrong, it is often wrong by thousands of miles.
 %
 All users on Twitter have a time zone setting for their account which is used
@@ -189,8 +190,9 @@ or the other.
 Since this showed so little benefit, it is unlikely to be improved by better
 time zone lines.
 \jam{Do we want the time zone section?}
+\fi
 
-\section{Location Field}
+\flsec{Location Field}
 Many Twitter users fill out the text-based location field.
 %
 If this user-reported data is good, there is no reason to spend time
@@ -268,7 +270,7 @@ This lets us add $\pLocation$ into the maximum-likelihood estimator:
     cutoff and more complicated.}
 
 
-\section{Ignoring Strangers}
+\flsec{Ignoring Strangers}
 Calculating $\pStrangers$ is very expensive.
 %
 It only has to be computed once, but if you wanted to do location prediction on
@@ -286,7 +288,7 @@ slightly worse prediction.
 There is a trade-off to be made here, and it may not be worth the time it takes
 to calculate $\pStrangers$.
 
-\section{Random Bits}
+\flsec{Random Bits}
 
 \jam{do we want to do us-only evaluation?}
 

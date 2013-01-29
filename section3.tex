@@ -1,12 +1,8 @@
-\ifdefined\THESIS
-    \chapter{\uppercase{Analysis of Distance to Contacts}}
-\else
-    \section{Analysis of Distance to Contacts}
-    \label{sec:analysis}
-\fi
+\flchap{Analysis of Distance to Contacts}
+\label{sec:analysis}
 
-Every user who has multiple contacts will have some contacts who are much
-closer than others.
+Every user who has multiple contacts will usually have some contacts who are
+much closer than the others.
 %
 In order to estimate the locations of users, we would like
 to find out which users are most likely to live nearby.
@@ -32,7 +28,7 @@ Reciprocal friends tend to be closer than other types of friendships.
 \label{fig:EdgeTypesCuml}
 \end{figure}
 
-\section{What type of contact is closest?}
+\flsec{What type of contact is closest?}
 \label{sec:EdgeTypes}
 
 Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
@@ -75,7 +71,7 @@ them, it is probably someone who knows them.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=.7\linewidth]{figures/edge_types_norm.pdf}
+\includegraphics[width=.9\linewidth]{figures/edge_types_norm.pdf}
 \caption{
 Histogram of distance to users for different types of relationships.
 The curves in this figure are the derivatives of the curves in
@@ -84,12 +80,12 @@ Figure~\ref{fig:EdgeTypesCuml}.
 \label{fig:EdgeTypes}
 \end{figure}
 
-\section{What is the distribution of contacts?}
+\flsec{What is the distribution of contacts?}
 
-To understand the distribution of contacts, we create a histogram of the
-distances between various types of contacts.
-We sort the distances to contacts into 160 logarithmically
-scaled bins (40 bins for each power of 10).
+To understand the distribution of contacts, we create a logarithmically-scaled
+histogram of the distances between various types of contacts.
+%We sort the distances to contacts into 160 logarithmically
+%scaled bins (40 bins for each power of 10).
 %
 Figure~\ref{fig:EdgeTypes} shows the result of plotting the histogram.
 %
@@ -118,7 +114,7 @@ In section~\ref{sec:model}, we use this idea that there are two types of
 contacts to build a predictive location model based on social ties.
 
 
-\begin{figure}[tbh]
+\begin{figure*}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_counts.pdf}
 \caption{
@@ -126,9 +122,9 @@ A comparison between number of followers and proximity---people who have more
 friends or followers tend to be further away.
 }
 \label{fig:EdgeCounts}
-\end{figure}
+\end{figure*}
 
-\section{Does the number of friends and followers a person have affect how
+\flsec{Does the number of friends and followers a person have affect how
 close they are?}
 
 Since the primary goal of this research is to predict the location of users, we
@@ -177,7 +173,7 @@ accounts which are useless for location prediction.
 \fi
 
 
-\begin{table}[tbh]
+\begin{table*}[tbh]
 \scriptsize
 \centering
 \begin{tabular}{l | r r | r r | r r | r r | r r}
@@ -204,9 +200,9 @@ contact.
 \jam{Should I highlight cells in the table?, Should I color-code?}
 }
 \label{tab:ComTypes}
-\end{table}
+\end{table*}
 
-\section{Are users closer to people they communicate with?}
+\flsec{Are users closer to people they communicate with?}
 
 We look at the 100 most recent tweets for the targets and one of their
 contacts for each type of their contacts.
@@ -214,7 +210,7 @@ contacts for each type of their contacts.
 The edges are divided into groups based on whether the target user
 mentioned the contact and whether the contact mentioned the target user.
 %
-For each of the groups, we calculate the the percentage of contacts who
+For each of the groups, we calculate the percentage of contacts who
 live within 25 miles of the targets and the number of edges in that group.
 %
 This is shown in Table~\ref{tab:ComTypes}.
@@ -235,7 +231,7 @@ reply, they probably do not live in the same area.
 %
 On the other hand, in the rare event that someone who is just a friend replies
 to their follower, then the probability that they live near each other is much
-higher--it goes from 21\% to 42\%.
+higher---it goes from 21\% to 42\%.
 
 The weakest type of contact is users who were just mentioned, but never
 replied to.
@@ -273,7 +269,7 @@ with proximity are rare.
 \label{tab:EdgeTypesProt}
 \end{table}
 
-\section{Are users closer to private accounts?}
+\flsec{Are users closer to private accounts?}
 
 Like many social networks, Twitter allows users to control the privacy settings
 on their account.
@@ -315,7 +311,7 @@ mutual friends.
 \label{fig:NearTriads}
 \end{figure}
 
-\section{If two of your friends live near each other, does that increase the
+\flsec{If two of your friends live near each other, does that increase the
 chance that they live near you?}
 
 In this section, we turn our attention to triangles of users.
@@ -349,11 +345,11 @@ We found this pattern for 147,669 of the target users.
 If a user had multiple instances of this pattern, it picked one of them
 randomly so that particular users would not bias the results.
 %
-Since our crawler only retrieved friend and follower information for a few
-reciprocal friends per user, it is reasonable to assume that this pattern
-is much more common, but the sample is more than enough data to draw some
-conclusions.
-
+%Since our crawler only retrieved friend and follower information for a few
+%reciprocal friends per user, it is reasonable to assume that this pattern
+%is more common, but the sample is more than enough data to draw some
+%conclusions.
+%
 Figure~\ref{fig:NearTriads} shows a comparison between distances to the ``my''
 users and the ``our'' users.
 %
@@ -395,7 +391,7 @@ live near the target user.
 \label{fig:LocalCmp}
 \end{figure}
 
-\section{Are some users closer to all of their friends and followers?}
+\flsec{Are some users closer to all of their friends and followers?}
 \label{sec:closer}
 
 In the previous sections we only looked at the contacts of the target

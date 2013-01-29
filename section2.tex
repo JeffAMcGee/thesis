@@ -1,19 +1,16 @@
-\ifdefined\THESIS
-    \chapter{\uppercase {Data Collection}}
+\flchap{Data Collection}
 
-\else
-    \section{Data Collection}
-\fi
-
-\section{Definitions}
+\flsec{Definitions}
 
 \jam{Talk about how geo-located users are different.}
 
 Before going into the details of the data collection, we first define a few
 terms to simplify the process of explaining how the data was collected.
 %
-Figure~\ref{fig:Terms} shows a social graph and uses most of the terms defined
-in this section.
+\ifdefined\THESIS
+    Figure~\ref{fig:Terms} shows a social graph and uses most of the terms
+    defined in this section.
+\fi
 %
 \textbf{Contacts} are defined to be the set of a user's friends, followers, and
 people who a user mentioned in her tweets (i.e., people the user speaks to).
@@ -27,20 +24,22 @@ communication edges that point back toward a user.
 In those platforms, it would be fairly straightforward to use that information
 in location prediction.
 
-\begin{figure}[tbh]
-\centering
-\includegraphics[width=\linewidth]{figures/terms.pdf}
-\caption{
-A small sample social graph for illustrating definitions used in this paper.
-Alberto adds location information to his tweets.
-Beryl is a reciprocal friend of Alberto, Chris is just a friend since Alberto
-follows Chris, Debby is just a follower, and Ernesto is just mentioned.
-The line to Ernesto is dashed to show that there is no friend/follow
-relationship between Alberto and Ernesto.
-The other arrows show who follows whom.
-}
-\label{fig:Terms}
-\end{figure}
+\ifdefined\THESIS
+    \begin{figure}[tbh]
+    \centering
+    \includegraphics[width=\linewidth]{figures/terms.pdf}
+    \caption{
+    A small sample social graph for illustrating definitions used in this paper.
+    Alberto adds location information to his tweets.
+    Beryl is a reciprocal friend of Alberto, Chris is just a friend since Alberto
+    follows Chris, Debby is just a follower, and Ernesto is just mentioned.
+    The line to Ernesto is dashed to show that there is no friend/follow
+    relationship between Alberto and Ernesto.
+    The other arrows show who follows whom.
+    }
+    \label{fig:Terms}
+    \end{figure}
+\fi
 
 Any given contact can be categorized into precisely one of these four disjoint
 sets:
@@ -79,8 +78,9 @@ We created labels for the seed users and each of the steps along the way:
     leaves.
 \end{description}
 
+\jam{define things in math notation here}
 
-\section{Data Collection}
+\flsec{Data Collection}
 To investigate how social relation and geographical distance between the
 relations correlate, we sample a dataset from Twitter.
 %
@@ -89,13 +89,14 @@ May, June, and July of 2012.
 
 We built a crawler to find these contacts for users who used Twitter's Location
 Feature to disclose their location.
+%
 The crawler sampled over one hundred million geo-coded tweets by monitoring
 Twitter's public streaming API for all of May 2012.
 % 118,464,320 lines including keepalive newlines and non-status messages.
 We kept the tweets from the users who posted at least three tweets, which left
-us with 1758101 Twitter users.
+us with 1,758,101 Twitter users.
 %
-For each of these users with geo-coded tweets, we use the median latitude and
+For each of these users with geo-coded tweets, we used the median latitude and
 median longitude of the locations of the user's tweets as an approximation of
 her home location.
 %
@@ -106,7 +107,7 @@ To account for this, the crawler calculated the distance between each tweet and
 the user's home location.
 %
 The crawler ignored users if the median distance from their tweets to their
-home location is greater than 50 miles.
+home location was greater than 50 miles.
 %
 This only removed 3.4\% of the geo-located users.
 %
@@ -115,9 +116,11 @@ any contacts with locations we could decode, which left us with 1.6 million
 Twitter users with a known location.
 %
 We randomly selected 249,584 of these users for analysis and experimentation.
+\ifdefined\THESIS
 \footnote{We originally selected 250,000 users, but had to remove 416 of them.
 These users had contacts with locations, but none of their contacts had
 meaningful locations.}
+\fi
 %
 Almost all of the experiments in this paper are based on these target
 users.
@@ -163,8 +166,8 @@ more than one target user.
 %
 In the end, we collected just over 73 million Twitter user profiles.
 
-\section{Geocoding}
-We used Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
+\flsec{Geocoding}
+We use Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
 %
 Gisgraphy does full-text search on the
 GeoNames\footnote{\url{http://www.geonames.org/}} database using Lucene.
@@ -187,17 +190,19 @@ First, it uses a regular expression to find latitude and longitude coordinates,
 which are treated as if they were a unique type of location returned by the
 geocoder.
 %
-Occasionally, users would put two locations separated by a slash, dash or a
-conjunction, and we pick the first one that we could decode.
+Occasionally, Twitter users put two locations separated by a slash, dash or a
+conjunction, and we pick the first one that we can decode.
 %
-If the geocoder did not return any results for a user, our system tried to
-geocode both locations and returned the first location that the geocoder
-understood.
+If the geocoder does not return any results for a user's location with the
+conjunction, our system tries to geocode both locations and returned the first
+location that the geocoder understood.
 
 Some locations are significantly more useful than others.
+%
 For example, even though Rhode Island and Montana are both states with around
 one million people, Rhode Island is smaller, and as a result, much more useful
 in estimating the location of a user.
+%
 To make the results of the geocoder more useful, we devised a method to
 estimate the accuracy of a location returned by the geocoder.
 
@@ -266,9 +271,9 @@ This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
 %
 We define the \textbf{predicted location error (PLE)} for a given location to
-be the median location error if it is one of the 17,370 locations that had
-at least three users; otherwise, it is the median location error for the location's
-type.
+be the median location error if it is one of the 17,370 locations that have
+at least three geocoding calibration users; otherwise, it is the median
+location error for the location's type.
 %
 For example, one user had ``PDX,OR'' in his location field.
 %
@@ -291,7 +296,7 @@ $t_i$ is the id of the type of place, and $e_i$ is the location error.
 
 For notational convenience, we define a set of places $F$ that have at least
 three users:
-\jam{is there a better way to say this?}
+\jam{is there a better way to say this? This is too long.}
 \[
     F = \{ p_i \mid \geotuple \land |\{(l^g_j,p_j,t_j,e_j) \in T|p_i==p_j\}| \geq 3 \}
 \]
@@ -303,7 +308,6 @@ This lets us define $PLE$ as a function of a place and type of place:
         \median(\{e_i |\geotuple \land p_i=p\})  & p \in F \\
         \median(\{e_i |\geotuple \land t_i=t \land p_i \notin F\})  & p \notin F \\
     \end{cases}
-\
 \]
 
 \begin{figure}[tb]

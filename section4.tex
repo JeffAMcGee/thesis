@@ -1,8 +1,4 @@
-\ifdefined\THESIS
-    \chapter{\uppercase{Location Prediction}}
-\else
-    \section{Location Prediction}
-\fi
+\flchap{Location Prediction}
 
 Based on the questions we answered in the previous section, we have enough
 information to build a system for location prediction, which we call
@@ -17,7 +13,7 @@ validation.
 In this chapter we will use the numbers from one of the five folds to make
 the descriptions more concrete.
 
-\section{Edge Length Prediction}
+\flsec{Edge Length Prediction}
 
 We need to separate the best contacts, who are likely to be nearby, from
 bad contacts who are likely to be far away.
@@ -34,7 +30,7 @@ with each other; users with lots of followers tend to have a low friend contact
 ratio.
 %
 Finally, distant accounts like celebrities may be useless for determining which
-city a person is from, but they might still suggest the user's home continent.
+city a person is from, but they might still suggest the user's home country.
 
 In \cite{backstrom2010find}, the authors present a model of the relationship
 between distance and friendship that treats all of the edges the same.
@@ -114,7 +110,7 @@ from the most distant pairs as we will show in the next section.
 \label{fig:TreeTop}
 \end{figure}
 
-\section{Model}
+\flsec{Model}
 \label{sec:model}
 
 In the previous sections, we looked at the probability that a contact lives a
@@ -186,7 +182,7 @@ the decision tree.
 %
 We split $R$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
 follows:\footnote{The notation used for order statistic may need some
-explaination.  $X_{n}$ is the $n^th$ element in the set $X$ when sorted in
+explaination.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in
 increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
 
 \[
@@ -240,9 +236,6 @@ edges.
 \label{fig:NearProbFit}
 \end{figure}
 
-\jam{Why 10? too few - not enough data, too many, little benefit, 10 is easy to
-visualize}
-
 We choose to split into ten quantiles, which gave us ten different curves for the
 probability that a certain type of contact exists between a pair of users.
 %
@@ -268,12 +261,15 @@ fitting are so noisy as can be seen in Figure~\ref{fig:NearProbFit}.
     This is the probability that a user lives at a location based on the people
     who they have no contact with. Dark areas have lower probability, and light
     areas have a higher probability.
+%
+\jam{Do we even need to show this graph? It's not new research, but I think it
+does help the reader understand $\pStrangers$.}
 }
 \label{fig:StrangerMat}
 \end{figure}
 
 
-\section{Location Prediction System}
+\flsec{Location Prediction System}
 We used this model to improve a maximum-likelihood estimator proposed by
 Backstrom et al. in \cite{backstrom2010find}.
 %
@@ -299,9 +295,6 @@ For convienience, we refer to this as $\pStrangers$:
     \pStrangers(l) = \prod_{l^s \in L^s}1-p(|l-l^s|)
 \]
 Figure~\ref{fig:StrangerMat} shows $\pStrangers$ for every location on earth.
-%
-\jam{Do we even need to show this graph? It's not new research, but I think it
-does help the reader understand pStrangers.}
 %
 Major cities have the lowest probability for $\pStrangers$.
 %

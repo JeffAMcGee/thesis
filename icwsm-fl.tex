@@ -14,12 +14,12 @@
 \usepackage{amsmath}
 \usepackage[noend]{algpseudocode}
 \usepackage{algorithm}
-\DeclareMathOperator{\pContact}{pContact}
-\DeclareMathOperator{\pLocation}{pContact}
-\DeclareMathOperator{\pTimeZone}{pTimeZone}
-\DeclareMathOperator{\pStrangers}{pStrangers}
+\DeclareMathOperator{\pContact}{pCon}
+\DeclareMathOperator{\pLocation}{pLoc}
+\DeclareMathOperator{\pTimeZone}{pTime}
+\DeclareMathOperator{\pStrangers}{pStgr}
 \DeclareMathOperator{\edges}{edges}
-\DeclareMathOperator{\contactEdges}{contactEdges}
+\DeclareMathOperator{\contactEdges}{conEd}
 \DeclareMathOperator{\median}{median}
 \DeclareMathOperator{\PLE}{PLE}
 \DeclareMathOperator{\LCR}{LCR}
@@ -30,7 +30,7 @@
 \DeclareMathOperator{\Err}{Err}
 \DeclareMathOperator{\AED}{AED}
 \DeclareMathOperator{\ACC}{ACC}
-\DeclareMathOperator{\quantile}{quantile}
+\DeclareMathOperator{\quantile}{qntl}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \renewcommand{\algorithmicthen}{}
 
@@ -49,6 +49,8 @@
 \newcommand{\url}[1]{\texttt{#1}}
 \newcommand{\jam}[1]{\emph{#1}}
 %\newcommand{\jam}[1]{}
+\newcommand{\flchap}[1]{\section{#1}}
+\newcommand{\flsec}[1]{\subsection{#1}}
 
 
 \begin{document}
@@ -57,11 +59,11 @@
 \maketitle
 \begin{abstract}
 \begin{quote}
-With the rise of volunteered user location information through services
-like Foursquare, Google Latitude, and Facebook Places, we face unprecedented
-access to the real-world connections among millions of social media users.
+%With the rise of volunteered user location information through services
+%like Foursquare, Google Latitude, and Facebook Places, we face unprecedented
+%access to the real-world connections among millions of social media users.
 %
-This location information is increasingly incorporated into social media for
+Location information is increasingly incorporated into social media for
 providing localized content, location-aware recommendations, and other
 geo-spatial enabled services.
 %
