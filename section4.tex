@@ -182,7 +182,7 @@ the decision tree.
 %
 We split $R$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
 follows:\footnote{The notation used for order statistic may need some
-explaination.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in
+explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in
 increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
 
 \[
@@ -280,7 +280,7 @@ The predictor they propose expressed in our notation is
         \prod_{l^s \in L^s} 1-\p(|l-l^s|)
 \]
 where $L^c$ is the set of locations of a user's contacts, $L^s$ is the set
-of all strangers' locations, and $\p$ is the probabilty of friendship given
+of all strangers' locations, and $\p$ is the probability of friendship given
 distance.
 
 The last product in that formula is only a function of the location $l^c_i$ and
@@ -290,7 +290,7 @@ about the target user's contacts.
 As suggested in \cite{backstrom2010find}, this can be pre-computed for every
 location.
 %
-For convienience, we refer to this as $\pStrangers$:
+For convenience, we refer to this as $\pStrangers$:
 \[
     \pStrangers(l) = \prod_{l^s \in L^s}1-p(|l-l^s|)
 \]
@@ -309,7 +309,7 @@ tree.
 %
 We do this by replacing the probability of being a contact based purely on
 distance ($p$) to the probability we found in the previous section
-($pContact$).
+($\pContact$).
 %
 We now have a formula for predicting the best location given $L$, the set of
 locations of the contacts, and $P$, the set of predicted distances to the same

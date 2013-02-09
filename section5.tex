@@ -57,7 +57,7 @@ with two baseline systems, which we will discuss in upcoming sections:
 \item[FriendlyLocation Basic] This is the system described in the previous
     section with only information from the locations of contacts.
 \item[FriendlyLocation - Strangers] This is the system described in the previous
-    section without $pStrangers$.
+    section without $\pStrangers$.
 \ifdefined\THESIS
 \item[FriendlyLocation + Time Zone] This is the system described in the previous
     section plus the target user's time zone information.
@@ -147,7 +147,7 @@ to display the times that tweets were posted.
 The time zone is set automatically when a user registers, and the user can
 change it, but it is still not always correct.
 %
-The time zone information is made availible on the Twitter API as the offset
+The time zone information is made available on the Twitter API as the offset
 in seconds from UTC.
 %
 We compared the longitudes of the target users to the UTC offset for their
@@ -255,7 +255,7 @@ their geocoded location.
 %
 We take the location error, which is the distance between a user's home
 location and geocoded location, for all the target users with a location the
-geocoder can decode, and find the distrubution of these errors.
+geocoder can decode, and find the distribution of these errors.
 %
 This lets us add $\pLocation$ into the maximum-likelihood estimator:
 \[
@@ -266,7 +266,7 @@ This lets us add $\pLocation$ into the maximum-likelihood estimator:
     \right)
     \pStrangers(l)
 \]
-\jam{Do we want ``Friendloc+Location''? It helped, but it is not as good as the
+\jam{Do we want ``FriendLoc+Location''? It helped, but it is not as good as the
     cutoff and more complicated.}
 
 
