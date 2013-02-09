@@ -84,6 +84,7 @@ with two baseline systems, which we will discuss in upcoming sections:
     Baseline & 8.41$\pm$.038 & 40.8$\pm$.20 & 426$\pm$3.9 & 55.7\%$\pm$.09\% \\
     Nearest & 7.73$\pm$.117 & 50.3$\pm$.39 & 594$\pm$9.3 & 56.5\%$\pm$.22\% \\
     FriendLoc$-$Strangers & 5.79$\pm$.028 & 25.2$\pm$.18 & 377$\pm$4.3 & 62.4\%$\pm$.09\% \\
+    FriendLoc$-$Leafs & 5.36$\pm$.011 & 22.1$\pm$.12 & 367$\pm$4.0 & 63.6\%$\pm$.12\% \\
     FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
 \ifdefined\THESIS
     FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
@@ -136,6 +137,7 @@ The comparison to the omniscient predictor shows that there is room for improvem
 Many users who have an incorrectly predicted location have at least one contact
 that is closer than the incorrectly predicted location.
 }
+
 
 \ifdefined\THESIS
 \flsec{Time Zone}
@@ -288,9 +290,30 @@ slightly worse prediction.
 There is a trade-off to be made here, and it may not be worth the time it takes
 to calculate $\pStrangers$.
 
-\flsec{Random Bits}
+\flsec{Prediction Using Only Contacts}
+Local Contact Ratio was the top node in the tree classifier for all 5 decision
+trees, which means it was the most important feature for classification.
+%
+However, getting information about the leafs is by far the most expensive part
+of the crawling and predicting process.
+%
+If we don't crawl the leafs, we also do not need to download the friends and
+followers of the contacts to find the leafs, which makes the process well over
+an order of magnitude faster.
+%
+We re-ran the tree regreessor, curve fitting, and prediction using only
+information from the target users friends, followers, and tweets and the
+profiles of the contacts.
+%
+The results for FriendLoc$-$Leafs are not quite as good as the basic version of
+FriendLoc, but they are still very close.
+%
+Prediction using only contacts takes only four calls to Twitter's API instead
+of the approximately 80 API calls it took to do the basic version of
+FriendlyLocation.
 
-\jam{do we want to do us-only evaluation?}
+
+\flsec{Random Bits}
 
 \jam{ Although we limited the crawler to 25 randomly-picked contacts per target
 user, if FriendlyLocation is going to be used as part of a larger system, the
