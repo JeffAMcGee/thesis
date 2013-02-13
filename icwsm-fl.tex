@@ -86,6 +86,7 @@ While an encouraging first step, this Facebook approach may encounter difficulti
 \item \textit{Multiple (often imprecise) location granularities.} First, many users in social media reveal broad, imprecise locations (e.g., at the city or state level), while others provide fine-grained latitude-longitude information. How can these multiple location granularities be integrated to account for uncertainty at different levels? 
 \item \textit{Varying social ties.} Second, not all relationships in social media are the same. Some ties are stronger than others, and presumably some ties are more revealing of a user's location. How does this variable tie strength nature impact location estimation? 
 \item \textit{Conflicting purposes.} Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}. What is the appropriate balance between these conflicting purposes for location estimation?
+% no one posts address to twitter becauese it is public, facebook is private
 \end{itemize}
 
 
@@ -207,7 +208,7 @@ For each of the quantiles, we can fit $p^*$ to the curve from \cite{backstrom201
     p^*(j,d) = a_{j} (b_{j}+d)^{-c_{j}}
 \]
 
-\begin{figure}[]
+\begin{figure}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
 \caption{
@@ -232,12 +233,33 @@ We choose to split into ten quantiles, which gave us ten different curves for th
 \section{Factors Impacting BLAH BLAH}
 In the previous section, we formalized the location estimation problem incorporating evidence of tie strength. But what factors actually impact the distance BLAH BALHB LABHA? In this section, we empirically examine a large sample from Twitter, totaling 100 million geo-encoded tweets and 73 million user profiles. Based on this sample, we examine the following properties to study how various types of edges correlated with proximity, including (i) friendship relationships, (ii) conversations between user, (iii) friend and follower counts, (iv) granularity of locations, BLAH BLAH.
 
-
 %All of the analysis in this section was done on the contacts of the 249,584 target users.
 % Contacts with a predicted location error that was greater than or equal to 1000 miles were filtered out.
 
+\begin{table*}[tbh]
+\scriptsize
+\centering
+\begin{tabular}{l l p{4cm} p{6cm}}
+    Label & Size & Description & Data obtained \\
+    \hline
+    Target Users & 249,584 & Users who posted at least 3 geo-located tweets &
+    Location from GPS coordinates, user ids of friends and followers,
+    and text of tweets. \\
+    Geocoding Users & 894,617 & Users who posted at least 3 geo-located tweets
+    and had a location the geocoder could parse, but not selected as target users &
+    Location from GPS coordinates and geocoded location from user profile \\
+    % 10,081,957 located contacts
+    Located Contacts & 10 million & 25 contacts of target users with locations, randomly selected &
+    Location from geocoded profile, user ids of friends and followers, and text of tweets \\
+    % 71,596,805 leafs minus some of 250k contacts
+    Leafs & 71 million & 100 contacts of target users, randomly selected &
+    user profile (some of these users have a geocoded profile)\\
+\end{tabular}
+\caption{Four diffenent sets of users and the data we obtained about them}
+\label{tab:datasets}
+\end{table*}
 
-\subsection{Data Collection from Twitter [TIGHTEN THIS SECTION 1/2 of a column]}
+\subsection{Data Collection from Twitter}
 To investigate how social relation and geographical distance between the
 relations correlate, we sample a dataset from Twitter.
 %
@@ -250,44 +272,49 @@ Feature to disclose their location.
 The crawler sampled over one hundred million geo-coded tweets by monitoring
 Twitter's public streaming API for all of May 2012.
 % 118,464,320 lines including keepalive newlines and non-status messages.
-We kept the tweets from the users who posted at least three tweets, which left
-us with 1,758,101 Twitter users.
+We kept the tweets from the users who posted at least three tweets.
+%which left us with 1,758,101 Twitter users.
 %
 For each of these users with geo-coded tweets, we used the median latitude and
 median longitude of the locations of the user's tweets as an approximation of
 her home location.
 %
-Some Twitter accounts, such as accounts that posted jobs, would
-move around faster than a human could possibly move.
+We filtered out 7\% of these users because they either had no contacts or they
+posted from too many differnent locations.
+
+%Some Twitter accounts, such as accounts that posted jobs, would
+%move around faster than a human could possibly move.
+%%
+%To account for this, the crawler calculated the distance between each tweet and
+%the user's home location.
+%%
+%The crawler ignored users if the median distance from their tweets to their
+%home location was greater than 50 miles.
+%%
+%This only removed 3.4\% of the geo-located users.
+%%
+%We also removed an additional 2.9\% of the geo-located users who did not have
+%any contacts with locations we could decode, which left us with 1.6 million
+%Twitter users with a known location.
 %
-To account for this, the crawler calculated the distance between each tweet and
-the user's home location.
-%
-The crawler ignored users if the median distance from their tweets to their
-home location was greater than 50 miles.
-%
-This only removed 3.4\% of the geo-located users.
-%
-We also removed an additional 2.9\% of the geo-located users who did not have
-any contacts with locations we could decode, which left us with 1.6 million
-Twitter users with a known location.
-%
-We randomly selected 249,584 of these users for analysis and experimentation.
+
+We randomly selected 249,584 of these users for the bulk of our analysis and
+experimentation.
 \ifdefined\THESIS
 \footnote{We originally selected 250,000 users, but had to remove 416 of them.
 These users had contacts with locations, but none of their contacts had
 meaningful locations.}
 \fi
 %
+We refer to these users as the target users.
+%
 Almost all of the experiments in this paper are based on these target
 users.
-
-[ADD A SUMMARY TABLE OF THE DATA WE HAVE]
-
-
-%To enable parallelization, we divided those users into 100 groups based on
-%the two least significant digits in their Twitter user id, and randomly selected
-%2500 users from each of the groups.
+%
+We used Twitter's API to download information about the target users, and
+crawled two steps out on the social graph.
+%
+Table~\ref{tab:datasets} shows the data obtained from Twitter.
 
 % distribution of the contacts
 %     med  avg      std
@@ -296,35 +323,35 @@ users.
 %jfrd 78.0 153.5700 241.222
 %jats  5.0   7.0764   8.060
 
-For all of the target users, the crawler used Twitter's API to download
-the users' 100 most recent tweets, a list of friend ids, and a list of follower ids.
-%
-Most of the target users had plenty of contacts of each of the four types.
-%
-The median number of reciprocal friends is 62, and the average is 132.
-%
-The average numbers are higher because the number of contacts a user has
-follows a heavy-tailed distribution.
-%
-The medians for other types of contacts are 35 just followers, 78 just friends,
-and 7 just mentioned.
-%
-If a user had over 25 contacts in any of the four types of contacts, the
-crawler chose a random sample of 25 from each of the types of contacts, and
-downloaded the profiles for up to 100 total contacts per target user.
-%
-From that 100, we randomly picked at most 25 contacts with locations we could
-decode to be the located contacts. For those located contacts, we downloaded
-their friends, followers, and tweets.
-%
-We finished this process by downloading up to 100 profiles of the contacts of
-the contacts.
-%
-Since the Twitter social network graph has a large strongly connected
-component, there are a significant number of users who are contacts or leafs for
-more than one target user.
-%
-In the end, we collected just over 73 million Twitter user profiles.
+%For all of the target users, the crawler used Twitter's API to download
+%the users' 100 most recent tweets, a list of friend ids, and a list of follower ids.
+%%
+%Most of the target users had plenty of contacts of each of the four types.
+%%
+%The median number of reciprocal friends is 62, and the average is 132.
+%%
+%The average numbers are higher because the number of contacts a user has
+%follows a heavy-tailed distribution.
+%%
+%The medians for other types of contacts are 35 just followers, 78 just friends,
+%and 7 just mentioned.
+%%
+%If a user had over 25 contacts in any of the four types of contacts, the
+%crawler chose a random sample of 25 from each of the types of contacts, and
+%downloaded the profiles for up to 100 total contacts per target user.
+%%
+%From that 100, we randomly picked at most 25 contacts with locations we could
+%decode to be the located contacts. For those located contacts, we downloaded
+%their friends, followers, and tweets.
+%%
+%We finished this process by downloading up to 100 profiles of the contacts of
+%the contacts.
+%%
+%Since the Twitter social network graph has a large strongly connected
+%component, there are a significant number of users who are contacts or leafs for
+%more than one target user.
+%%
+%In the end, we collected just over 73 million Twitter user profiles.
 
 
 
