@@ -23,7 +23,7 @@
 \DeclareMathOperator{\contactEdges}{contactEdges}
 \DeclareMathOperator{\actEdges}{actEdges}
 \DeclareMathOperator{\median}{median}
-\DeclareMathOperator{\PLE}{PLE}
+\DeclareMathOperator{\MLE}{MLE}
 \DeclareMathOperator{\LCR}{LCR}
 \DeclareMathOperator{\FriendLoc}{FriendLoc}
 \DeclareMathOperator{\Backstrom}{Backstrom}
@@ -832,6 +832,71 @@ All of these are noticeably closer than reciprocal friends who are within 25
 miles 38\% of the time.
 
 
+\subsection{Are some locations better than others?}
+The location field on a user's profile is just a text field that asks the user
+to respond to ``Where in the world are you?''.
+%
+Responses include neighborhood names, state names, country names, and even
+jokes and nonsense.
+%
+We use Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to geocode this
+free-form text to a location.
+%
+Gisgraphy does full-text search on the
+GeoNames\footnote{\url{http://www.geonames.org/}} database using Lucene.
+
+Since some locations are significantly more useful than others, we needed a way
+to evaluate the quality of a location.
+%
+The geocoding users are the 894,617 users who posted geo-located tweets, were not
+selected as target users, and also filled in the the free-response location
+field with something that the geocoder is able to decode.
+%
+We can compare the results of the geocoder to the location of the geo-located
+tweets for these users to quantify how accurate the geocoder is for certain
+types of locations.
+%
+We define the \textbf{location error} to be the distance between a user's home
+location (from their tweets) and the location returned from the geocoder.
+
+We calculated the location error for each of geocoding users, and grouped the
+users by their location.
+%
+For the 17,370 locations that had at least three geocoding users, we calculated
+the median location error (MLE) for that location.
+%
+All the users who were at locations with only one or two users were grouped
+according to the type of location returned by the geocoder.
+%
+We calculated the median location error for each location type.
+%
+%The median is more appropriate than the average or standard deviation because
+%those metrics are strongly affected by large outliers.
+%
+%We choose to make the cutoff three because that is the smallest value where the
+%median is not just an average.
+%
+This gives us a method to estimate the quality of a coordinate returned by
+Gisgraphy.
+
+\begin{table}[tbh]
+\centering
+\begin{tabular}{l r r }
+    MLE &local&count\\
+    \hline
+    0--10 & 50\% & 151962\\
+    10--100 & 27\% & 44814\\
+    100--1000 & 2\% & 39233\\
+\end{tabular}
+\caption{
+FIXME
+}
+\label{tab:mle}
+\end{table}
+
+Table~\ref{tab:mle} shows FIXME
+
+
 \subsection{Summary}
 Based on this large-scale analysis of Twitter, we observe the following: 
 
@@ -931,7 +996,7 @@ just the U.S.
 We investigate several implementations of the FriendlyLocation system along
 with two baseline systems, which we will discuss in upcoming sections:
 \begin{description}
-\item[Baseline] This is based on the MLE estimator presented in
+\item[Baseline] This is based on the maximum likelihood estimator presented in
     \cite{backstrom2010find}. Some changes to the system had to be made to make it
     work on Twitter's directed graph. (Facebook friendships are always
     reciprocal.)
@@ -1053,6 +1118,7 @@ The evaluation results for this formula are in the ``FriendLoc+Time Zone'' row
 of Table~\ref{tab:results}.
 %
 We hoped that the time zone would help us avoid locations on the wrong side of
+
 the world; unfortunately, adding the time zone information does not improve the
 location prediction.
 %
@@ -1088,20 +1154,20 @@ of the target users to make the distribution of the quality of their
 locations would match the quality of the contacts.
 %
 First, we sorted all the target users and all the contacts by their
-PLE(predicted location error).
+MLE(median location error).
 %
 Next, we looked at each percentile of the target users and compared
-their PLE to the PLE for that percentile in the contacts.
+their MLE to the MLE for that percentile in the contacts.
 %
 For each of the target users, we moved the user's location based on
 reverse geocoding away from the user's actual median location based on the
-difference between the PLEs.
+difference between the MEs.
 %
-For example, the median PLE for a target user was 5.9 miles, and the median
-PLE for a contact was 6.7 miles.
+For example, the MLE for a target user was 5.9 miles, and the median
+MLE for a contact was 6.7 miles.
 %
 This means that we need to add .8 miles of noise to a target user
-with a PLE of 5.9 so that the quality of the geo-located target user's location
+with a MLE of 5.9 so that the quality of the geo-located target user's location
 would match the quality of normal Twitter users.
 %
 We also removed the location field from 17\% of the target users to
@@ -1116,7 +1182,7 @@ We investigate two different ways of using this information.
 The simpler of the two, which we refer to as ``FriendLoc+Cutoff'' in
 Table~\ref{tab:results}.
 %
-If the PLE for the target user's geocoded location is less than or equal to 25
+If the ME for the target user's geocoded location is less than or equal to 25
 miles, then we use the geocoded location as the actual location; otherwise, we
 ignore the geocoded location and just use $\FriendLoc$t diff to find the location.
 %
@@ -1189,8 +1255,36 @@ of the approximately 80 API calls it took to do the basic version of
 FriendlyLocation.
 
 \section{Conclusion}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vestibulum fringilla orci, vitae dictum enim lobortis mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin pellentesque tincidunt velit gravida lacinia. Pellentesque vitae purus nibh, molestie facilisis mi. Donec porttitor dapibus felis, non rhoncus odio laoreet a. Phasellus felis neque, fermentum a sodales vitae, dictum ac dolor. Cras mattis, augue et vulputate aliquet, sapien eros fermentum ligula, sed bibendum dui libero sit amet justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vestibulum fringilla orci, vitae dictum enim lobortis mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin pellentesque tincidunt velit gravida lacinia. Pellentesque vitae purus nibh, molestie facilisis mi. Donec porttitor dapibus felis, non rhoncus odio laoreet a. Phasellus felis neque, fermentum a sodales vitae, dictum ac dolor. Cras mattis, augue et vulputate aliquet, sapien eros fermentum ligula, sed bibendum dui libero sit amet justo.
 
+We demonstrated that some types of relationships tend to be closer than others,
+identified some features of relationships that are correlated with physical
+proximity, and used this to accurately predict the locations of users on a
+social media website.
+%
+There are two directions that the future work on this project could go:
+improving the results of the predictor and using the predicted locations in
+other research projects.
+
+One way to improve this predictor is to combine tie strength and the social
+graph with other factors such as the words users choose to use as described by
+Cheng \cite{cheng2010you}.
+%
+It could be useful for the predictor to return not just a location, but an
+estimate of the quality of the prediction.
+%
+This paper only considered users who have a well-defined location.
+%
+FriendlyLocation could identify users who do not have meaningful locations such
+as people who constantly travel.
+%
+This could work well with the node locality metric which is defined by
+Scellato\cite{scellato2010distance}.
+
+Finally, high-quality geographic information opens up new avenues for research.
+With geographic location of users, we can cluster users and find local
+conversations.
+%
+It also allows businesses to provide hyper-local content and services.
 
 
 \end{document}
