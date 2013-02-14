@@ -41,6 +41,8 @@
 
 \pdfpagewidth 8.5in \pdfpageheight 11in
 
+\newcommand{\jam}[1]{\emph{#1}}
+
 \newcommand{\squishlist}{
 \begin{list}
 	{$\bullet$} { \setlength{
@@ -879,26 +881,31 @@ We calculated the median location error for each location type.
 This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
 
-\begin{table}[tbh]
+\begin{figure}[tbh]
 \centering
-\begin{tabular}{l r r }
-    MLE &local&count\\
-    \hline
-    0--10 & 50\% & 151962\\
-    10--100 & 27\% & 44814\\
-    100--1000 & 2\% & 39233\\
-\end{tabular}
+\includegraphics[width=\linewidth]{figures/rfrd_mdist.pdf}
 \caption{
-FIXME
+Reciprocal friends divided into groups based on the median location error(MLE)
+of their location.
+Contacts who report a location with a low MLE usually live near their contact,
+while contacts with a high MLE generally live in the same region.
 }
-\label{tab:mle}
-\end{table}
+\label{fig:RfrdMdist}
+\end{figure}
 
-Table~\ref{tab:mle} shows FIXME
-
+Figure~\ref{fig:RfrdMdist} shows the length of edges to reciprocal friends
+divided into three groups based on MLE.
+%
+Contacts with a low MLE provide relatively high-quality location
+information---50\% of reciprocal friends with a MLE less than 10 live within 25
+miles of the target user.
+%
+Contacts with locations with a MLE greater than 1000 were ignored for all of
+the experiments in this paper, since these locations were almost always
+nonsense values that happen to decode to an actual location.
 
 \subsection{Summary}
-Based on this large-scale analysis of Twitter, we observe the following: 
+Based on this large-scale analysis of Twitter, we observe the following:
 
 \begin{itemize}
 \item Reciprocal friendships tend to be physically closer than contacts with less strong relationships such as someone who is just a follower.
@@ -1136,6 +1143,7 @@ time zone lines.
 \fi
 
 \subsection{Location Field}
+\jam{We probably want to chop out this section if space is a problem.}
 Many Twitter users fill out the text-based location field.
 %
 If this user-reported data is good, there is no reason to spend time
