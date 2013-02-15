@@ -98,7 +98,7 @@ The study of geographical properties of online social media users has drawn inte
 
 Scellato et al. \cite{scellato2011socio} used data from three location based social networks to investigate the relationship between distance and location, and they show that connections are not purely caused by geographical or social factors.  They investigated two random models where they shuffle the user locations and another where they shuffle the social connections and investigate what happens to the user location.  They show that if a user has more connections, then their friends tend to be further away.  They also found that longer connections are equally likely to be part of a social triangle as shorter connections.
 
-Several researchers in recent years have looked into predicting user locations in a social network based on the social graph. In the best-known paper on this subject, Facebook researchers analyzed the physical distance between Facebook users' social relations and utilized the locations of a user's friends' to predict the user's geographical location \cite{backstrom2010find}. Davis et al. \cite{davis2011infer} investigated a system that predicted location by taking a vote among the locations of the user's friends and picking the most popular location.
+Several researchers in recent years have looked into predicting user locations in a social network based on the social graph. In the largest-to-date study on this subject, Facebook researchers analyzed the physical distance between Facebook users' social relations and utilized the locations of a user's friends' to predict the user's geographical location \cite{backstrom2010find}. Davis et al. \cite{davis2011infer} investigated a system that predicted location by taking a vote among the locations of the user's friends and picking the most popular location.
 
 An alternative to network-based approaches is \textit{content-based}, in which a the content associated with a user either explicitly reveals location information (e.g,. mentioning a local attraction like Disneyland) or implicitly does so (e.g., by inferring subtle local linguistic cues to estimate a user's location).
 %
@@ -108,13 +108,14 @@ Eisenstein et al. \cite{eisenstein2010latent} proposed a functionally similar sy
 %
 Recently, Li et al. \cite{li2012towards} proposed a system to integrate both network and content-based estimation via a unified discriminative influence model which combined locations that a Twitter user mentioned with the locations of the user's followers.
 
-They were doing location prediction at a point in time given a user's history of previous locations and friend current locations.
+%They were doing location prediction at a point in time given a user's history of previous locations and friend current locations.
 
-In Finding Your Friends and Following Them to Where You Are, \cite{sadilek2012finding} the authors look at users who post at least 100 geo-located tweets a month in NYC and LA. They reconstruct the social graph from co-occurring geo-located tweets and used dynamic Bayesian networks to predict where a user was at a particular moment in time.
+In recent work \cite{sadilek2012finding}, the authors look at users who post at least 100 geo-located tweets a month in NYC and LA. They reconstruct the social graph from co-occurring geo-located tweets and used dynamic Bayesian networks to predict where a user was at a particular moment in time.
 
-Finally, Cranshaw et al. \cite{cranshaw2010bridging} solved the inverse of the problem we are investigating: they predicted the existence of a social network tie given precise location information from laptops and cell phones. They used a collection of features of when users are co-located.  Together, these efforts have begun to lay a foundation for the study geo-social media.
+Finally, Cranshaw et al. \cite{cranshaw2010bridging} tackled the inverse of the problem we are investigating: they predicted the existence of a social network tie given precise location information from laptops and cell phones. They used a collection of features of when users are co-located.  Together, these efforts have begun to lay a foundation for the study geo-social media.
 
 
+<<<<<<< HEAD
 \section{Location Estimation: Problem Statement}
 In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his contacts. Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.
 We first describe the baseline Backstrom model for location estimation,
@@ -132,6 +133,13 @@ locations of the user's friends with known locations, and $L^s$, all 2.9
 million known loacions of Facebook users.
 %
 Then, the Facebook model estimates the likelihood of location $l$ as:
+=======
+\section{Location Estimation Incorporating Tie Strength}
+In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his contacts. Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.  We first describe the baseline Backstrom model for location estimation, identify several limitations of applying it more widely, and then describe the proposed FriendlyLocation approach that integrates tie strength for augmented location estimation.
+
+\subsection{Baseline: The Facebook Model}
+The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins with a striking observation: that the probability of friendship is roughly inversely proportional to distance. Specifically, by examining the ratio of actual edges at a particular distance to the total number of possible edges at that distance (i.e., the probability of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent close to $c=-1$. With the empirically observed probability of friendship, they divide the set of users into two groups: $L^c$ is the set of locations of a user's contacts; and $L^s$ is the set of all strangers' locations. Then, the Facebook model estimates the likelihood of location $l$ as: 
+>>>>>>> cav
 
 \[
     \Backstrom(l,L^c) =
@@ -139,6 +147,7 @@ Then, the Facebook model estimates the likelihood of location $l$ as:
         \prod_{l^s \in L^s} 1-\p(|l-l^s|)
 \]
 
+<<<<<<< HEAD
 \noindent where $\p$ is the probability of friendship given an input distance (which again, can be derived empirically).
 %
 [ADD SENTENCES GIVING INTUITION OF HOW THE BACKSTROM MODEL REALLY WORKS]
@@ -146,6 +155,9 @@ Then, the Facebook model estimates the likelihood of location $l$ as:
 The first product in the formula combines the probabilities from a user's friends.
 %
 The last product in the likelihood formula is only a function of the location $l^c_i$ and the locations of the strangers; it does not depend on any other information about the target user's contacts. For convenience, we refer to this as $\pStrangers$:
+=======
+\noindent where $\p$ is the probability of friendship given an input distance (which again, can be derived empirically). [ADD SENTENCES GIVING INTUITION OF HOW THE Facebook MODEL REALLY WORKS] The last product in the likelihood formula is only a function of the location $l^c_i$ and the locations of the strangers; it does not depend on any other information about the target user's contacts. For convenience, we refer to this as $\pStrangers$:
+>>>>>>> cav
 \[
     \pStrangers(l) = \prod_{l^s \in L^s}1-p(|l-l^s|)
 \]
@@ -159,6 +171,7 @@ more likely to live in the small town, and just happen to know people in the
 big city.
 
 
+<<<<<<< HEAD
 The Backstrom model naturally aggregates the locations of a user's contacts,
 and often picks the center of the cluster of the user's friends.
 %
@@ -185,6 +198,9 @@ locations (e.g., at the city or state level), while others provide fine-grained
 latitude-longitude information.
 %
 Third, the strength of connection between users necessarily varies, so capturing this variation is important. Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength of a tie can be predicted by interaction patterns.  Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}.
+=======
+The Facebook model naturally aggregates the locations of a user's contacts, such that nearby friends BLAH BLAH BLAH. However, directly applying this approach to other non-Facebook domains may encounter difficulties. First, the Facebook empirical study focused only on the continental US, meaning that distances between contacts were naturally limited to around 1,000 miles. When investigating global friendships (as on Twitter or on the rest of Facebook), there is considerable noise introduced in the 1,000--10,000 mile range due to the distribution of land and oceans on the surface of the earth. Second, the Facebook dataset had street addresses for approximately 2.9 million Americans, and they used the friendships between users with street addresses to do the calculation. In practice, however, many users in social media reveal broad, imprecise locations (e.g., at the city or state level), while others provide fine-grained latitude-longitude information. Third, the strength of connection between users necessarily varies, so capturing this variation is important. Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength of a tie can be predicted by interaction patterns.  Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}.
+>>>>>>> cav
 
 
 
@@ -277,13 +293,14 @@ We choose to split into ten quantiles, which gave us ten different curves for th
 \section{Factors Impacting the Length of an Edge}
 In the previous section, we formalized the location estimation problem incorporating evidence of tie strength. But what factors actually impact the length of an edge? In this section, we empirically examine a large sample from Twitter, totaling 100 million geo-encoded tweets and 73 million user profiles.
 %
-Based on this sample, we examine the following properties to study how various types of edges correlated with proximity, including
+Based on this sample, we examine the following properties to study how various types of edges correlated with proximity, including [JEFF UPDATE TO REFLECT THE FACTORS WE LIST IN THE SECTION]
     (i) friendship relationships,
     (ii) conversations between users,
     (iii) friend and follower counts,
     (iv) edges in social triangles,
     (v) granularity of locations, and
     (vi) distances from a contact to their contacts.
+    
 
 \begin{table*}[tbh]
 \scriptsize
@@ -423,26 +440,22 @@ Reciprocal friends tend to be closer than other types of friendships.
 
 \subsection{Factor 1: What type of contact is closest?}
 \label{sec:EdgeTypes}
+We first consider the type of contact and its impact on distance by dividing all contacts into one of four sets:
 
-Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
-function (CDF) of the distance between a target user and several types of
-contacts.
-
-Any given contact can be categorized into precisely one of these four disjoint
-sets:
 \begin{description}
-\item[reciprocal friend] The target user follows this user and is followed
+\item[reciprocal friend:] The target user follows this user and is followed
     back.
-\item[just friend] The target user follows this user and is not followed
+\item[just friend:] The target user follows this user and is not followed
     back.
-\item[just follower] The target user is followed by this user, but does
+\item[just follower:] The target user is followed by this user, but does
     not follow them.
-\item[just mentioned] The users do not follow each other, but the target
+\item[just mentioned:] The users do not follow each other, but the target
     user mentioned the name of the other user in a tweet.
 \end{description}
 
-
-
+Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
+function (CDF) of the distance between a target user and each of these types of
+contacts.
 %
 Distance is plotted on a logarithmic scale to show both local and
 global effects.
@@ -451,7 +464,7 @@ On a logarithmic scale, the contacts are fairly evenly distributed from being
 nearby to being on the opposite side of the world.
 %
 For reciprocal friends, the 1\textsuperscript{st} quartile, median, and
-3\textsuperscript{rd} of the distances are 7.9 miles, 106 miles, and 720 miles
+3\textsuperscript{rd} quartile of the distances are 7.9 miles, 106 miles, and 720 miles
 respectively.
 %
 There is a relatively flat section in all the lines around 3,000 miles.
@@ -460,7 +473,7 @@ There is a relatively flat section in all the lines around 3,000 miles.
 the west coast, but shorter than the distance from the east coast of the U.S.
 to Europe, so there are few population centers that are this distance apart.
 
-In general, reciprocal friends are the closest, followed by followers, friends,
+In general, we observe that reciprocal friends are the closest, followed by followers, friends,
 and finally users who are just mentioned.
 %
 38\% of reciprocal friends live within 25 miles while only 18\% of users
@@ -489,12 +502,10 @@ Figure~\ref{fig:EdgeTypesCuml}.
 \label{fig:EdgeTypes}
 \end{figure}
 
-\subsection{What is the distribution of contacts?}
 
-To understand the distribution of contacts, we create a logarithmically-scaled
+\medskip
+\noindent\textbf{What is the distribution of contacts?} To further analyze the distribution of contacts, we show in Figure~\ref{fig:EdgeTypes} a logarithmically-scaled
 histogram of the distances between various types of contacts.
-%
-Figure~\ref{fig:EdgeTypes} shows the result of plotting the histogram.
 %
 All four types of contacts follow roughly the same
 distribution: one peak around 10 miles from people who live nearby, and several
@@ -527,19 +538,19 @@ friends or followers tend to be further away.
 \label{fig:EdgeCounts}
 \end{figure*}
 
-\jam{Do we want to compare this to the bimodal distribution we saw in my CIKM
-poster? Bimodal is true of U.S., but not true for rest of world. Most location
-prediction papers focus on just USA.}
+%\jam{Do we want to compare this to the bimodal distribution we saw in my CIKM
+%poster? Bimodal is true of U.S., but not true for rest of world. Most location
+%prediction papers focus on just USA.}
 
-\subsection{Does the number of friends and followers a person have affect how
+\subsection{Factor 2: Does the number of friends and followers a person have affect how
 close they are?}
 
-Since the primary goal of this research is to predict the location of users, we
-want to be able to discern the differences between contacts.
+%Since the primary goal of this research is to predict the location of users, we
+%want to be able to discern the differences between contacts.
 %
-When looking at number of friends and followers, we focus our attention on the
-number of friends and followers a contact has rather than the numbers for the
-target user.
+The second factor we consider is the number of friends and followers of a contact. %, we focus our attention on the
+%number of friends and followers a contact has rather than the numbers for the
+%target user.
 %
 We took each of the reciprocal friendships that we looked at in
 Section~\ref{sec:EdgeTypes} and put them into five log-scaled bins based on
@@ -608,7 +619,7 @@ contact.
 \label{tab:ComTypes}
 \end{table*}
 
-\subsection{Are users closer to people they communicate with?}
+\subsection{Factor 3: Are users closer to people they communicate with?}
 
 We look at the 100 most recent tweets for the targets and one of their
 contacts for each type of their contacts.
@@ -675,7 +686,7 @@ with proximity are rare.
 \label{tab:EdgeTypesProt}
 \end{table}
 
-\subsection{Are users closer to private accounts?}
+\subsection{Factor 4: Are users closer to private accounts?}
 
 Like many social networks, Twitter allows users to control the privacy settings
 on their account.
@@ -717,10 +728,10 @@ mutual friends.
 \label{fig:NearTriads}
 \end{figure}
 
-\subsection{If two of your friends live near each other, does that increase the
+\subsection{Factor 5: If two of your friends live near each other, does that increase the
 chance that they live near you?}
 
-In this section, we turn our attention to triangles of users.
+We now turn our attention to triangles of users.
 Finding useful relationships between the edges of a social triangle is tricky
 because the three distances depend on each other.
 Unfortunately, it is fairly simple to show using the triangle inequality theorem
@@ -797,7 +808,7 @@ live near the target user.
 \label{fig:LocalCmp}
 \end{figure}
 
-\subsection{Are some users closer to all of their friends and followers?}
+\subsection{Factor 6: Are some users closer to all of their friends and followers?}
 \label{sec:closer}
 
 In the previous sections we only looked at the contacts of the target
@@ -881,7 +892,7 @@ All of these are noticeably closer than reciprocal friends who are within 25
 miles 38\% of the time.
 
 
-\subsection{Are some locations better than others?}
+\subsection{Factor 7: Are some locations better than others?}
 The location field on a user's profile is just a text field that asks the user
 to respond to ``Where in the world are you?''.
 %
@@ -952,7 +963,7 @@ the experiments in this paper, since these locations were almost always
 nonsense values that happen to decode to an actual location.
 
 \subsection{Summary}
-Based on this large-scale analysis of Twitter, we observe the following:
+Based on this large-scale analysis of Twitter, we conclude the following:
 
 \begin{itemize}
 \item Reciprocal friendships tend to be physically closer than contacts with less strong relationships such as someone who is just a follower.
@@ -960,11 +971,13 @@ Based on this large-scale analysis of Twitter, we observe the following:
 \item Protected accounts tend to be closer, but we provide less additional information for assessing their relative quality.
 \item Contacts with lots of friends and followers tend to be further away (since, in many cases these contacts correspond to celebrities or news organizations).
 \item Contacts with more precise locations are more useful for location prediction.
-\item Some people have lots of friends who are close by, and other people have friends who are far apart.
+%\item Some people have lots of friends who are close by, and other people have friends who are far apart.
+\item JEFF ANYTHING ELSE WE CAN CONCLUDE? AND THE ONE I COMMENTED OUT ... IS THERE SOME WAY TO PHRASE IT SO IT SOUNDS MORE SIGNIFICANT? 
 \end{itemize}
 
 
 
+<<<<<<< HEAD
 \section{Building and Evaluating the Location Estimator}
 
 We now have several features which are correlated with the length of an edge
@@ -979,10 +992,18 @@ In addition, the data is dense and low-dimensional, so Support Vector Machines
 do not work well.
 %
 We chose to use a decision tree regressor based on the CART algorithm (classification and regression trees) to distinguish the best edges from the worst. A decision tree regressor works similar to the well-known decision tree classifier, except that it produces real numbers as output instead of discrete classes. During training, the training data is recursively split based on the input
+=======
+\section{Building and Evaluating FriendlyLocation}
+In this section, we integrate the observations from our study of the factors that impact distance into the FriendlyLocation location estimator. While there are many options for mapping from input factors to tie strength, we adopt a decision tree regressor based on the CART algorithm (classification and regression trees) to distinguish the best edges from the worst.\footnote{Since most of the input features are correlated and either binary or non-linear,
+linear regression is unlikely to work well. In addition, the data is dense and low-dimensional, so Support Vector Machines
+do not work well.} A decision tree regressor works similar to the well-known decision tree classifier, except that it produces real numbers as output instead of discrete classes. During training, the training data is recursively split based on the input
+>>>>>>> cav
 variable with the most predictive power to build a binary tree.  Each of the internal nodes of this tree have a cutoff for one of the input
 variables, and the leaves of the tree have a predicted value.
 
-Since the distances between users varied by several orders of magnitude, we
+
+\medskip
+\noindent\textbf{Setup.} Since the distances between users varied by several orders of magnitude, we
 trained the regressor to predict the log of the distance.
 %
 The tree regressor was configured to not split leafs with fewer than 1000 data
@@ -1024,7 +1045,8 @@ We did not recalculate $\pStrangers$ or the probability as a function of distanc
 used for the baseline, since these are fairly independent of the selected set
 of users.
 
-We evaluate the system against the metrics used in previous works:
+\medskip
+\noindent\textbf{Metrics.} We evaluate the system against the metrics used in previous works:
 accuracy at 25 miles (ACC) which was used in \cite{backstrom2010find}
 and average error distance (AED) proposed in \cite{cheng2010you} and
 extended in \cite{li2012towards}.
@@ -1044,17 +1066,19 @@ Average error distance (reported as AED@100\%) is as follows:
     \AED(U) = { \sum_{u \in U} \Err(u) \over |U| }
 \]
 
-We also use the extension of AED created by \cite{li2012towards}:
-\begin{quote}
-However, as AED is easily affected by outliers in results, we report AED at
-different percentiles (60\%, 80\% and 100\%) of users ranked by their error
-distances. E.g., AED@60\% is the average error distance of the top 60\% of
-users ranked by their error distances.
-\end{quote}
-The effect of outliers that they mention is even larger in our work than theirs
-because we are using locations from around the world instead of focusing on
-just the U.S.
+Since AED may be affected by outliers, we also report the AED at other percentiles, following \cite{li2012towards}.
 
+%\begin{quote}
+%However, as AED is easily affected by outliers in results, we report AED at
+%different percentiles (60\%, 80\% and 100\%) of users ranked by their error
+%distances. E.g., AED@60\% is the average error distance of the top 60\% of
+%users ranked by their error distances.
+%\end{quote}
+%The effect of outliers that they mention is even larger in our work than theirs
+%because we are using locations from around the world instead of focusing on
+%just the U.S.
+
+\subsection{Evaluating FriendlyLocation}
 We investigate several implementations of the FriendlyLocation system along
 with two baseline systems, which we will discuss in upcoming sections:
 \begin{description}
@@ -1116,7 +1140,7 @@ with two baseline systems, which we will discuss in upcoming sections:
 \label{tab:results}
 \end{table}
 
-\subsection{Basic FriendlyLocation}
+
 
 Table~\ref{tab:results} shows our system compared to a baseline implementation.
 %
