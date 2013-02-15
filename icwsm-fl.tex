@@ -123,7 +123,7 @@ The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins
 With the empirically observed probability of friendship, they can estimate the
 likelihood that a user lives at a location $l$ using both $L^c$, the set of
 locations of the user's friends with known locations, and $L^s$, all 2.9
-million known loacions of Facebook users.
+million known locations of Facebook users.
 %
 Then, the Facebook model estimates the likelihood of location $l$ as:
 \[
@@ -134,9 +134,10 @@ Then, the Facebook model estimates the likelihood of location $l$ as:
 
 \noindent where $\p$ is the probability of friendship given an input distance (which again, can be derived empirically).
 %
-[ADD SENTENCES GIVING INTUITION OF HOW THE BACKSTROM MODEL REALLY WORKS]
-%
 The first product in the formula combines the probabilities from a user's friends.
+%
+Locations near a user's friends will have a higher probability because $\p$ is
+roughly inversely proportional to distance.
 %
 The last product in the likelihood formula is only a function of the location $l^c_i$ and the locations of the strangers; it does not depend on any other information about the target user's contacts. For convenience, we refer to this as $\pStrangers$:
 \[
@@ -152,8 +153,13 @@ more likely to live in the small town, and just happen to know people in the
 big city.
 
 
-The Facebook model naturally aggregates the locations of a user's contacts,
-and often picks the center of the cluster of the user's friends.
+The Facebook model naturally aggregates the locations of a user's friends, and
+gives the probability that a user lives at a given location.
+%
+They then calculate this probability at each of the locations of the user's friends.
+%
+The location with the highest probability is often the center of the cluster of
+the user's friends.
 %
 However, directly applying this approach to other non-Facebook domains may encounter difficulties.
 %
@@ -169,7 +175,7 @@ Americans, and they used the friendships between users with street addresses to
 do the calculation.
 %
 Since information on Facebook is usually only shared with a user's friends,
-people are more willing to divulge their home addresss.
+people are more willing to divulge their home addresses.
 %
 On most other social media websites, the location is publicly shared.
 %
@@ -183,11 +189,9 @@ Third, the strength of connection between users necessarily varies, so capturing
 \subsection{FriendlyLocation: Incorporating Tie Strength}
 A common theme of these challenges is that the quality of the geographic information conveyed by a relationship in social media varies. Some edges may convey strong evidence of the location of a user. For example, intuitively the many edges between a user with an unknown location and his co-workers (for whom we know their location) should contribute strongly to the likelihood that the user is nearby those co-workers. In contrast, links between a user with an unknown location and with a news service (e.g., CNN) should contribute little discriminating power to estimating the location of the user.
 
-\jam{talk in terms of edges and tie strength, not contacts}
 The challenge here is to separate the best contacts, who are likely to be nearby, from bad contacts who are likely to be far away. Simply encoding our intuitions about who should make a good contact is a starting point, but could miss many non-obvious relationships: for example, there may exist a pair of users who are good friends, communicate with each other, have many friends in common, and yet still live on opposite sides of the globe. 
 
-[NEED TO FIX THE NOTATION IN THIS SECTION; NO MENTION OF TRAINING DATA -- JUST MAPPING EDGES TO QUANTILES]
-Hence, we propose to assess the relative quality of each edge from a target user to his contacts based, so that edges conveying strong location information are weighed more than others. Concretely, suppose we have a single edge from a user to one of his contacts. We propose to assign this edge to a quantile based on its estimated ``goodness'' (where this goodness can be based on observations over BLAH BLAH BLAH). Suppose we construct a set of $m$ quantiles, representing edges at different distances. Let the boundaries for these quantiles be  $\{q_0,\dots,q_m\}$, where:\footnote{The notation used for order statistic may need some explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
+Hence, we propose to assess the relative quality of each edge from a target user to his contacts, so that edges conveying strong location information are weighed more than others. Concretely, suppose we have a single edge from a user to one of his contacts. We propose to assign this edge to a quantile based on its estimated ``goodness''. Suppose we construct a set of $m$ quantiles, representing edges at different distances. Let the boundaries for these quantiles be  $\{q_0,\dots,q_m\}$, where:\footnote{The notation used for order statistic may need some explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
 
 \[
     q_j =
@@ -202,7 +206,7 @@ Hence, we propose to assess the relative quality of each edge from a target user
     \quantile(d^p_i) = \max_{j \in \{0,\dots,m\}} \{j: d^p<q_j\}
 \]
 
-Hence, we can identify the actual edges ($\actEdges$) that exist with a distance of $d$This lets us find $\actEdges$, which is the number of users who fit in a quantile $j$ and had an actual distance of $d$
+Hence, we can identify the actual edges ($\actEdges$) that exist with a distance of $d$. This lets us find $\actEdges$, which is the number of users who fit in a quantile $j$ and had an actual distance of $d$
 \[
     \actEdges(j,d) = |\{
             (d^a_i,d^p_i) \in R :
@@ -222,7 +226,11 @@ This could be looked at as a classification problem where we want to classify ed
 
 
 
-We propose improving their system by adding in information from the decision tree. We do this by replacing the probability of being a contact based purely on distance ($p$) to the probability we found in the previous section ($\pContact$). We now have a formula for predicting the best location given $L$, the set of locations of the contacts, and $P$, the set of predicted distances to the same
+We propose improving their system by adding in information from the decision tree.
+%
+We do this by replacing the probability of being a contact based purely on distance ($p$) to the probability based on the regression tree ($p^*$).
+%
+We now have a formula for predicting the best location given $L$, the set of locations of the contacts, and $P$, the set of predicted distances to the same
 contacts:
 \[
     FL(l,L,P) =
@@ -239,7 +247,7 @@ Location prediction with a maximum likelihood estimator requires an estimate of 
 % j index in Q, quantile boundaries
 % k index in 
 
-Next, we need to model the probability that two users are contacts. We ran the decision tree regressor on the training data to create a set of
+Next, we need to model the probability that two users are contacts. We ran the decision tree regressor on millions of edges to create a set of
 tuples $R = (d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where $d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by the decision tree. 
 
 
@@ -303,7 +311,6 @@ types of edges correlated with proximity, including
 \end{table*}
 
 \subsection{Data Collection from Twitter}
-\jam{talk about how geo-located users are different}
 To investigate how social relation and geographical distance between the
 relations correlate, we sample a dataset from Twitter.
 %
@@ -325,6 +332,22 @@ her home location.
 %
 We filtered out 7\% of these users because they either had no contacts or they
 posted from too many different locations.
+
+Users who post geo-located tweets are not entirely representative of the
+average Twitter user.
+%
+In particular, they are less concerned about their privacy and have a precise
+location.
+%
+We only use information obtained from the contacts, and not the geolocated
+users themselves in our prediction.
+%
+There are some Twitter accounts, such as large organizations, who do not have a
+single location.
+%
+In practice, a location prediction system would need to identify users who do
+not have a location.
+
 
 %Some Twitter accounts, such as accounts that posted jobs, would
 %move around faster than a human could possibly move.
@@ -506,7 +529,7 @@ mainstream media.
 The former group is useful for predicting location and the latter group is not.
 
 Most previous location prediction work has focused on doing predicting
-locations in the contenental U.S.
+locations in the continental U.S.
 %
 In the first figure from \cite{mcgee2011geographic}, McGee et al. observe a
 bimodal distribution with strong peaks at 10 miles and 2500 miles.
