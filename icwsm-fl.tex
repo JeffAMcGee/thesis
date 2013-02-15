@@ -32,7 +32,7 @@
 \DeclareMathOperator{\Err}{Err}
 \DeclareMathOperator{\AED}{AED}
 \DeclareMathOperator{\ACC}{ACC}
-\DeclareMathOperator{\quantile}{quantile}
+\DeclareMathOperator{\quantile}{q}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \renewcommand{\algorithmicthen}{}
 
@@ -116,32 +116,82 @@ Finally, Cranshaw et al. \cite{cranshaw2010bridging} solved the inverse of the p
 
 
 \section{Location Estimation: Problem Statement}
-In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his contacts. Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.  We first describe the baseline Backstrom model for location estimation, describe the BLAH BLAH, then BLAH BLAB ALLAHABAD.
+In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his contacts. Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.
+We first describe the baseline Backstrom model for location estimation,
+show a way to extend it using by treating good and bad edges differently,
+investigate several factors which correlate with edges that are useful for location prediction,
+and then combine these factors to build and evaluate a location prediction system.
+
 
 \subsection{Baseline: The Backstrom Model}
-The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins with a striking observation: that the probability of friendship is roughly inversely proportional to distance. Specifically, by examining the ratio of actual edges at a particular distance to the total number of possible edges at that distance (i.e., the probability of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent close to $c=-1$. With the empirically observed probability of friendship, they divide the set of users into two groups: $L^c$ is the set of locations of a user's contacts; and $L^s$ is the set of all strangers' locations. Then, the Facebook model estimates the likelihood of location $l$ as: 
+The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins with a striking observation: that the probability of friendship is roughly inversely proportional to distance. Specifically, by examining the ratio of actual edges at a particular distance to the total number of possible edges at that distance (i.e., the probability of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent close to $c=-1$.
+%
+With the empirically observed probability of friendship, they can estimate the
+likelihood that a user lives at a location $l$ using both $L^c$, the set of
+locations of the user's friends with known locations, and $L^s$, all 2.9
+million known loacions of Facebook users.
+%
+Then, the Facebook model estimates the likelihood of location $l$ as:
 
 \[
-    \Backstrom(l,L^c) = 
-        \prod_{l^c \in L^c} {\p(|l-l^c|) \over 1-\p(l-l^c) }
+    \Backstrom(l,L^c) =
+        \prod_{l^c \in L^c} {\p(|l-l^c|) \over 1-\p(|l-l^c|) }
         \prod_{l^s \in L^s} 1-\p(|l-l^s|)
 \]
 
-\noindent where $\p$ is the probability of friendship given an input distance (which again, can be derived empirically). [ADD SENTENCES GIVING INTUITION OF HOW THE BACKSTROM MODEL REALLY WORKS] The last product in the likelihood formula is only a function of the location $l^c_i$ and the locations of the strangers; it does not depend on any other information about the target user's contacts. For convenience, we refer to this as $\pStrangers$:
+\noindent where $\p$ is the probability of friendship given an input distance (which again, can be derived empirically).
+%
+[ADD SENTENCES GIVING INTUITION OF HOW THE BACKSTROM MODEL REALLY WORKS]
+%
+The first product in the formula combines the probabilities from a user's friends.
+%
+The last product in the likelihood formula is only a function of the location $l^c_i$ and the locations of the strangers; it does not depend on any other information about the target user's contacts. For convenience, we refer to this as $\pStrangers$:
 \[
     \pStrangers(l) = \prod_{l^s \in L^s}1-p(|l-l^s|)
 \]
 
-\noindent As suggested in \cite{backstrom2010find}, this can be pre-computed for every location. [ADD ONE SENTENCE SUMMARIZING WHAT THEY FIND] 
+\noindent As suggested in \cite{backstrom2010find}, this can be pre-computed for every location.
+Major cities have the lowest probability for $\pStrangers$, and remote areas have the highest probability.
+It may seem counter-intuitive that areas with low population density have a
+higher probability, but consider this example: if someone has ten friends in
+New York City and ten friends in a small town in upstate New York, they are
+more likely to live in the small town, and just happen to know people in the
+big city.
 
 
-The Backstrom model naturally aggregates the locations of a user's contacts, such that nearby friends BLAH BLAH BLAH. However, directly applying this approach to other non-Facebook domains may encounter difficulties. First, the Facebook empirical study focused only on the continental US, meaning that distances between contacts were naturally limited to around 1,000 miles. When investigating global friendships (as on Twitter or on the rest of Facebook), there is considerable noise introduced in the 1,000--10,000 mile range due to the distribution of land and oceans on the surface of the earth. Second, the Facebook dataset had street addresses for approximately 2.9 million Americans, and they used the friendships between users with street addresses to do the calculation. In practice, however, many users in social media reveal broad, imprecise locations (e.g., at the city or state level), while others provide fine-grained latitude-longitude information. Third, the strength of connection between users necessarily varies, so capturing this variation is important. Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength of a tie can be predicted by interaction patterns.  Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}.
+The Backstrom model naturally aggregates the locations of a user's contacts,
+and often picks the center of the cluster of the user's friends.
+%
+However, directly applying this approach to other non-Facebook domains may encounter difficulties.
+%
+First, the Facebook empirical study focused only on the continental US, meaning
+that distances between contacts were naturally limited to around 1,000 miles.
+%
+When investigating global friendships (as on Twitter or on the rest of
+Facebook), there is considerable noise introduced in the 1,000--10,000 mile
+range due to the distribution of land and oceans on the surface of the earth.
+%
+Second, the Facebook dataset had street addresses for approximately 2.9 million
+Americans, and they used the friendships between users with street addresses to
+do the calculation.
+%
+Since information on Facebook is usually only shared with a user's friends,
+people are more willing to divulge their home addresss.
+%
+On most other social media websites, the location is publicly shared.
+%
+In practice, many users in social media reveal broad, imprecise
+locations (e.g., at the city or state level), while others provide fine-grained
+latitude-longitude information.
+%
+Third, the strength of connection between users necessarily varies, so capturing this variation is important. Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength of a tie can be predicted by interaction patterns.  Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}.
 
 
 
 \subsection{FriendlyLocation: Incorporating Tie Strength}
 A common theme of these challenges is that the quality of the geographic information conveyed by a relationship in social media varies. Some edges may convey strong evidence of the location of a user. For example, intuitively the many edges between a user with an unknown location and his co-workers (for whom we know their location) should contribute strongly to the likelihood that the user is nearby those co-workers. In contrast, links between a user with an unknown location and with a news service (e.g., CNN) should contribute little discriminating power to estimating the location of the user. 
 
+\jam{talk in terms of edges and tie strength, not contacts}
 The challenge here is to separate the best contacts, who are likely to be nearby, from bad contacts who are likely to be far away. Simply encoding our intuitions about who should make a good contact is a starting point, but could miss many non-obvious relationships: for example, there may exist a pair of users who are good friends, communicate with each other, have many friends in common, and yet still live on opposite sides of the globe. 
 
 [NEED TO FIX THE NOTATION IN THIS SECTION; NO MENTION OF TRAINING DATA -- JUST MAPPING EDGES TO QUANTILES]
