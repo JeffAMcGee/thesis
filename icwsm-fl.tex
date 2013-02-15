@@ -80,7 +80,7 @@ Location-based social media is widespread, with the adoption of voluntary user-b
 
 By investigating the interplay between geography and social media, both researchers and practitioners are enabling new applications that leverage location. Location information is increasingly incorporated into social media for providing localized content, location-aware recommendations, and other geo-spatial enabled services. For example, researchers have begun investigating techniques to cluster users based on their revealed geographic patterns \cite{scellato2010distance}, automatically deriving location-based social networks, and improving friend suggestion based on geographic proximity \cite{cranshaw2010bridging}, \cite{wang2011human}, \cite{crandall2010inferring}. Localized social media activity -- like Twitter discussions about a recent city council vote -- can be automatically detected and directed to interested parties. Crowds of co-located people can be identified and related support services can be directed toward them -- in the case of a fire or emergency, resources may be more smartly targeted to the affected regions.
 
-Tempering this excitement, however is a key challenge: how to derive high-quality location estimates for users in social media. Many users choose not to reveal their location, while others may reveal their location only using noisy or overly general descriptors (e.g., `` New York'').  To tackle this challenge, one of the most popular location estimation methods is \textit{network-based estimation}, in which a user's location is derived from the known location  properties of other users nearby in the social network (e.g,. if most of my direct friends are in San Francisco, then perhaps I am as well) \cite{davis2011infer}, \cite{li2012towards}. One of the best known network-based approaches was introduced by Facebook researchers Backstrom et al. \cite{backstrom2010find} in a comprehensive study over 2.9 million Facebook users. This Facebook study analyzed users who had posted a home street address and found that as distance increases, the probability of friendship decreases. Building on this observational study of Facebook users, they showed how the street adressess of a user's friends could be used to predict a user's location within 25 miles 57\% of the time.
+Tempering this excitement, however is a key challenge: how to derive high-quality location estimates for users in social media. Many users choose not to reveal their location, while others may reveal their location only using noisy or overly general descriptors (e.g., `` New York'').  To tackle this challenge, one of the most popular location estimation methods is \textit{network-based estimation}, in which a user's location is derived from the known location  properties of other users nearby in the social network (e.g,. if most of my direct friends are in San Francisco, then perhaps I am as well) \cite{davis2011infer}, \cite{li2012towards}. One of the best known network-based approaches was introduced by Facebook researchers Backstrom et al. \cite{backstrom2010find} in a comprehensive study over 2.9 million Facebook users. This Facebook study analyzed users who had posted a home street address and found that as distance increases, the probability of friendship decreases. Building on this observational study of Facebook users, they showed how the street addresses of a user's friends could be used to predict a user's location within 25 miles 57\% of the time.
 
 While an encouraging first step, this Facebook approach may encounter difficulties in location estimation when applied more broadly to other social media services:
 
@@ -100,24 +100,23 @@ Scellato et al. \cite{scellato2011socio} used data from three location based soc
 
 Several researchers in recent years have looked into predicting user locations in a social network based on the social graph. In the best-known paper on this subject, Facebook researchers analyzed the physical distance between Facebook users' social relations and utilized the locations of a user's friends' to predict the user's geographical location \cite{backstrom2010find}. Davis et al. \cite{davis2011infer} investigated a system that predicted location by taking a vote among the locations of the user's friends and picking the most popular location.
 
-An alternative to network-based approaches is \textit{content-based}, in which a the content associated with a user either explicitly reveals location information (e.g,. mentioning a local attraction like Disneyland) or implicitly does so (e.g., by inferring subtle local linguistic cues to estimate a user's location). Cheng et al. \cite{cheng2010you} proposed a content-based system for locating users on Twitter. They find words that are highly concentrated in specific regions and build a model to calculate the probability that a user lives at a location. [ANOTHER ONE?] Recently, Li et al. \cite{li2012towards} proposed a system to integrate both network and content-based estimation via a unified discriminative influence model which combined locations that a Twitter user mentioned with the locations of the user's followers.
+An alternative to network-based approaches is \textit{content-based}, in which a the content associated with a user either explicitly reveals location information (e.g,. mentioning a local attraction like Disneyland) or implicitly does so (e.g., by inferring subtle local linguistic cues to estimate a user's location).
+%
+Cheng et al. \cite{cheng2010you} proposed a content-based system for locating users on Twitter. They find words that are highly concentrated in specific regions and build a model to calculate the probability that a user lives at a location.
+%
+Eisenstein et al. \cite{eisenstein2010latent} proposed a functionally similar system based on a latent variable model that predicted a user's location based on the words in their tweets.
+%
+Recently, Li et al. \cite{li2012towards} proposed a system to integrate both network and content-based estimation via a unified discriminative influence model which combined locations that a Twitter user mentioned with the locations of the user's followers.
 
 They were doing location prediction at a point in time given a user's history of previous locations and friend current locations.
 
-In Finding Your Friends and Following Them to Where You Are, \cite{sadilek2012finding} the authors look at users who post at least 100 geo-located tweets a month in NYC and LA. They reconstruct the social graph from co-occuring geo-located tweets and used dynamic bayesian networks to perdict where a user was at a particular moment in time.
+In Finding Your Friends and Following Them to Where You Are, \cite{sadilek2012finding} the authors look at users who post at least 100 geo-located tweets a month in NYC and LA. They reconstruct the social graph from co-occurring geo-located tweets and used dynamic Bayesian networks to predict where a user was at a particular moment in time.
 
 Finally, Cranshaw et al. \cite{cranshaw2010bridging} solved the inverse of the problem we are investigating: they predicted the existence of a social network tie given precise location information from laptops and cell phones. They used a collection of features of when users are co-located.  Together, these efforts have begun to lay a foundation for the study geo-social media.
 
 
-
-
-
-
-
-
-
 \section{Location Estimation: Problem Statement}
-In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his contacts. Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.  We first describe the baseline Backstrom model for location estimation, describe the BLAH BALH, then BLAH BLAHB ALHBAL.
+In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his contacts. Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.  We first describe the baseline Backstrom model for location estimation, describe the BLAH BLAH, then BLAH BLAB ALLAHABAD.
 
 \subsection{Baseline: The Backstrom Model}
 The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins with a striking observation: that the probability of friendship is roughly inversely proportional to distance. Specifically, by examining the ratio of actual edges at a particular distance to the total number of possible edges at that distance (i.e., the probability of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent close to $c=-1$. With the empirically observed probability of friendship, they divide the set of users into two groups: $L^c$ is the set of locations of a user's contacts; and $L^s$ is the set of all strangers' locations. Then, the Facebook model estimates the likelihood of location $l$ as: 
@@ -136,7 +135,7 @@ The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins
 \noindent As suggested in \cite{backstrom2010find}, this can be pre-computed for every location. [ADD ONE SENTENCE SUMMARIZING WHAT THEY FIND] 
 
 
-The Backstrom model naturally aggregates the locations of a user's contacts, such that nearby friends BLAH BLAHBLAH. However, directly applying this approach to other non-Facebook domains may encounter difficulties. First, the Facebook empirical study focused only on the continental US, meaning that distances between contacts were naturally limited to around 1,000 miles. When investigating global friendships (as on Twitter or on the rest of Facebook), there is considerable noise introduced in the 1,000--10,000 mile range due to the distribution of land and oceans on the surface of the earth. Second, the Facebook dataset had street addresses for approximately 2.9 million Americans, and they used the friendships between users with street addresses to do the calculation. In practice, however, many users in social media reveal broad, imprecise locations (e.g., at the city or state level), while others provide fine-grained latitude-longitude information. Third, the strength of connection between users necessarily varies, so capturing this variation is important. Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength of a tie can be predicted by interaction patterns.  Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}.
+The Backstrom model naturally aggregates the locations of a user's contacts, such that nearby friends BLAH BLAH BLAH. However, directly applying this approach to other non-Facebook domains may encounter difficulties. First, the Facebook empirical study focused only on the continental US, meaning that distances between contacts were naturally limited to around 1,000 miles. When investigating global friendships (as on Twitter or on the rest of Facebook), there is considerable noise introduced in the 1,000--10,000 mile range due to the distribution of land and oceans on the surface of the earth. Second, the Facebook dataset had street addresses for approximately 2.9 million Americans, and they used the friendships between users with street addresses to do the calculation. In practice, however, many users in social media reveal broad, imprecise locations (e.g., at the city or state level), while others provide fine-grained latitude-longitude information. Third, the strength of connection between users necessarily varies, so capturing this variation is important. Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength of a tie can be predicted by interaction patterns.  Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}.
 
 
 
@@ -225,19 +224,16 @@ We choose to split into ten quantiles, which gave us ten different curves for th
 
 
 
-
-%Algorithm~\ref{alg:friendloc} shows all the pieces from this section and the previous section tied together.
-
-
-
-
-
-
-\section{Factors Impacting BLAH BLAH}
-In the previous section, we formalized the location estimation problem incorporating evidence of tie strength. But what factors actually impact the distance BLAH BALHB LABHA? In this section, we empirically examine a large sample from Twitter, totaling 100 million geo-encoded tweets and 73 million user profiles. Based on this sample, we examine the following properties to study how various types of edges correlated with proximity, including (i) friendship relationships, (ii) conversations between user, (iii) friend and follower counts, (iv) granularity of locations, BLAH BLAH.
-
-%All of the analysis in this section was done on the contacts of the 249,584 target users.
-% Contacts with a predicted location error that was greater than or equal to 1000 miles were filtered out.
+\section{Factors Impacting the Length of an Edge}
+In the previous section, we formalized the location estimation problem incorporating evidence of tie strength. But what factors actually impact the length of an edge? In this section, we empirically examine a large sample from Twitter, totaling 100 million geo-encoded tweets and 73 million user profiles.
+%
+Based on this sample, we examine the following properties to study how various types of edges correlated with proximity, including
+    (i) friendship relationships,
+    (ii) conversations between users,
+    (iii) friend and follower counts,
+    (iv) edges in social triangles,
+    (v) granularity of locations, and
+    (vi) distances from a contact to their contacts.
 
 \begin{table*}[tbh]
 \scriptsize
@@ -258,7 +254,7 @@ In the previous section, we formalized the location estimation problem incorpora
     Leafs & 71 million & 100 contacts of target users, randomly selected &
     user profile (some of these users have a geocoded profile)\\
 \end{tabular}
-\caption{Four diffenent sets of users and the data we obtained about them}
+\caption{Four different sets of users and the data we obtained about them}
 \label{tab:datasets}
 \end{table*}
 
@@ -283,7 +279,7 @@ median longitude of the locations of the user's tweets as an approximation of
 her home location.
 %
 We filtered out 7\% of these users because they either had no contacts or they
-posted from too many differnent locations.
+posted from too many different locations.
 
 %Some Twitter accounts, such as accounts that posted jobs, would
 %move around faster than a human could possibly move.
@@ -446,8 +442,6 @@ Figure~\ref{fig:EdgeTypesCuml}.
 
 To understand the distribution of contacts, we create a logarithmically-scaled
 histogram of the distances between various types of contacts.
-%We sort the distances to contacts into 160 logarithmically
-%scaled bins (40 bins for each power of 10).
 %
 Figure~\ref{fig:EdgeTypes} shows the result of plotting the histogram.
 %
@@ -471,9 +465,6 @@ they met in real life, and people who they met online or know about via
 mainstream media.
 %
 The former group is useful for predicting location and the latter group is not.
-%
-%In section~\ref{sec:model}, we use this idea that there are two types of contacts to build a predictive location model based on social ties.
-
 
 \begin{figure*}[tbh]
 \centering
@@ -484,6 +475,10 @@ friends or followers tend to be further away.
 }
 \label{fig:EdgeCounts}
 \end{figure*}
+
+\jam{Do we want to compare this to the bimodal distribution we saw in my CIKM
+poster? Bimodal is true of U.S., but not true for rest of world. Most location
+prediction papers focus on just USA.}
 
 \subsection{Does the number of friends and followers a person have affect how
 close they are?}
@@ -910,8 +905,7 @@ Based on this large-scale analysis of Twitter, we observe the following:
 
 \begin{itemize}
 \item Reciprocal friendships tend to be physically closer than contacts with less strong relationships such as someone who is just a follower.
-\item Contacts who talk to the target user on Twitter tend to be located nearby.
-\item if the contact mentioned the target---this is also true in the other direction.
+\item Contacts who mention or are mentioned by the target user on Twitter tend to be located nearby.
 \item Protected accounts tend to be closer, but we provide less additional information for assessing their relative quality.
 \item Contacts with lots of friends and followers tend to be further away (since, in many cases these contacts correspond to celebrities or news organizations).
 \item Contacts with more precise locations are more useful for location prediction.
@@ -1014,13 +1008,15 @@ with two baseline systems, which we will discuss in upcoming sections:
     section with only information from the locations of contacts.
 \item[FriendlyLocation - Strangers] This is the system described in the previous
     section without $\pStrangers$.
+\item[FriendlyLocation - Leafs] This is the system described in the previous
+    section without the locations of the leafs and tweets from the contacts.
 \ifdefined\THESIS
 \item[FriendlyLocation + Time Zone] This is the system described in the previous
     section plus the target user's time zone information.
-\fi
 \item[FriendlyLocation + Location] This is the system described in the previous
     section plus the target user's reported location is included in the
     estimation.
+\fi
 \end{description}
 
 \begin{figure}[tb]
@@ -1171,7 +1167,7 @@ their MLE to the MLE for that percentile in the contacts.
 %
 For each of the target users, we moved the user's location based on
 reverse geocoding away from the user's actual median location based on the
-difference between the MEs.
+difference between the MLEs.
 %
 For example, the MLE for a target user was 5.9 miles, and the median
 MLE for a contact was 6.7 miles.
@@ -1253,7 +1249,7 @@ If we don't crawl the leafs, we also do not need to download the friends and
 followers of the contacts to find the leafs, which makes the process well over
 an order of magnitude faster.
 %
-We re-ran the tree regreessor, curve fitting, and prediction using only
+We re-ran the tree regressor, curve fitting, and prediction using only
 information from the target users friends, followers, and tweets and the
 profiles of the contacts.
 %
