@@ -94,7 +94,7 @@ While an encouraging first step, this Facebook approach may encounter difficulti
 To address these challenges, we propose a novel network-based approach for location estimation that integrates evidence of the \textit{social tie strength} between users for improved location estimation, naturally incorporates uncertainty across multiple location granularities, and can distinguish between users of the system that operate at cross-purposes. We investigate this approach through an examination of over 100 million geo-encoded tweets and 73 million user profiles collected from Twitter. Concretely, we propose a location estimator -- FriendlyLocation -- and investigate the relationship between the strength of the tie between a pair of users and the distance between the pair. Based on this investigation, we identify several factors such as number of followers and how the users interact that can strongly reveal the distance between a pair of users, and use these factors to train a tree classifier to predict the distance between a pair of connected users. We use the results of this classifier as the input to a maximum likelihood estimator to predict a user's location. We find that this proposed method significantly improves the results of location estimation relative to the Facebook technique. FriendlyLocation improves the average error distance for 80\% of Twitter users from 41 miles to 21 miles which has great significance for augmenting traditional social media and enriching location-based services with more refined and accurate location estimates.
 
 \section{Related Work}
-The study of geographical properties of online social media users has drawn intensive attention in recent years. Characterizing network properties in relation to local geography has been studied in \cite{yardi2010tweeting}. Lindqvist \cite{lindqvist2011m} analyzed how and why people use location sharing services, and discussed the privacy issues related to location sharing services.  User behavior with regard to the location field in Twitter user profiles has been studied in \cite{hecht2011tweets}.
+The study of geographical properties of online social media users has drawn intensive attention in recent years. Characterizing network properties in relation to local geography has been studied in \cite{yardi2010tweeting}. Lindqvist \cite{lindqvist2011mayor} analyzed how and why people use location sharing services, and discussed the privacy issues related to location sharing services.  User behavior with regard to the location field in Twitter user profiles has been studied in \cite{hecht2011tweets}.
 
 Scellato et al. \cite{scellato2011socio} used data from three location based social networks to investigate the relationship between distance and location, and they show that connections are not purely caused by geographical or social factors.  They investigated two random models where they shuffle the user locations and another where they shuffle the social connections and investigate what happens to the user location.  They show that if a user has more connections, then their friends tend to be further away.  They also found that longer connections are equally likely to be part of a social triangle as shorter connections.
 
@@ -212,7 +212,7 @@ For each of the quantiles, we can fit $p^*$ to the curve from \cite{backstrom201
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/near_prob_fit.pdf}
+\includegraphics[width=\linewidth]{figures/vect_fit.pdf}
 \caption{
 After splitting edges into groups based on their predicted distance, each group
 was fit to a curve. Here are four of the ten curves and their curves of best
@@ -259,6 +259,7 @@ Based on this sample, we examine the following properties to study how various t
 \end{table*}
 
 \subsection{Data Collection from Twitter}
+\jam{talk about how geo-located users are different}
 To investigate how social relation and geographical distance between the
 relations correlate, we sample a dataset from Twitter.
 %
@@ -778,7 +779,7 @@ in practice since we are really trying to distinguish between contacts who are
 hundreds of miles away and contacts who live in the same town.
 %
 Around one in ten contacts did not have any contacts with a location from the
-contacts we looked at--they were treated as a separate group.
+contacts we looked at---they were treated as a separate group.
 
 In \cite{li2012towards}, the authors model the probability distribution of
 user's followers using a Gaussian distribution, and use this to build a
@@ -916,9 +917,18 @@ Based on this large-scale analysis of Twitter, we observe the following:
 
 \section{Building and Evaluating the Location Estimator}
 
-Since most of the input features are correlated and either binary or non-linear,
-linear regression is unlikely to work well. In addition, the data is dense and low-dimensional, so Support Vector Machines
-do not work well.  We chose to use a decision tree regressor based on the CART algorithm (classification and regression trees) to distinguish the best edges from the worst. A decision tree regressor works similar to the well-known decision tree classifier, except that it produces real numbers as output instead of discrete classes. During training, the training data is recursively split based on the input
+We now have several features which are correlated with the length of an edge
+between a target user and her contact.
+%
+We need a way to sort out the best edges from the worst edges using these features.
+%
+Since most of the input features are correlated with each other and either binary or non-linear,
+linear regression is unlikely to work well.
+%
+In addition, the data is dense and low-dimensional, so Support Vector Machines
+do not work well.
+%
+We chose to use a decision tree regressor based on the CART algorithm (classification and regression trees) to distinguish the best edges from the worst. A decision tree regressor works similar to the well-known decision tree classifier, except that it produces real numbers as output instead of discrete classes. During training, the training data is recursively split based on the input
 variable with the most predictive power to build a binary tree.  Each of the internal nodes of this tree have a cutoff for one of the input
 variables, and the leaves of the tree have a predicted value.
 
