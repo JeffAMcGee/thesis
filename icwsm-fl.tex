@@ -115,10 +115,14 @@ In recent work \cite{sadilek2012finding}, the authors look at users who post at 
 Finally, Cranshaw et al. \cite{cranshaw2010bridging} tackled the inverse of the problem we are investigating: they predicted the existence of a social network tie given precise location information from laptops and cell phones. They used a collection of features of when users are co-located.  Together, these efforts have begun to lay a foundation for the study geo-social media.
 
 \section{Location Estimation Incorporating Tie Strength}
-In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his contacts. Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.  We first describe the baseline Facebook model for location estimation, identify several limitations of applying it more widely, and then describe the proposed FriendlyLocation approach that integrates tie strength for augmented location estimation.
+In this section, we build a model for the probability that a user, who we refer to as the target user, lives at a specific location given the approximate location of his friends and followers.
+%
+Given a user, our goal is to estimate the location $l$ of the user provided only with some imperfect information about the location of that user's social network.
+%
+We first describe the baseline Facebook model for location estimation, identify several limitations of applying it more widely, and then describe the proposed FriendlyLocation approach that integrates tie strength for augmented location estimation.
 
 \subsection{Baseline: The Facebook Model}
-The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins with a striking observation: that the probability of friendship is roughly inversely proportional to distance. Specifically, by examining the ratio of actual edges at a particular distance to the total number of possible edges at that distance (i.e., the probability of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent close to $c=-1$. 
+The Facebook model developed by Backstrom et al. \cite{backstrom2010find} begins with a striking observation: that the probability of friendship is roughly inversely proportional to distance. Specifically, by examining the ratio of actual edges at a particular distance to the total number of possible edges at that distance (i.e., the probability of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent close to $c=-1$.
 
 With the empirically observed probability of friendship, they can estimate the
 likelihood that a user lives at a location $l$ using both $L^c$, the set of
@@ -262,7 +266,7 @@ For each of the quantiles, we can fit $p^*$ to the curve from \cite{backstrom201
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/vect_fit.pdf}
+\includegraphics[width=.9\linewidth]{figures/vect_fit.pdf}
 \caption{
 After splitting edges into groups based on their predicted distance, each group
 was fit to a curve. Here are four of the ten curves and their curves of best
@@ -333,20 +337,20 @@ her home location.
 We filtered out 7\% of these users because they either had no contacts or they
 posted from too many different locations.
 
-Users who post geo-located tweets are not entirely representative of the
-average Twitter user.
-%
-In particular, they are less concerned about their privacy and have a precise
-location.
-%
-We only use information obtained from the contacts, and not the geolocated
-users themselves in our prediction.
-%
-There are some Twitter accounts, such as large organizations, who do not have a
-single location.
-%
-In practice, a location prediction system would need to identify users who do
-not have a location.
+%Users who post geo-located tweets are not entirely representative of the
+%average Twitter user.
+%%
+%In particular, they are less concerned about their privacy and have a precise
+%location.
+%%
+%We only use information obtained from the contacts, and not the geolocated
+%users themselves in our prediction.
+%%
+%There are some Twitter accounts, such as large organizations, who do not have a
+%single location.
+%%
+%In practice, a location prediction system would need to identify users who do
+%not have a location.
 
 
 %Some Twitter accounts, such as accounts that posted jobs, would
@@ -424,7 +428,7 @@ Table~\ref{tab:datasets} shows the data obtained from Twitter.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/edge_types_cuml.pdf}
+\includegraphics[width=.9\linewidth]{figures/edge_types_cuml.pdf}
 \caption{
 CDF of distance from target users to users they have some contact
 with.
@@ -450,7 +454,7 @@ We first consider the type of contact and its impact on distance by dividing all
 \item[just follower:] The target user is followed by this user, but does
     not follow them.
 \item[just mentioned:] The users do not follow each other, but the target
-    user mentioned the name of the other user in a tweet.
+    user mentioned the other user in a tweet.
 \end{description}
 
 Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
@@ -463,15 +467,15 @@ global effects.
 On a logarithmic scale, the contacts are fairly evenly distributed from being
 nearby to being on the opposite side of the world.
 %
-For reciprocal friends, the 1\textsuperscript{st} quartile, median, and
-3\textsuperscript{rd} quartile of the distances are 7.9 miles, 106 miles, and 720 miles
-respectively.
+%For reciprocal friends, the 1\textsuperscript{st} quartile, median, and
+%3\textsuperscript{rd} quartile of the distances are 7.9 miles, 106 miles, and 720 miles
+%respectively.
 %
-There is a relatively flat section in all the lines around 3,000 miles.
+%There is a relatively flat section in all the lines around 3,000 miles.
 %
-3,000 miles is longer than the distance between the east coast of the U.S. and
-the west coast, but shorter than the distance from the east coast of the U.S.
-to Europe, so there are few population centers that are this distance apart.
+%3,000 miles is longer than the distance between the east coast of the U.S. and
+%the west coast, but shorter than the distance from the east coast of the U.S.
+%to Europe, so there are few population centers that are this distance apart.
 
 In general, we observe that reciprocal friends are the closest, followed by followers, friends,
 and finally users who are just mentioned.
@@ -493,22 +497,18 @@ them, it is probably someone who knows them.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=.9\linewidth]{figures/edge_types_norm.pdf}
+\includegraphics[width=.9\linewidth]{figures/rfrd_norm.pdf}
 \caption{
-Histogram of distance to users for different types of relationships.
-The curves in this figure are the derivatives of the curves in
-Figure~\ref{fig:EdgeTypesCuml}.
+Histogram of distance to reciprocal friends.
 }
 \label{fig:EdgeTypes}
 \end{figure}
 
 
-\medskip
 \noindent\textbf{What is the distribution of contacts?} To further analyze the distribution of contacts, we show in Figure~\ref{fig:EdgeTypes} a logarithmically-scaled
 histogram of the distances between various types of contacts.
 %
-All four types of contacts follow roughly the same
-distribution: one peak around 10 miles from people who live nearby, and several
+We see one peak around 10 miles from people who live nearby, and several
 other peaks between 100 and 10,000 miles.
 %
 Since the contacts often list the name of their town, there is a small distance
@@ -525,17 +525,16 @@ network; it is also a news distribution network as described in
 This distribution suggests that users have two types of contacts: people who
 they met in real life, and people who they met online or know about via
 mainstream media.
-%
-The former group is useful for predicting location and the latter group is not.
 
 Most previous location prediction work has focused on doing predicting
 locations in the continental U.S.
 %
 In the first figure from \cite{mcgee2011geographic}, McGee et al. observe a
-bimodal distribution with strong peaks at 10 miles and 2500 miles.
+bimodal distribution in distances between American Twitter users with strong
+peaks at 10 miles and 2500 miles.
 %
-When looking at a similar set of data on a global scale, we find more chaos in
-the distribution of contacts at distances greater than 200 miles.
+When looking at this similar set of data on a global scale, we find more chaos
+in the distribution of contacts at distances greater than 200 miles.
 
 \begin{figure*}[tbh]
 \centering
@@ -586,7 +585,7 @@ accounts which are useless for location prediction.
 \ifdefined\THESIS
     \begin{figure}[tbh]
     \centering
-    \includegraphics[width=\linewidth]{figures/com_types.pdf}
+    \includegraphics[width=.9\linewidth]{figures/com_types.pdf}
     \caption{
     CDF of the distance between a target user and various types of contacts
     plotted on a logarithmic scale.
@@ -722,7 +721,7 @@ are only slightly more likely to be nearby.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/near_triads.pdf}
+\includegraphics[width=.9\linewidth]{figures/near_triads.pdf}
 \caption{
 Comparison between distance to a mutual friend, labeled ``our'', and someone
 who is not a mutual friend, labeled ``my''.
@@ -789,7 +788,7 @@ If they are farther apart, it doesn't matter.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/locals_10.pdf}
+\includegraphics[width=.9\linewidth]{figures/locals_10.pdf}
 \caption{
 The colored lines show the distance to contacts split into groups based on the
 proportion of the contact's friends and followers who live near the contact.
@@ -803,7 +802,7 @@ live near the target user.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/locals_cmp.pdf}
+\includegraphics[width=.9\linewidth]{figures/locals_cmp.pdf}
 \caption{
     Distances to contacts with a local contact ratio better than the median LCR
     for several numbers of leafs.
@@ -904,11 +903,10 @@ to respond to ``Where in the world are you?''.
 Responses include neighborhood names, state names, country names, and even
 jokes and nonsense.
 %
-We use Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to geocode this
-free-form text to a location.
-%
-Gisgraphy does full-text search on the
-GeoNames\footnote{\url{http://www.geonames.org/}} database using Lucene.
+We use Gisgraphy
+%\footnote{\url{http://www.gisgraphy.com/}}
+to geocode this free-form text to a location using the GeoNames database.
+%\footnote{\url{http://www.geonames.org/}}
 
 Since some locations are significantly more useful than others, we needed a way
 to evaluate the quality of a location.
@@ -946,7 +944,7 @@ Gisgraphy.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/rfrd_mdist.pdf}
+\includegraphics[width=.9\linewidth]{figures/rfrd_mdist.pdf}
 \caption{
 Reciprocal friends divided into groups based on the median location error(MLE)
 of their location.
@@ -986,13 +984,12 @@ Based on this large-scale analysis of Twitter, we conclude the following:
 In this section, we integrate the observations from our study of the factors that impact distance into the FriendlyLocation location estimator.
 %
 While there are many options for mapping from input factors to tie strength, we adopt a decision tree regressor based on the CART algorithm (classification and regression trees) to distinguish the best edges from the worst.\footnote{Since most of the input features are correlated and either binary or non-linear,
-linear regression is unlikely to work well. In addition, the data is dense and low-dimensional, so Support Vector Machines
+linear regression is unlikely to work well. In addition, the data is dense and low-dimensional, so support vector machines
 do not work well.} A decision tree regressor works similar to the well-known decision tree classifier, except that it produces real numbers as output instead of discrete classes. During training, the training data is recursively split based on the input
 variable with the most predictive power to build a binary tree.  Each of the internal nodes of this tree have a cutoff for one of the input
 variables, and the leaves of the tree have a predicted value.
 
 
-\medskip
 \noindent\textbf{Setup.} Since the distances between users varied by several orders of magnitude, we
 trained the regressor to predict the log of the distance.
 %
@@ -1009,7 +1006,7 @@ from the most distant pairs as we will show in the next section.
 
 \begin{figure}[tbh]
 \centering
-\includegraphics[width=\linewidth]{figures/tree_top.pdf}
+\includegraphics[width=.9\linewidth]{figures/tree_top.pdf}
 \caption{
     The top three levels of the decision tree. This decision tree will predict a
     distance of 839 miles for a contact with a local contact ratio of .2 and
@@ -1035,7 +1032,6 @@ We did not recalculate $\pStrangers$ or the probability as a function of distanc
 used for the baseline, since these are fairly independent of the selected set
 of users.
 
-\medskip
 \noindent\textbf{Metrics.} We evaluate the system against the metrics used in previous works:
 accuracy at 25 miles (ACC) which was used in \cite{backstrom2010find}
 and average error distance (AED) proposed in \cite{cheng2010you} and
@@ -1095,7 +1091,7 @@ with two baseline systems, which we will discuss in upcoming sections:
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=\linewidth]{figures/fl_basic.pdf}
+\includegraphics[width=.9\linewidth]{figures/fl_basic.pdf}
 \caption{
     FriendlyLocation against several baseline systems.
 }
