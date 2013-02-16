@@ -208,6 +208,7 @@ After splitting edges into groups based on their predicted distance, each group
 was fit to a curve. Here are four of the ten curves and their curves of best
 fit. The other six curves of best fit are shown as faint dotted lines.}
 \label{fig:NearProbFit}
+\vspace{-2pt}
 \end{figure}
 
 
@@ -461,6 +462,7 @@ with.
 Reciprocal friends tend to be closer than other types of friendships.
 }
 \label{fig:EdgeTypesCuml}
+\vspace{-2pt}
 \end{figure}
 
 
@@ -527,6 +529,7 @@ them, it is probably someone who knows them.
 Histogram of distance to reciprocal friends.
 }
 \label{fig:EdgeTypes}
+\vspace{-2pt}
 \end{figure}
 
 
@@ -569,6 +572,7 @@ A comparison between number of followers and proximity---people who have more
 friends or followers tend to be further away.
 }
 \label{fig:EdgeCounts}
+\vspace{-2pt}
 \end{figure*}
 
 \subsection{Factor 2: Does the number of friends and followers a person have affect how
@@ -616,6 +620,7 @@ accounts which are useless for location prediction.
     plotted on a logarithmic scale.
     }
     \label{fig:ComTypes}
+    \vspace{-2pt}
     \end{figure}
 \fi
 
@@ -713,7 +718,7 @@ with proximity are rare.
     Private accounts tend to be closer.
 }
 \label{tab:EdgeTypesProt}
-%\vspace{-4pt}
+\vspace{-4pt}
 \end{table}
 
 \subsection{Factor 4: Are users closer to private accounts?}
@@ -756,10 +761,11 @@ more likely to live near them than two contacts who live nearby but are not
 mutual friends.
 }
 \label{fig:NearTriads}
+\vspace{-2pt}
 \end{figure}
 
 \subsection{Factor 5: If two of your friends live near each other, does that increase the
-chance that they live near you?}
+chance they live near you?}
 
 We now turn our attention to triangles of users.
 Finding useful relationships between the edges of a social triangle is tricky
@@ -824,6 +830,7 @@ Contacts who have a high proportion of nearby leafs are much more likely to
 live near the target user.
 }
 \label{fig:Local10}
+\vspace{-2pt}
 \end{figure}
 
 \begin{figure}[tb]
@@ -836,6 +843,7 @@ live near the target user.
     be nearby, it probably doesn't justify how long it takes to compute.
 }
 \label{fig:LocalCmp}
+\vspace{-2pt}
 \end{figure}
 
 \subsection{Factor 6: Are some users closer to all of their friends and followers?}
@@ -978,6 +986,7 @@ Contacts who report a location with a low MLE usually live near their contact,
 while contacts with a high MLE generally live in the same region.
 }
 \label{fig:RfrdMdist}
+\vspace{-2pt}
 \end{figure}
 
 Figure~\ref{fig:RfrdMdist} shows the length of edges to reciprocal friends
@@ -1020,13 +1029,14 @@ variables, and the leaves of the tree have a predicted value.
 \centering
 \includegraphics[width=.8\linewidth]{figures/tree_top.pdf}
 \caption{
-    The top three levels of the decision tree. This decision tree will predict a
+    The top three levels of the decision tree. This tree will predict a
     distance of 839 miles for a contact with a local contact ratio of .2 and
     2800 friends. It will predict a much-closer distance of 43.7 miles for a
-    user with a local contact ratio of .5 and a predicted location error of 10
+    user with a local contact ratio of .5 and a median location error of 10
     miles.
 }
 \label{fig:TreeTop}
+\vspace{-2pt}
 \end{figure}
 
 \noindent\textbf{Setup.} Since the distances between users varied by several orders of magnitude, we
@@ -1122,6 +1132,7 @@ with two baseline systems, which we will discuss in upcoming sections:
     FriendlyLocation against several baseline systems.
 }
 \label{fig:results}
+\vspace{-2pt}
 \end{figure}
 
 \begin{table}[tb]
@@ -1145,9 +1156,9 @@ with two baseline systems, which we will discuss in upcoming sections:
     Results of our location prediction system when compared to a baseline.
     The value after the $\pm$ is the standard deviation from the five-fold
     cross-validation.
-    Including the target user's time zone information does not improve the
-    results, but using the target user's reported location, if they gave one,
-    makes for significantly better results.
+    %Including the target user's time zone information does not improve the
+    %results, but using the target user's reported location, if they gave one,
+    %makes for significantly better results.
 }
 \label{tab:results}
 \end{table}
