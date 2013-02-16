@@ -18,7 +18,7 @@
 \DeclareMathOperator{\pContact}{pContact}
 \DeclareMathOperator{\pLocation}{pContact}
 \DeclareMathOperator{\pTimeZone}{pTimeZone}
-\DeclareMathOperator{\pStrangers}{pStrangers}
+\DeclareMathOperator{\pStrangers}{pStgrs}
 \DeclareMathOperator{\edges}{edges}
 \DeclareMathOperator{\contactEdges}{contactEdges}
 \DeclareMathOperator{\actEdges}{actEdges}
@@ -26,13 +26,13 @@
 \DeclareMathOperator{\MLE}{MLE}
 \DeclareMathOperator{\LCR}{LCR}
 \DeclareMathOperator{\FriendLoc}{FriendLoc}
-\DeclareMathOperator{\Backstrom}{Backstrom}
+\DeclareMathOperator{\Backstrom}{Facebook}
 \DeclareMathOperator{\p}{p}
 \DeclareMathOperator{\haversin}{haversin}
 \DeclareMathOperator{\Err}{Err}
 \DeclareMathOperator{\AED}{AED}
 \DeclareMathOperator{\ACC}{ACC}
-\DeclareMathOperator{\quantile}{q}
+\DeclareMathOperator{\quantile}{qntl}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \renewcommand{\algorithmicthen}{}
 
@@ -40,6 +40,7 @@
 \hyphenation{Face-book}
 
 \pdfpagewidth 8.5in \pdfpageheight 11in
+\linespread{.95}
 
 \newcommand{\jam}[1]{\emph{#1}}
 
@@ -72,7 +73,15 @@
 
 \maketitle
 \begin{abstract}
-We propose a novel network-based approach for location estimation in social media that integrates evidence of the \textit{social tie strength} between users for improved location estimation. Concretely, we propose a location estimator -- FriendlyLocation -- that leverages the relationship between the strength of the tie between a pair of users, and the distance between the pair. Based on an examination of over 100 million geo-encoded tweets and 73 million user profiles collected from Twitter, we identify several factors such as the number of followers and how the users interact that can strongly reveal the distance between a pair of users, and use these factors to train a decision tree to distinguish between users who are likely to live nearby and pairs of users who are likely to live in different areas. We use the results of this decision tree as the input to a maximum likelihood estimator to predict a user's location. We find that this proposed method significantly improves the results of location estimation relative to a state-of-the-art technique. Our system reduces the average error distance for 80\% of Twitter users from 40 miles to 21 miles using only information from the user's friends and friends-of-friends,  which has great significance for augmenting traditional social media and enriching location-based services with more refined and accurate location estimates.
+We propose a novel network-based approach for location estimation in social media that integrates evidence of the \textit{social tie strength} between users for improved location estimation. Concretely, we propose a location estimator -- FriendlyLocation -- that leverages the relationship between the strength of the tie between a pair of users, and the distance between the pair.
+Based on an examination of over 100 million geo-encoded tweets and 73 million
+Twitter user profiles, we identify several factors such as the
+number of followers and how the users interact that can strongly reveal the
+distance between a pair of users.
+We use these factors to train a decision
+tree to distinguish between pairs of users who are likely to live nearby and pairs of
+users who are likely to live in different areas.
+We use the results of this decision tree as the input to a maximum likelihood estimator to predict a user's location. We find that this proposed method significantly improves the results of location estimation relative to a state-of-the-art technique. Our system reduces the average error distance for 80\% of Twitter users from 40 miles to 21 miles using only information from the user's friends and friends-of-friends,  which has great significance for augmenting traditional social media and enriching location-based services with more refined and accurate location estimates.
 \end{abstract}
 
 \section{Introduction}
@@ -91,24 +100,26 @@ While an encouraging first step, this Facebook approach may encounter difficulti
 \end{itemize}
 
 
-To address these challenges, we propose a novel network-based approach for location estimation that integrates evidence of the \textit{social tie strength} between users for improved location estimation, naturally incorporates uncertainty across multiple location granularities, and can distinguish between users of the system that operate at cross-purposes. We investigate this approach through an examination of over 100 million geo-encoded tweets and 73 million user profiles collected from Twitter. Concretely, we propose a location estimator -- FriendlyLocation -- and investigate the relationship between the strength of the tie between a pair of users and the distance between the pair. Based on this investigation, we identify several factors such as number of followers and how the users interact that can strongly reveal the distance between a pair of users, and use these factors to train a tree classifier to predict the distance between a pair of connected users. We use the results of this classifier as the input to a maximum likelihood estimator to predict a user's location. We find that this proposed method significantly improves the results of location estimation relative to the Facebook technique. FriendlyLocation improves the average error distance for 80\% of Twitter users from 41 miles to 21 miles which has great significance for augmenting traditional social media and enriching location-based services with more refined and accurate location estimates.
+To address these challenges, we propose a novel network-based approach for location estimation that
+  integrates evidence of the \textit{social tie strength} between users for improved location estimation,
+  naturally incorporates uncertainty across multiple location granularities,
+  and can distinguish between users of the system that operate at cross-purposes.
+We investigate this approach through an examination of over 100 million geo-encoded tweets and 73 million user profiles collected from Twitter. Concretely, we propose a location estimator -- FriendlyLocation -- and investigate the relationship between the strength of the tie between a pair of users and the distance between the pair. Based on this investigation, we identify several factors such as number of followers and how the users interact that can strongly reveal the distance between a pair of users, and use these factors to train a tree classifier to predict the distance between a pair of connected users. We use the results of this classifier as the input to a maximum likelihood estimator to predict a user's location. We find that this proposed method significantly improves the results of location estimation relative to the Facebook technique. FriendlyLocation improves the average error distance for 80\% of Twitter users from 41 miles to 21 miles which has great significance for augmenting traditional social media and enriching location-based services with more refined and accurate location estimates.
 
 \section{Related Work}
 The study of geographical properties of online social media users has drawn intensive attention in recent years. Characterizing network properties in relation to local geography has been studied in \cite{yardi2010tweeting}. Lindqvist \cite{lindqvist2011mayor} analyzed how and why people use location sharing services, and discussed the privacy issues related to location sharing services.  User behavior with regard to the location field in Twitter user profiles has been studied in \cite{hecht2011tweets}.
 
-Scellato et al. \cite{scellato2011socio} used data from three location based social networks to investigate the relationship between distance and location, and they show that connections are not purely caused by geographical or social factors.  They investigated two random models where they shuffle the user locations and another where they shuffle the social connections and investigate what happens to the user location.  They show that if a user has more connections, then their friends tend to be further away.  They also found that longer connections are equally likely to be part of a social triangle as shorter connections.
+Scellato et al. \cite{scellato2011socio} used data from three location based social networks to investigate the relationship between distance and location, and they showed that connections are not purely caused by geographical or social factors.  They investigated two random models where they shuffle the user locations and another where they shuffled the social connections and investigated what happened to the user location.  They showed that if a user has more connections, then their friends tend to be further away.  They also found that longer connections are equally likely to be part of a social triangle as shorter connections.
 
 Several researchers in recent years have looked into predicting user locations in a social network based on the social graph. In the largest-to-date study on this subject, Facebook researchers analyzed the physical distance between Facebook users' social relations and utilized the locations of a user's friends' to predict the user's geographical location \cite{backstrom2010find}. Davis et al. \cite{davis2011infer} investigated a system that predicted location by taking a vote among the locations of the user's friends and picking the most popular location.
 
 An alternative to network-based approaches is \textit{content-based}, in which a the content associated with a user either explicitly reveals location information (e.g,. mentioning a local attraction like Disneyland) or implicitly does so (e.g., by inferring subtle local linguistic cues to estimate a user's location).
 %
-Cheng et al. \cite{cheng2010you} proposed a content-based system for locating users on Twitter. They find words that are highly concentrated in specific regions and build a model to calculate the probability that a user lives at a location.
+Cheng et al. \cite{cheng2010you} proposed a content-based system for locating users on Twitter. They found words that are highly concentrated in specific regions and built a model to calculate the probability that a user lives at a location.
 %
 Eisenstein et al. \cite{eisenstein2010latent} proposed a functionally similar system based on a latent variable model that predicted a user's location based on the words in their tweets.
 %
 Recently, Li et al. \cite{li2012towards} proposed a system to integrate both network and content-based estimation via a unified discriminative influence model which combined locations that a Twitter user mentioned with the locations of the user's followers.
-
-%They were doing location prediction at a point in time given a user's history of previous locations and friend current locations.
 
 In recent work \cite{sadilek2012finding}, the authors look at users who post at least 100 geo-located tweets a month in NYC and LA. They reconstruct the social graph from co-occurring geo-located tweets and used dynamic Bayesian networks to predict where a user was at a particular moment in time.
 
@@ -189,6 +200,41 @@ latitude-longitude information.
 %
 Third, the strength of connection between users necessarily varies, so capturing this variation is important. Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength of a tie can be predicted by interaction patterns.  Finally, many social systems serve different purposes. Twitter, for example, is both a social network connecting friends (which may tend to be local) as well as a news media (supporting global dissemination)  \cite{kwak2010why}.
 
+\begin{figure}[tb]
+\centering
+\includegraphics[width=.9\linewidth]{figures/vect_fit.pdf}
+\caption{
+After splitting edges into groups based on their predicted distance, each group
+was fit to a curve. Here are four of the ten curves and their curves of best
+fit. The other six curves of best fit are shown as faint dotted lines.}
+\label{fig:NearProbFit}
+\end{figure}
+
+
+
+\begin{table*}[tb]
+\scriptsize
+\centering
+\begin{tabular}{l l p{4cm} p{6cm}}
+    Label & Size & Description & Data obtained \\
+    \hline
+    Target Users & 249,584 & Users who posted at least 3 geo-located tweets &
+    Location from GPS coordinates, user ids of friends and followers,
+    and text of tweets. \\
+    Geocoding Users & 894,617 & Users who posted at least 3 geo-located tweets
+    and had a location the geocoder could parse, but not selected as target users &
+    Location from GPS coordinates and geocoded location from user profile \\
+    % 10,081,957 located contacts
+    Located Contacts & 10 million & 25 contacts of target users with locations, randomly selected &
+    Location from geocoded profile, user ids of friends and followers, and text of tweets \\
+    % 71,596,805 leafs minus some of 250k contacts
+    Leafs & 71 million & 100 contacts of target users, randomly selected &
+    user profile (some of these users have a geocoded profile)\\
+\end{tabular}
+\caption{Four different sets of users and the data we obtained about them}
+\label{tab:datasets}
+\end{table*}
+
 
 \subsection{FriendlyLocation: Incorporating Tie Strength}
 A common theme of these challenges is that the quality of the geographic information conveyed by a relationship in social media varies. Some edges may convey strong evidence of the location of a user. For example, intuitively the many edges between a user with an unknown location and his co-workers (for whom we know their location) should contribute strongly to the likelihood that the user is nearby those co-workers. In contrast, links between a user with an unknown location and with a news service (e.g., CNN) should contribute little discriminating power to estimating the location of the user.
@@ -197,10 +243,12 @@ The challenge here is to separate the best contacts, who are likely to be nearby
 
 Hence, we propose to assess the relative quality of each edge from a target user to his contacts, so that edges conveying strong location information are weighed more than others. Concretely, suppose we have a single edge from a user to one of his contacts. We propose to assign this edge to a quantile based on its estimated ``goodness''. Suppose we construct a set of $m$ quantiles, representing edges at different distances. Let the boundaries for these quantiles be  $\{q_0,\dots,q_m\}$, where:\footnote{The notation used for order statistic may need some explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
 
+\jam{define R, caverlee confused actual dists and predicted dists}
+
 \[
     q_j =
     \begin{cases}
-        D^p_{(1+\lfloor j|R|/m \rfloor)}, & j=<m \\
+        D^p_{(1+\lfloor j|D^p|/m \rfloor)}, & j<m \\
         \infty & j=m
     \end{cases}
 \]
@@ -229,7 +277,6 @@ This could be looked at as a classification problem where we want to classify ed
 
 
 
-
 We propose improving their system by adding in information from the decision tree.
 %
 We do this by replacing the probability of being a contact based purely on distance ($p$) to the probability based on the regression tree ($p^*$).
@@ -245,7 +292,7 @@ contacts:
         \pStrangers(l)
 \]
 
-Location prediction with a maximum likelihood estimator requires an estimate of the probability that a user lives at a specific location. We can find that probability by comparing the distribution of Twitter users to the distribution of the contacts. First, we needed a model for the density of Twitter users. We calculate the distance between every target user and every contact (even for contacts and users who had no relationship). We call the number of target and contact pairs that are $d$ miles apart $\edges(d)$.
+Location prediction with a maximum likelihood estimator requires an estimate of the probability that a user lives at a specific location. We can find that probability by comparing the distribution of Twitter users to the distribution of the contacts. First, we need a model for the density of Twitter users. We calculate the distance between every target user and every contact (even for contacts and users who had no relationship). We call the number of target and contact pairs that are $d$ miles apart $\edges(d)$.
 
 % i index in R, decision tree tuples
 % j index in Q, quantile boundaries
@@ -264,18 +311,7 @@ For each of the quantiles, we can fit $p^*$ to the curve from \cite{backstrom201
     p^*(j,d) = a_{j} (b_{j}+d)^{-c_{j}}
 \]
 
-\begin{figure}[tbh]
-\centering
-\includegraphics[width=.9\linewidth]{figures/vect_fit.pdf}
-\caption{
-After splitting edges into groups based on their predicted distance, each group
-was fit to a curve. Here are four of the ten curves and their curves of best
-fit. The other six curves of best fit are shown as faint dotted lines.}
-\label{fig:NearProbFit}
-\end{figure}
-
 We choose to split into ten quantiles, which gave us ten different curves for the probability that a certain type of contact exists between a pair of users.  Four of the ten curves from one of the folds from the five-fold evaluation and their lines of best fit are shown in Figure~\ref{fig:NearProbFit}. The best contacts are orders of magnitude more likely to live near a target user than the worst contacts. If the predictions from the tree regressor were ignored, and users were placed into one group instead of ten equal groups, this would reduce to the model for friendship and distance presented in \cite{backstrom2010find}. We choose ten because it was large enough to distinguish between the curves.  Larger numbers of quantiles give no benefit since the curves we are fitting are so noisy as can be seen in Figure~\ref{fig:NearProbFit}.
-
 
 
 \section{Factors Impacting the Length of an Edge}
@@ -290,29 +326,6 @@ types of edges correlated with proximity, including
     (v) edges in social triangles,
     (vi) distances from a contact to their contacts, and
     (vii) granularity of locations.
-
-\begin{table*}[tbh]
-\scriptsize
-\centering
-\begin{tabular}{l l p{4cm} p{6cm}}
-    Label & Size & Description & Data obtained \\
-    \hline
-    Target Users & 249,584 & Users who posted at least 3 geo-located tweets &
-    Location from GPS coordinates, user ids of friends and followers,
-    and text of tweets. \\
-    Geocoding Users & 894,617 & Users who posted at least 3 geo-located tweets
-    and had a location the geocoder could parse, but not selected as target users &
-    Location from GPS coordinates and geocoded location from user profile \\
-    % 10,081,957 located contacts
-    Located Contacts & 10 million & 25 contacts of target users with locations, randomly selected &
-    Location from geocoded profile, user ids of friends and followers, and text of tweets \\
-    % 71,596,805 leafs minus some of 250k contacts
-    Leafs & 71 million & 100 contacts of target users, randomly selected &
-    user profile (some of these users have a geocoded profile)\\
-\end{tabular}
-\caption{Four different sets of users and the data we obtained about them}
-\label{tab:datasets}
-\end{table*}
 
 \subsection{Data Collection from Twitter}
 To investigate how social relation and geographical distance between the
@@ -337,20 +350,20 @@ her home location.
 We filtered out 7\% of these users because they either had no contacts or they
 posted from too many different locations.
 
-%Users who post geo-located tweets are not entirely representative of the
-%average Twitter user.
-%%
-%In particular, they are less concerned about their privacy and have a precise
-%location.
-%%
-%We only use information obtained from the contacts, and not the geolocated
-%users themselves in our prediction.
-%%
-%There are some Twitter accounts, such as large organizations, who do not have a
-%single location.
-%%
-%In practice, a location prediction system would need to identify users who do
-%not have a location.
+Users who post geo-located tweets are not entirely representative of the
+average Twitter user.
+%
+In particular, they are less concerned about their privacy and have a precise
+location.
+%
+We only use information obtained from the contacts, and not the geolocated
+users themselves in our prediction.
+%
+There are some Twitter accounts, such as large organizations, who do not have a
+single location.
+%
+In practice, a location prediction system would need to identify users who do
+not have a location.
 
 
 %Some Twitter accounts, such as accounts that posted jobs, would
@@ -426,7 +439,7 @@ Table~\ref{tab:datasets} shows the data obtained from Twitter.
 
 
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/edge_types_cuml.pdf}
 \caption{
@@ -495,7 +508,7 @@ user and not a celebrity.
 If they follow someone, it might be a celebrity; however, if someone follows
 them, it is probably someone who knows them.
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/rfrd_norm.pdf}
 \caption{
@@ -536,7 +549,7 @@ peaks at 10 miles and 2500 miles.
 When looking at this similar set of data on a global scale, we find more chaos
 in the distribution of contacts at distances greater than 200 miles.
 
-\begin{figure*}[tbh]
+\begin{figure*}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_counts.pdf}
 \caption{
@@ -583,7 +596,7 @@ Follower count and friend count are good ways to distinguish celebrity and news
 accounts which are useless for location prediction.
 
 \ifdefined\THESIS
-    \begin{figure}[tbh]
+    \begin{figure}[tb]
     \centering
     \includegraphics[width=.9\linewidth]{figures/com_types.pdf}
     \caption{
@@ -595,7 +608,7 @@ accounts which are useless for location prediction.
 \fi
 
 
-\begin{table*}[tbh]
+\begin{table*}[tb]
 \scriptsize
 \centering
 \begin{tabular}{l | r r | r r | r r | r r | r r}
@@ -670,7 +683,7 @@ One challenge to using communication patterns as a source of information for
 location prediction is that the communication patterns that are correlated
 with proximity are rare.
 
-\begin{table}[tbh]
+\begin{table}[tb]
 \centering
 \begin{tabular}{l | r r | r r}
     & \multicolumn{2}{c}{Public}
@@ -688,6 +701,7 @@ with proximity are rare.
     Private accounts tend to be closer.
 }
 \label{tab:EdgeTypesProt}
+%\vspace{-4pt}
 \end{table}
 
 \subsection{Factor 4: Are users closer to private accounts?}
@@ -719,7 +733,7 @@ reciprocal friends.
 On the other hand, if a protected account follows the target user, they
 are only slightly more likely to be nearby.
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/near_triads.pdf}
 \caption{
@@ -786,21 +800,21 @@ you are to them.
 %
 If they are farther apart, it doesn't matter.
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/locals_10.pdf}
 \caption{
 The colored lines show the distance to contacts split into groups based on the
 proportion of the contact's friends and followers who live near the contact.
 The dotted line shows the distance to contacts who have no locatable contacts.
-This graph is based on at most 10 leafs per contact.
+%This graph is based on at most 10 leafs per contact.
 Contacts who have a high proportion of nearby leafs are much more likely to
 live near the target user.
 }
 \label{fig:Local10}
 \end{figure}
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/locals_cmp.pdf}
 \caption{
@@ -942,7 +956,7 @@ We calculated the median location error for each location type.
 This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
 
-\begin{figure}[tbh]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=.9\linewidth]{figures/rfrd_mdist.pdf}
 \caption{
@@ -990,6 +1004,19 @@ variable with the most predictive power to build a binary tree.  Each of the int
 variables, and the leaves of the tree have a predicted value.
 
 
+\begin{figure}[tb]
+\centering
+\includegraphics[width=.8\linewidth]{figures/tree_top.pdf}
+\caption{
+    The top three levels of the decision tree. This decision tree will predict a
+    distance of 839 miles for a contact with a local contact ratio of .2 and
+    2800 friends. It will predict a much-closer distance of 43.7 miles for a
+    user with a local contact ratio of .5 and a predicted location error of 10
+    miles.
+}
+\label{fig:TreeTop}
+\end{figure}
+
 \noindent\textbf{Setup.} Since the distances between users varied by several orders of magnitude, we
 trained the regressor to predict the log of the distance.
 %
@@ -1003,19 +1030,6 @@ contact; there's simply too much noise.
 %
 However, it does do an excellent job of separating the closest pairs of users
 from the most distant pairs as we will show in the next section.
-
-\begin{figure}[tbh]
-\centering
-\includegraphics[width=.9\linewidth]{figures/tree_top.pdf}
-\caption{
-    The top three levels of the decision tree. This decision tree will predict a
-    distance of 839 miles for a contact with a local contact ratio of .2 and
-    2800 friends. It will predict a much-closer distance of 43.7 miles for a
-    user with a local contact ratio of .5 and a predicted location error of 10
-    miles.
-}
-\label{fig:TreeTop}
-\end{figure}
 
 
 
