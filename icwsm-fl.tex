@@ -241,27 +241,44 @@ A common theme of these challenges is that the quality of the geographic informa
 
 The challenge here is to separate the best contacts, who are likely to be nearby, from bad contacts who are likely to be far away. Simply encoding our intuitions about who should make a good contact is a starting point, but could miss many non-obvious relationships: for example, there may exist a pair of users who are good friends, communicate with each other, have many friends in common, and yet still live on opposite sides of the globe. 
 
-Hence, we propose to assess the relative quality of each edge from a target user to his contacts, so that edges conveying strong location information are weighed more than others. Concretely, suppose we have a single edge from a user to one of his contacts. We propose to assign this edge to a quantile based on its estimated ``goodness''. Suppose we construct a set of $m$ quantiles, representing edges at different distances. Let the boundaries for these quantiles be  $\{q_0,\dots,q_m\}$, where:\footnote{The notation used for order statistic may need some explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
-
-\jam{define R, caverlee confused actual dists and predicted dists}
-
+Hence, we propose to assess the relative quality of each edge from a target
+user to his contacts, so that edges conveying strong location information are
+weighed more than others.
+%
+This could be looked at as a classification problem where we want to classify
+edges as local or non-local, but the problem is there is a smooth continuum
+from local to non-local, and semi-local friends can be useful for location
+prediction.
+%
+As a result, we model this as a regression problem, and we propose improving
+the Facebook system by adding in information from a decision tree.
+%
+Concretely, suppose we have a single edge from a user to one of his contacts.
+We propose to assign this edge to a quantile based on its estimated
+``goodness'' as determined by the decision tree.
+%
+This decision tree will give us a set of $n$ predicted lengths $d^p_i \in D^p$
+that correspond to the $n$ actual lengths of the edges $d^a_i \in D^a$.
+%
+Suppose we construct a set of $m$ quantiles, representing edges at different predicted distances.
+%
+Let the boundaries for these quantiles be $\{q_0,\dots,q_m\}$, where:\footnote{The notation used for order statistic may need some explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
 \[
     q_j =
     \begin{cases}
-        D^p_{(1+\lfloor j|D^p|/m \rfloor)}, & j<m \\
+        D^p_{(1+\lfloor {jn\over m} \rfloor)}, & j<m \\
         \infty & j=m
     \end{cases}
 \]
-
 \noindent The quantile for a specific distance $d^p_i$ can be found by comparing it to the boundaries:
 \[
-    \quantile(d^p_i) = \max_{j \in \{0,\dots,m\}} \{j: d^p<q_j\}
+    \quantile(d^p_i) = \max_{j \in \{0,\dots,m\}} \{j: d^p_i<q_j\}
 \]
 
 Hence, we can identify the actual edges ($\actEdges$) that exist with a distance of $d$. This lets us find $\actEdges$, which is the number of users who fit in a quantile $j$ and had an actual distance of $d$
 \[
     \actEdges(j,d) = |\{
-            (d^a_i,d^p_i) \in R :
+            i \in \{1,\dots,n\} :
             d=d^a_i \wedge j=\quantile(d^p_i)
         \}|
 \]
@@ -272,14 +289,9 @@ By comparing the number of edges that could have existed to the number of edges 
 p^*(j,d) = \frac{\actEdges(j,d)}{\edges(d)}
 \]
 
-This could be looked at as a classification problem where we want to classify edges as local or non-local, but the problem is there is a smooth continuum from local to non-local, and semi-local friends can be useful for location prediction. As a result, we model this as a regression problem.
-
-
-
-
-We propose improving their system by adding in information from the decision tree.
-%
-We do this by replacing the probability of being a contact based purely on distance ($p$) to the probability based on the regression tree ($p^*$).
+We can combine this improved model into the existing estimator by
+replacing the probability of being a contact based purely on distance ($p$) to
+the probability based on the regression tree ($p^*$).
 %
 We now have a formula for predicting the best location given $L$, the set of locations of the contacts, and $P$, the set of predicted distances to the same
 contacts:
