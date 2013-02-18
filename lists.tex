@@ -4,16 +4,17 @@
 %  For more info about this template or the 
 %  TAMU LaTeX User's Group, see http://www.howdy.me/.
 %
-%  Author: Wendy Lynn Turner 
-%	 Version 1.0 
-%  Last updated 8/5/2012
+%  Author: Wendy Lynn Turner
+%	 Version 1.4
+%  Last updated 1/27/2013
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%       TABLE OF CONTENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \phantomsection
-\addcontentsline{toc}{chapter}{TABLE OF CONTENTS}  % Needs to be set to part, so the TOC doesnt add 'CHAPTER ' prefix in the TOC.
+\addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
+
 \begin{singlespace}
 \renewcommand\contentsname{\normalfont} {\centerline{TABLE OF CONTENTS}}
 
@@ -34,19 +35,20 @@
 \pagebreak{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                           lIST OF FIGURES
+%%                           LIST OF FIGURES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \phantomsection
-\addcontentsline{toc}{chapter}{LIST OF FIGURES}  % Needs to be set to part, so the TOC doesnt add 'CHAPTER ' prefix in the TOC.
+\addcontentsline{toc}{chapter}{LIST OF FIGURES}
 
 \renewcommand{\cftloftitlefont}{\center\normalfont\MakeUppercase}
 
 \setlength{\cftbeforeloftitleskip}{-12pt} %% Positions the LOF title vertically to match the chapter titles
-
 \renewcommand{\cftafterloftitleskip}{12pt}
+
+
 \renewcommand{\cftafterloftitle}{%
-\\[\baselineskip]\mbox{}\hfill{\normalfont Page}}
+\\[4em]\mbox{}\hspace{2pt}FIGURE\hfill{\normalfont Page}\vskip\baselineskip}
 
 \begingroup
 
@@ -59,10 +61,12 @@
 \setlength{\cftbeforesubsecskip}{0.30cm}
 \setlength{\cftbeforefigskip}{0.4cm}
 \setlength{\cftbeforetabskip}{0.4cm}
+
 \listoffigures
 
 \end{singlespace}
 \end{center}
+
 \pagebreak{}
 
 
@@ -71,15 +75,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \phantomsection
-\addcontentsline{toc}{chapter}{LIST OF TABLES}  % Needs to be set to part, so the TOC doesnt add 'CHAPTER ' prefix in the TOC.
+<<<<<<< HEAD
+\addcontentsline{toc}{chapter}{LIST OF TABLES}
 
 \renewcommand{\cftlottitlefont}{\center\normalfont\MakeUppercase}
 
-\setlength{\cftbeforelottitleskip}{-12pt} %% Positions the LOF title vertically to match the chapter titles
+\setlength{\cftbeforelottitleskip}{-12pt} %% Positions the LOT title vertically to match the chapter titles
 
 \renewcommand{\cftafterlottitleskip}{12pt}
+
+
 \renewcommand{\cftafterlottitle}{%
-\\[\baselineskip]\mbox{}\hfill{\normalfont Page}}
+\\[4em]\mbox{}\hspace{4pt}TABLE\hfill{\normalfont Page}\vskip\baselineskip}
 
 \begin{center}
 \begin{singlespace}
@@ -90,9 +97,10 @@
 \setlength{\cftbeforesubsecskip}{0.30cm}
 \setlength{\cftbeforefigskip}{0.4cm}
 \setlength{\cftbeforetabskip}{0.4cm}
-\listoftables
+
+\listoftables 
 
 \end{singlespace}
 \end{center}
 \endgroup
-\pagebreak{}  % Need this for the pagenumbering to be correct. 
+\pagebreak{}  % Need this for the pagenumbering to be correct.
