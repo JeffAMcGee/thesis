@@ -5,12 +5,10 @@
 %  TAMU LaTeX User's Group, see http://www.howdy.me/.
 %
 %  Author: Wendy Lynn Turner 
-%	 Version 1.0 
-%  Last updated 8/5/2012
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[colorlinks=false,12pt]{report}
+\documentclass[12pt]{report}
 \renewcommand{\familydefault}{\rmdefault}
 \usepackage[latin9]{inputenc}
 \usepackage[letterpaper]{geometry}
@@ -30,7 +28,7 @@
 \usepackage[font=singlespacing]{caption}
 
 % Hyperref setup below.  You should be able to get away with using uncommenting just the first line.
-% \usepackage[hidelinks]{hyperref}
+%\usepackage[hidelinks]{hyperref}
 
 % if \usepackage[hidelinks]{hyperref} doesn't work try this.
 % \usepackage{hyperref}  % Hidelinks is an option that removes link visiability.  TAMU Thesis Offices prefers to not see the links. But often doesn't work.  
@@ -42,7 +40,7 @@
 %     filecolor=black,
 %     urlcolor=black,
 % }
-%%%%%%%%  End of hyperref setup.  One of these two options should work, but my motto with hyperref is when in doubt, comment it out!
+%%%%%%%  End of hyperref setup.  One of these two options should work, but my motto with hyperref is when in doubt, comment it out!
 
 \begin{document}
 \renewcommand{\tamumanuscripttitle}{Type in your default title here}
@@ -66,6 +64,7 @@
 \include{dedication}
 \include{acknowledgements}
 \include{nomenclature}
+
 \include{lists}  % This is simply a file that formats and adds your toc, lof, and lot, please do not edit this unless you have a specific need. .
 
 \include{section1}
