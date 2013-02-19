@@ -13,10 +13,130 @@ validation.
 In this chapter we will use the numbers from one of the five folds to make
 the descriptions more concrete.
 
-\flsec{Edge Length Prediction}
 
-We need to separate the best contacts, who are likely to be nearby, from
-bad contacts who are likely to be far away.
+\flsec{Baseline: The Facebook Model}
+The Facebook model developed by Backstrom et al. \cite{backstrom2010find}
+begins with a striking observation: that the probability of friendship is
+roughly inversely proportional to distance.
+%
+Specifically, by examining the ratio of actual edges at a particular distance
+to the total number of possible edges at that distance (i.e., the probability
+of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent
+close to $c=-1$.
+
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=\linewidth]{figures/stranger_mat.png}
+\caption{
+    This is the probability that a user lives at a location based on the people
+    who they have no contact with. Dark areas have lower probability, and light
+    areas have a higher probability.
+}
+\label{fig:StrangerMat}
+\end{figure}
+
+With the empirically observed probability of friendship, they can estimate the
+likelihood that a user lives at a location $l$ using both $L^c$, the set of
+locations of the user's friends with known locations, and $L^s$, all 2.9
+million known locations of Facebook users.
+%
+Then, the Facebook model estimates the likelihood of location $l$ as:
+\[
+    \Backstrom(l,L^c) =
+        \prod_{l^c \in L^c} {\p(|l-l^c|) \over 1-\p(|l-l^c|) }
+        \prod_{l^s \in L^s} 1-\p(|l-l^s|)
+\]
+
+\noindent where $\p$ is the probability of friendship given an input distance
+(which again, can be derived empirically).
+%
+The first product in the formula combines the probabilities from a user's friends.
+%
+Locations near a user's friends will have a higher probability because $\p$ is
+roughly inversely proportional to distance.
+%
+The last product in the likelihood formula is only a function of the location
+$l^c_i$ and the locations of the strangers; it does not depend on any other
+information about the target user's contacts.
+%
+For convenience, we refer to this as $\pStrangers$:
+\[
+    \pStrangers(l) = \prod_{l^s \in L^s}1-p(|l-l^s|)
+\]
+
+\noindent As suggested in \cite{backstrom2010find}, this can be pre-computed
+for every location.
+%
+Figure~\ref{fig:StrangerMat} shows $\pStrangers$ for every location on earth.
+%
+Major cities have the lowest probability for
+$\pStrangers$, and remote areas have the highest probability.  It may seem
+counter-intuitive that areas with low population density have a higher
+probability, but consider this example: if someone has ten friends in New York
+City and ten friends in a small town in upstate New York, they are more likely
+to live in the small town, and just happen to know people in the big city.
+
+The Facebook model naturally aggregates the locations of a user's friends, and
+gives the probability that a user lives at a given location.
+%
+They then calculate this probability at each of the locations of the user's friends.
+%
+The location with the highest probability is often the center of the cluster of
+the user's friends.
+%
+However, directly applying this approach to other non-Facebook domains may
+encounter difficulties.
+%
+First, the Facebook empirical study focused only on the continental US, meaning
+that distances between contacts were naturally limited to around 1,000 miles.
+%
+When investigating global friendships (as on Twitter or on the rest of
+Facebook), there is considerable noise introduced in the 1,000--10,000 mile
+range due to the distribution of land and oceans on the surface of the earth.
+%
+Second, the Facebook dataset had street addresses for approximately 2.9 million
+Americans, and they used the friendships between users with street addresses to
+do the calculation.
+%
+Since information on Facebook is usually only shared with a user's friends,
+people are more willing to divulge their home addresses.
+%
+On most other social media websites, the location is publicly shared.
+%
+In practice, many users in social media reveal broad, imprecise
+locations (e.g., at the city or state level), while others provide fine-grained
+latitude-longitude information.
+%
+Third, the strength of connection between users necessarily varies, so
+capturing this variation is important.
+%
+Encouragingly, Gilbert \cite{gilbert2009predicting} have shown how the strength
+of a tie can be predicted by interaction patterns.
+%
+Finally, many social systems serve different purposes.
+%
+Twitter, for example, is both a social network connecting friends (which may
+tend to be local) as well as a news media (supporting global dissemination)
+\cite{kwak2010why}.
+
+
+\flsec{Edge Length Classification}
+
+A common theme of these challenges is that the quality of the geographic
+information conveyed by a relationship in social media varies.
+%
+Some edges may convey strong evidence of the location of a user.
+%
+For example, intuitively the many edges between a user with an unknown location
+and his co-workers (for whom we know their location) should contribute strongly
+to the likelihood that the user is nearby those co-workers.
+%
+In contrast, links between a user with an unknown location and with a news
+service (e.g., CNN) should contribute little discriminating power to estimating
+the location of the user.
+
+The challenge here is to separate the best contacts, who are likely to be
+nearby, from bad contacts who are likely to be far away.
 %
 The factors that we investigated in the previous section indicate when someone
 is likely to be nearby, but they don't guarantee it.
@@ -67,9 +187,6 @@ variable with the most predictive power to build a binary tree.
 %
 Each of the internal nodes of this tree have a cutoff for one of the input
 variables, and the leaves of the tree have a predicted value.
-%
-\jam{Does this need a better explanation? Can we assume people know decision
-trees?}
 
 The regression tree was trained on several of the features from the previous
 section that are correlated with users living near each other:
@@ -110,7 +227,7 @@ from the most distant pairs as we will show in the next section.
 \label{fig:TreeTop}
 \end{figure}
 
-\flsec{Model}
+\flsec{FriendlyLocation Prediction System}
 \label{sec:model}
 
 In the previous sections, we looked at the probability that a contact lives a
@@ -120,48 +237,13 @@ In this section, we build a model for the probability that a user, who we refer
 to as the target user, lives at a specific location given the approximate
 location of his contacts.
 %
-We will extend the model presented in \cite{backstrom2010find}.
-%
-Here's how they described their curve for the probability of friendship as a
-function of distance:
-\begin{quote}
-To generate this curve, we aggregate over all individuals, computing the
-distance between all $8.1 \times 10^{12}$ pairs of individuals with known
-addresses.
-We then bucket by intervals of 0.1 miles to compute the total number of pairs
-and the number of pairs for which an edge is present, plotting the ratio. It
-turns out that we can get a good fit to a curve of the form $a(b+x)^{-c}$.
-The exponent very close to $c=-1$ suggests that, at medium to long-range
-distances, the probability of friendship is roughly inversely proportional to
-distance.
-\end{quote}
+We use this to extend the baseline maximum likelihood estimator.
 
-There are several differences between what they did and what we are doing.
-%
-First, the data we have is from around the world, so we consider distances up
-to 10,000 miles apart instead of stopping at 1,000 miles.
-%
-The data is a lot noisier in the 1,000--10,000 mile range because of the
-distribution of land and oceans on the earth.
-%
-Next, their dataset had street addresses for approximately 2.9 million
-Americans, and they used the friendships between users with street addresses to
-do the calculation.
-%
-Since our geolocated users rarely have connections with other geolocated users
-we use the geocoded locations of their contacts, which are less accurate than
-street addresses since the locations are usually city names.
-%
-Finally, the most important difference is that we are not treating all the
-edges like they are the same, so we can't fit just one curve.
 
-Location prediction with a maximum likelihood estimator requires an estimate of
-the probability that a user lives at a specific location.
+Just like \cite{backstrom2010find}, we can find that probability by comparing
+the distribution of Twitter users to the distribution of the contacts.
 %
-We can find that probability by comparing the distribution of Twitter users to
-the distribution of the contacts.
-%
-First, we needed a model for the density of Twitter users.
+First, we need a model for the density of Twitter users.
 %
 We calculate the distance between every target user and every contact
 (even for contacts and users who had no relationship).
@@ -169,42 +251,50 @@ We calculate the distance between every target user and every contact
 We call the number of target and contact pairs that are $d$ miles apart
 $\edges(d)$.
 
-% i index in R, decision tree tuples
-% j index in Q, quantile boundaries
-% k index in 
-
 Next, we need to model the probability that two users are contacts.
 %
-We ran the decision tree regressor on the training data to create a set of
-tuples $R = (d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where
-$d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by
-the decision tree.
+We propose to assess the relative quality of each edge from a target
+user to his contacts, so that edges conveying strong location information are
+weighed more than others.
 %
-We split $R$ into $m$ quantiles on the boundaries $\{q_0,\dots,q_m\}$ as
-follows:\footnote{The notation used for order statistic may need some
-explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted in
-increasing order, so $X_{(2)}$ means the second smallest element in $X$.}
+Concretely, suppose we have a single edge from a user to one of his contacts.
+%
+We propose to assign this edge to a quantile based on its estimated
+``goodness'' as determined by the decision tree.
+%
+We will show that the tree regreessor described in the previous section does a
+reasonable job of sorting out good and bad edges.
 
+This decision tree will give us a set of $n$ predicted lengths $d^p_i \in D^p$
+that correspond to the $n$ actual lengths of the edges $d^a_i \in D^a$.
+%
+Suppose we construct a set of $m$ quantiles, representing edges at different
+predicted distances.
+%
+Let the boundaries for these quantiles be $\{q_0,\dots,q_m\}$,
+where:\footnote{The notation used for order statistic may need some
+    explanation.  $X_{(n)}$ is the $n^{th}$ element in the set $X$ when sorted
+    in increasing order, so $X_{(2)}$ means the second smallest element in
+$X$.}
 \[
     q_j =
     \begin{cases}
-        D^p_{(1+\lfloor j|R|/m \rfloor)}, & j=<m \\
+        D^p_{(1+\lfloor {jn\over m} \rfloor)}, & j<m \\
         \infty & j=m
     \end{cases}
 \]
-
-
-The quantile for a specific predicted distance $d^p_i$ can be found by
+\noindent The quantile for a specific distance $d^p_i$ can be found by
 comparing it to the boundaries:
 \[
-    \quantile(d^p_i) = \max_{j \in \{0,\dots,m\}} \{j: d^p<q_j\}
+    \quantile(d^p_i) = \max_{j \in \{0,\dots,m\}} \{j: d^p_i<q_j\}
 \]
 
-This lets us find $\contactEdges$, which is the number of users who fit in a
-quantile $j$ and had an actual distance of $d$
+Hence, we can identify the actual edges ($\actEdges$) that exist with a distance of $d$.
+%
+This lets us find $\actEdges$, which is the number of users who fit in a quantile $j$ and had an actual distance of $d$
 \[
-    \contactEdges(j,d) = |\{
-            (d^a_i,d^p_i) \in R :
+    \actEdges(j,d) = |\{
+            i \in \{1,\dots,n\} :
             d=d^a_i \wedge j=\quantile(d^p_i)
         \}|
 \]
@@ -214,13 +304,7 @@ that actually exist at a specific distance and in a specific quantile, we can
 find the probability that a contact at a specific distance is in a quantile:
 
 \[
-\pContact(j,d) = \frac{\contactEdges(j,d)}{\edges(d)}
-\]
-
-For each of the quantiles, we can fit $\pContact$ to the curve from
-\cite{backstrom2010find}:
-\[
-    \pContact(j,d) = a_{j} (b_{j}+d)^{-c_{j}}
+p^*(j,d) = \frac{\actEdges(j,d)}{\edges(d)}
 \]
 
 \begin{figure}[tbh]
@@ -254,74 +338,24 @@ We choose ten because it was large enough to distinguish between the curves.
 Larger numbers of quantiles give no benefit since the curves we are
 fitting are so noisy as can be seen in Figure~\ref{fig:NearProbFit}.
 
-\begin{figure}[tbh]
-\centering
-\includegraphics[width=\linewidth]{figures/stranger_mat.png}
-\caption{
-    This is the probability that a user lives at a location based on the people
-    who they have no contact with. Dark areas have lower probability, and light
-    areas have a higher probability.
-%
-\jam{Do we even need to show this graph? It's not new research, but I think it
-does help the reader understand $\pStrangers$.}
-}
-\label{fig:StrangerMat}
-\end{figure}
 
-
-\flsec{Location Prediction System}
-We used this model to improve a maximum-likelihood estimator proposed by
-Backstrom et al. in \cite{backstrom2010find}.
-%
-The predictor they propose expressed in our notation is
-\[
-    \Backstrom(l,L^c) = 
-        \prod_{l^c \in L^c} {\p(|l-l^c|) \over 1-\p(l-l^c) }
-        \prod_{l^s \in L^s} 1-\p(|l-l^s|)
-\]
-where $L^c$ is the set of locations of a user's contacts, $L^s$ is the set
-of all strangers' locations, and $\p$ is the probability of friendship given
-distance.
-
-The last product in that formula is only a function of the location $l^c_i$ and
-the locations of the strangers; it does not depend on any other information
-about the target user's contacts.
-%
-As suggested in \cite{backstrom2010find}, this can be pre-computed for every
-location.
-%
-For convenience, we refer to this as $\pStrangers$:
-\[
-    \pStrangers(l) = \prod_{l^s \in L^s}1-p(|l-l^s|)
-\]
-Figure~\ref{fig:StrangerMat} shows $\pStrangers$ for every location on earth.
-%
-Major cities have the lowest probability for $\pStrangers$.
-%
-It may seem counter-intuitive that areas with low population density have a
-higher probability, but consider this example: if someone has ten friends in
-New York City and ten friends in a small town in upstate New York, they are
-more likely to live in the small town, and just happen to know people in the
-big city.
-
-We propose improving their system by adding in information from the decision
-tree.
-%
-We do this by replacing the probability of being a contact based purely on
-distance ($p$) to the probability we found in the previous section
-($\pContact$).
+We can combine this improved model into the existing estimator by
+replacing the probability of being a contact based purely on distance ($p$) to
+the probability based on the regression tree ($p^*$).
 %
 We now have a formula for predicting the best location given $L$, the set of
 locations of the contacts, and $P$, the set of predicted distances to the same
 contacts:
 \[
-    \FriendLoc(l,L,P) =
+    FL(l,L,P) =
         \left(
             \prod_{l^c_k \in L,p_k \in P}
-            {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
+            {p^*(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
         \right)
         \pStrangers(l)
 \]
+
+\jam{unitalicize p in $p^*$}
 
 Algorithm~\ref{alg:friendloc} shows all the pieces from this section and the
 previous section tied together.
