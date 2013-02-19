@@ -7,10 +7,8 @@
 Before going into the details of the data collection, we first define a few
 terms to simplify the process of explaining how the data was collected.
 %
-\ifdefined\THESIS
-    Figure~\ref{fig:Terms} shows a social graph and uses most of the terms
-    defined in this section.
-\fi
+Figure~\ref{fig:Terms} shows a social graph and uses most of the terms
+defined in this section.
 %
 \textbf{Contacts} are defined to be the set of a user's friends, followers, and
 people who a user mentioned in her tweets (i.e., people the user speaks to).
@@ -24,22 +22,20 @@ communication edges that point back toward a user.
 In those platforms, it would be fairly straightforward to use that information
 in location prediction.
 
-\ifdefined\THESIS
-    \begin{figure}[tbh]
-    \centering
-    \includegraphics[width=\linewidth]{figures/terms.pdf}
-    \caption{
-    A small sample social graph for illustrating definitions used in this paper.
-    Alberto adds location information to his tweets.
-    Beryl is a reciprocal friend of Alberto, Chris is just a friend since Alberto
-    follows Chris, Debby is just a follower, and Ernesto is just mentioned.
-    The line to Ernesto is dashed to show that there is no friend/follow
-    relationship between Alberto and Ernesto.
-    The other arrows show who follows whom.
-    }
-    \label{fig:Terms}
-    \end{figure}
-\fi
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=\linewidth]{figures/terms.pdf}
+\caption{
+A small sample social graph for illustrating definitions used in this paper.
+Alberto adds location information to his tweets.
+Beryl is a reciprocal friend of Alberto, Chris is just a friend since Alberto
+follows Chris, Debby is just a follower, and Ernesto is just mentioned.
+The line to Ernesto is dashed to show that there is no friend/follow
+relationship between Alberto and Ernesto.
+The other arrows show who follows whom.
+}
+\label{fig:Terms}
+\end{figure}
 
 Any given contact can be categorized into precisely one of these four disjoint
 sets:
@@ -54,31 +50,58 @@ sets:
     user mentioned the name of the other user in a tweet.
 \end{description}
 
-Our crawler starts from a set of seed users and goes two steps out on the
-social graph.
+%Our crawler starts from a set of seed users and goes two steps out on the
+%social graph.
 %
-We created labels for the seed users and each of the steps along the way:
-
-\begin{description}
-\item[geo-located users] These users choose to use Twitter's location sharing
-    features, which means that we have precise latitude and longitude
-    coordinates for their location.
-\item[target users] These are a randomly chosen subset of the geo-located users
-    who have at least one contact.
-\item[geocoder calibration users] These are geo-located users who filled out their
-    location field with a location we could decode, but were not selected to be
-    part of the target users. They are used to differentiate between
-    high-quality locations and low-quality locations that are likely to be
-    wrong.
-\item[located contacts] These are the 25 randomly chosen contacts of
-    target users who have locations that we can decode.
-\item[leaves] These are at most 100 of the contacts of the located contacts.
-    When we selected leaves, we excluded the target users from the contacts so
-    that the distances to contacts would be independent from the distances to
-    leaves.
-\end{description}
+%We created labels for the seed users and each of the steps along the way:
+%
+%\begin{description}
+%\item[geo-located users] These users choose to use Twitter's location sharing
+%    features, which means that we have precise latitude and longitude
+%    coordinates for their location.
+%\item[target users] These are a randomly chosen subset of the geo-located users
+%    who have at least one contact.
+%\item[geocoder calibration users] These are geo-located users who filled out their
+%    location field with a location we could decode, but were not selected to be
+%    part of the target users. They are used to differentiate between
+%    high-quality locations and low-quality locations that are likely to be
+%    wrong.
+%\item[located contacts] These are the 25 randomly chosen contacts of
+%    target users who have locations that we can decode.
+%\item[leaves] These are at most 100 of the contacts of the located contacts.
+%    When we selected leaves, we excluded the target users from the contacts so
+%    that the distances to contacts would be independent from the distances to
+%    leaves.
+%\end{description}
 
 \jam{define things in math notation here}
+
+
+\begin{table*}[tb]
+\scriptsize
+\centering
+\begin{tabular}{l l p{4cm} p{6cm}}
+    Label & Size & Description & Data obtained \\
+    \hline
+    Target Users & 249,584 & Users who posted at least 3 geo-located tweets &
+    Location from GPS coordinates, user ids of friends and followers,
+    and text of tweets. \\
+    Geocoding Users & 894,617 & Users who posted at least 3 geo-located tweets
+    and had a location the geocoder could parse, but not selected as target users &
+    Location from GPS coordinates and geocoded location from user profile \\
+    % 10,081,957 located contacts
+    Located Contacts & 10 million & 25 contacts of target users with locations, randomly selected &
+    Location from geocoded profile, user ids of friends and followers, and text of tweets \\
+    % 71,596,805 leafs minus some of 250k contacts
+    Leafs & 71 million & 100 contacts of target users, randomly selected &
+    user profile (some of these users have a geocoded profile)\\
+\end{tabular}
+\caption{Four different sets of users and the data we obtained about them}
+\jam{ref this}
+\label{tab:datasets}
+\end{table*}
+
+
 
 \flsec{Data Collection}
 To investigate how social relation and geographical distance between the
@@ -116,14 +139,31 @@ any contacts with locations we could decode, which left us with 1.6 million
 Twitter users with a known location.
 %
 We randomly selected 249,584 of these users for analysis and experimentation.
-\ifdefined\THESIS
 \footnote{We originally selected 250,000 users, but had to remove 416 of them.
 These users had contacts with locations, but none of their contacts had
 meaningful locations.}
-\fi
+%
+We refer to these users as the target users.
 %
 Almost all of the experiments in this paper are based on these target
 users.
+
+Users who post geo-located tweets are not entirely representative of the
+average Twitter user.
+%
+In particular, they are less concerned about their privacy and have a precise
+location.
+%
+We only use information obtained from the contacts, and not the geolocated
+users themselves in our prediction.
+%
+There are some Twitter accounts, such as large organizations, who do not have a
+single location.
+%
+In practice, a location prediction system would need to identify users who do
+not have a location.
+
+
 
 %To enable parallelization, we divided those users into 100 groups based on
 %the two least significant digits in their Twitter user id, and randomly selected
@@ -165,6 +205,8 @@ component, there are a significant number of users who are contacts or leafs for
 more than one target user.
 %
 In the end, we collected just over 73 million Twitter user profiles.
+%
+Table~\ref{tab:datasets} shows a summary of the data obtained from Twitter.
 
 \flsec{Geocoding}
 We use Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.

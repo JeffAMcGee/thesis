@@ -31,6 +31,10 @@ Reciprocal friends tend to be closer than other types of friendships.
 \flsec{What type of contact is closest?}
 \label{sec:EdgeTypes}
 
+We first consider the type of contact and its impact on distance by dividing
+all contacts into one of four previously-defined sets:
+ reciprocal friend, just follower, just friend, and just mentioned.
+%
 Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
 function(CDF) of the distance between a target user and several types of
 contacts.
@@ -51,7 +55,7 @@ There is a relatively flat section in all the lines around 3,000 miles.
 the west coast, but shorter than the distance from the east coast of the U.S.
 to Europe, so there are few population centers that are this distance apart.
 
-In general, reciprocal friends are the closest, followed by followers, friends,
+In general, we observe that reciprocal friends are the closest, followed by followers, friends,
 and finally users who are just mentioned.
 %
 38\% of reciprocal friends live within 25 miles while only 18\% of users
@@ -82,12 +86,9 @@ Figure~\ref{fig:EdgeTypesCuml}.
 
 \flsec{What is the distribution of contacts?}
 
-To understand the distribution of contacts, we create a logarithmically-scaled
+To further analyze the distribution of contacts, we show in
+Figure~\ref{fig:EdgeTypes} a logarithmically-scaled
 histogram of the distances between various types of contacts.
-%We sort the distances to contacts into 160 logarithmically
-%scaled bins (40 bins for each power of 10).
-%
-Figure~\ref{fig:EdgeTypes} shows the result of plotting the histogram.
 %
 All four types of contacts follow roughly the same
 distribution: one peak around 10 miles from people who live nearby, and several
@@ -114,6 +115,16 @@ In section~\ref{sec:model}, we use this idea that there are two types of
 contacts to build a predictive location model based on social ties.
 
 
+Most previous location prediction work has focused on doing predicting
+locations in the continental U.S.
+%
+In the first figure from \cite{mcgee2011geographic}, we observed a
+bimodal distribution in distances between American Twitter users with strong
+peaks at 10 miles and 2500 miles.
+%
+When looking at this similar set of data on a global scale, we find more chaos
+in the distribution of contacts at distances greater than 200 miles.
+
 \begin{figure*}[tbh]
 \centering
 \includegraphics[width=\linewidth]{figures/edge_counts.pdf}
@@ -127,6 +138,8 @@ friends or followers tend to be further away.
 \flsec{Does the number of friends and followers a person have affect how
 close they are?}
 
+The second factor we consider is the number of friends and followers of a contact.
+%
 Since the primary goal of this research is to predict the location of users, we
 want to be able to discern the differences between contacts.
 %
@@ -314,9 +327,11 @@ mutual friends.
 \flsec{If two of your friends live near each other, does that increase the
 chance that they live near you?}
 
-In this section, we turn our attention to triangles of users.
+We now turn our attention to triangles of users.
+%
 Finding useful relationships between the edges of a social triangle is tricky
 because the three distances depend on each other.
+%
 Unfortunately, it is fairly simple to show using the triangle inequality theorem
 that if two users are 1000 miles apart, then the third member of the triangle
 has to be at least 500 miles from one of the other two.
@@ -345,10 +360,10 @@ We found this pattern for 147,669 of the target users.
 If a user had multiple instances of this pattern, it picked one of them
 randomly so that particular users would not bias the results.
 %
-%Since our crawler only retrieved friend and follower information for a few
-%reciprocal friends per user, it is reasonable to assume that this pattern
-%is more common, but the sample is more than enough data to draw some
-%conclusions.
+Since our crawler only retrieved friend and follower information for a few
+reciprocal friends per user, it is reasonable to assume that this pattern
+is more common, but the sample is more than enough data to draw some
+conclusions.
 %
 Figure~\ref{fig:NearTriads} shows a comparison between distances to the ``my''
 users and the ``our'' users.
@@ -423,7 +438,7 @@ in practice since we are really trying to distinguish between contacts who are
 hundreds of miles away and contacts who live in the same town.
 %
 Around one in ten contacts did not have any contacts with a location from the
-contacts we looked at--they were treated as a separate group.
+contacts we looked at---they were treated as a separate group.
 
 In \cite{li2012towards}, the authors model the probability distribution of
 user's followers using a Gaussian distribution, and use this to build a
@@ -474,3 +489,4 @@ The percentage of contacts within 25 miles with a good LCR based on 10 leafs,
 All of these are noticeably closer than reciprocal friends who are within 25
 miles 38\% of the time.
 
+\jam{Do we want to copy the "are some locations better" section from icwsm?}
