@@ -1,9 +1,6 @@
 \flchap{Evaluation}
 \label{chap:eval}
 
-\jam{pContact or $p^*$}
-\jam{update ple to mle in rest of document}
-
 In this section, we evaluate the system against a baseline implementation, and
 we investigate several modifications to the system.
 %
@@ -65,6 +62,9 @@ with two baseline systems, which we will discuss in upcoming sections:
 \item[FriendlyLocation + Location] This is the system described in the previous
     section plus the target user's reported location is included in the
     estimation.
+\item[FriendlyLocation + Cutoff] This is the system described in the previous
+    section where location detection is not done if the user gave us a
+    sufficiently good location.
 \end{description}
 
 \begin{figure}[tb]
@@ -127,14 +127,12 @@ than 1000 miles for all of the predictors.
 Some of this inaccuracy may be caused by inaccurate training data, but there is
 no real way to know.
 
-\jam{Do we want to include the omniscient predictor that magically picks the
-closest contact?
-%
-The comparison to the omniscient predictor shows that there is room for improvement.
-%
-Many users who have an incorrectly predicted location have at least one contact
-that is closer than the incorrectly predicted location.
-}
+%\jam{Do we want to include the omniscient predictor that magically picks the
+%closest contact?
+%The comparison to the omniscient predictor shows that there is room for improvement.
+%Many users who have an incorrectly predicted location have at least one contact
+%that is closer than the incorrectly predicted location.
+%}
 
 
 \ifdefined\THESIS
@@ -265,8 +263,8 @@ This lets us add $\pLocation$ into the maximum-likelihood estimator:
     \right)
     \pStrangers(l)
 \]
-\jam{Do we want ``FriendLoc+Location''? It helped, but it is not as good as the
-    cutoff and more complicated.}
+%\jam{Do we want ``FriendLoc+Location''? It helped, but it is not as good as the
+%    cutoff and more complicated.}
 
 
 \flsec{Ignoring Strangers}
@@ -311,8 +309,6 @@ of the approximately 80 API calls it takes to do the basic version of
 FriendlyLocation.
 
 
-\flsec{Random Bits}
-
-\jam{ Although we limited the crawler to 25 randomly-picked contacts per target
-user, if FriendlyLocation is going to be used as part of a larger system, the
-crawler should pick users based on relationship type before crawling.}
+%\jam{ Although we limited the crawler to 25 randomly-picked contacts per target
+%user, if FriendlyLocation is going to be used as part of a larger system, the
+%crawler should pick users based on relationship type before crawling.}

@@ -72,7 +72,7 @@ sets:
 %    leaves.
 %\end{description}
 
-\jam{define things in math notation here}
+%\jam{define things in math notation here}
 
 
 \begin{table*}[tb]
@@ -84,7 +84,7 @@ sets:
     Target Users & 249,584 & Users who posted at least 3 geo-located tweets &
     Location from GPS coordinates, user ids of friends and followers,
     and text of tweets. \\
-    Geocoding Users & 894,617 & Users who posted at least 3 geo-located tweets
+    Geocoded Users & 894,617 & Users who posted at least 3 geo-located tweets
     and had a location the geocoder could parse, but not selected as target users &
     Location from GPS coordinates and geocoded location from user profile \\
     % 10,081,957 located contacts
@@ -95,7 +95,6 @@ sets:
     user profile (some of these users have a geocoded profile)\\
 \end{tabular}
 \caption{Four different sets of users and the data we obtained about them}
-\jam{ref this}
 \label{tab:datasets}
 \end{table*}
 
@@ -212,7 +211,7 @@ We use Gisgraphy\footnote{\url{http://www.gisgraphy.com/}} to do geocoding.
 Gisgraphy does full-text search on the
 GeoNames\footnote{\url{http://www.geonames.org/}} database using Lucene.
 %
-Since it runs locally it is not limited to a certain number of queries per day.
+Since it runs locally, it is not limited to a certain number of queries per day.
 %
 Gisgraphy's geocoder returns ranked results based on a full text search
 over millions of geographical features such as countries, cities, and schools.
@@ -273,17 +272,17 @@ could be used for calibrating the geocoder.
 the free-response location field with something that the geocoder is able to
 decode.
 %
-These users form the geocoder calibration group.
+These users are called the geocoded users.
 
 We can compare the results of the geocoder to the location of the geo-located
 tweets for these users to quantify how accurate the geocoder is for certain
 types of locations.
 %
 We define the \textbf{location error} to be the great circle distance between a
-user's home location and the location returned from the geocoder:
-\[
-e_i = |l^h_i - l^g_i|
-\]
+user's home location and the location returned from the geocoder.
+%\[
+%e_i = |l^h_i - l^g_i|
+%\]
 
 The location error for a user can vary from less than a mile to over ten
 thousand miles.
@@ -312,7 +311,7 @@ Gisgraphy.
 %
 We define the \textbf{median location error (MLE)} for a given location to
 be the median location error if it is one of the 17,370 locations that have
-at least three geocoding calibration users; otherwise, it is the median
+at least three geocoded users; otherwise, it is the median
 location error for the location's type.
 %
 For example, one user had ``PDX,OR'' in his location field.
@@ -326,29 +325,29 @@ An airport is a bad location name since airports tend to have regional names
 and people who report their location as an airport are likely to move around a
 lot.
 
-\newcommand{\geotuple}{{(l^g_i,p_i,t_i,e_i) \in T}}
-
-We will now formally define median location error.
+%\newcommand{\geotuple}{{(l^g_i,p_i,t_i,e_i) \in T}}
 %
-We treat the locations returned by the geocoder as a set of tuples $\geotuple$,
-where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
-$t_i$ is the id of the type of place, and $e_i$ is the location error.
-
-For notational convenience, we define a set of places $F$ that have at least
-three users:
-\jam{is there a better way to say this? This is too long.}
-\[
-    F = \{ p_i \mid \geotuple \land |\{(l^g_j,p_j,t_j,e_j) \in T|p_i==p_j\}| \geq 3 \}
-\]
-
-This lets us define $MLE$ as a function of a place and type of place:
-\[
-    MLE(p,t) =
-    \begin{cases}
-        \median(\{e_i |\geotuple \land p_i=p\})  & p \in F \\
-        \median(\{e_i |\geotuple \land t_i=t \land p_i \notin F\})  & p \notin F \\
-    \end{cases}
-\]
+%We will now formally define median location error.
+%%
+%We treat the locations returned by the geocoder as a set of tuples $\geotuple$,
+%where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
+%$t_i$ is the id of the type of place, and $e_i$ is the location error.
+%
+%For notational convenience, we define a set of places $F$ that have at least
+%three users:
+%\jam{is there a better way to say this? This is too long.}
+%\[
+%    F = \{ p_i \mid \geotuple \land |\{(l^g_j,p_j,t_j,e_j) \in T|p_i==p_j\}| \geq 3 \}
+%\]
+%
+%This lets us define $MLE$ as a function of a place and type of place:
+%\[
+%    MLE(p,t) =
+%    \begin{cases}
+%        \median(\{e_i |\geotuple \land p_i=p\})  & p \in F \\
+%        \median(\{e_i |\geotuple \land t_i=t \land p_i \notin F\})  & p \notin F \\
+%    \end{cases}
+%\]
 
 \begin{figure}[tb]
 \centering

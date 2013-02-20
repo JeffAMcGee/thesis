@@ -304,7 +304,7 @@ that actually exist at a specific distance and in a specific quantile, we can
 find the probability that a contact at a specific distance is in a quantile:
 
 \[
-p^*(j,d) = \frac{\actEdges(j,d)}{\edges(d)}
+\pContact(j,d) = \frac{\actEdges(j,d)}{\edges(d)}
 \]
 
 \begin{figure}[tbh]
@@ -341,7 +341,7 @@ fitting are so noisy as can be seen in Figure~\ref{fig:NearProbFit}.
 
 We can combine this improved model into the existing estimator by
 replacing the probability of being a contact based purely on distance ($p$) to
-the probability based on the regression tree ($p^*$).
+the probability based on the regression tree ($\pContact$).
 %
 We now have a formula for predicting the best location given $L$, the set of
 locations of the contacts, and $P$, the set of predicted distances to the same
@@ -350,12 +350,11 @@ contacts:
     FL(l,L,P) =
         \left(
             \prod_{l^c_k \in L,p_k \in P}
-            {p^*(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
+            {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
         \right)
         \pStrangers(l)
 \]
 
-\jam{unitalicize p in $p^*$}
 
 Algorithm~\ref{alg:friendloc} shows all the pieces from this section and the
 previous section tied together.
@@ -381,6 +380,6 @@ previous section tied together.
   \end{algorithmic}
 \end{algorithm}
 
-\jam{locations of contacts are not independent as seen in~\ref{sec:closer}, but
-this formula really assumes they are. Where do we want to talk about this?}
+%\jam{locations of contacts are not independent as seen in~\ref{sec:closer}, but
+%this formula really assumes they are. Where do we want to talk about this?}
 
