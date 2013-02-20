@@ -20,36 +20,31 @@
 \pagenumbering{roman} % Roman numerals
 \setcounter{page}{2}
 
-\jam{limit of 350 words}
-
-\indent With the rise of volunteered user location information through services
-like Foursquare, Google Latitude, and Facebook Places, we face unprecedented
-access to the real-world connections among millions of social media users.
+\indent We propose a novel network-based approach for location estimation in social
+media that integrates evidence of the \textit{social tie strength} between
+users for improved location estimation.
 %
-This location information is increasingly incorporated into social media for
-providing localized content, location-aware recommendations, and other
-geo-spatial enabled services.
+Concretely, we propose a location
+estimator -- FriendlyLocation -- that leverages the relationship between the
+strength of the tie between a pair of users, and the distance between the pair.
 %
-In this paper, we investigate the relationship between the strength of the tie
-between a pair of users, and the distance between the pair through an
-examination of over 100 million geo-encoded tweets and
-over 73 million user profiles collected from \temp{information publicly
-posted to} Twitter.
+Based on an examination of over 100 million geo-encoded tweets and 73 million
+Twitter user profiles, we identify several factors such as the
+number of followers and how the users interact that can strongly reveal the
+distance between a pair of users.
 %
-Based on this investigation, we identify several factors such as number of
-followers and how the users interact that can strongly reveal the distance
-between a pair of users, and use these factors to train a decision tree to
-distinguish between users who are likely to live nearby and pairs of users who
-are likely to live in different areas.
+We use these factors to train a decision
+tree to distinguish between pairs of users who are likely to live nearby and pairs of
+users who are likely to live in different areas.
 %
 We use the results of this decision tree as the input to a maximum likelihood
 estimator to predict a user's location.
-%
 We find that this proposed method significantly improves the results of
 location estimation relative to a state-of-the-art technique.
-%
 Our system reduces the average error distance for 80\% of Twitter users from 40
 miles to 21 miles using only information from the user's friends and
-friends-of-friends.
+friends-of-friends,  which has great significance for augmenting traditional
+social media and enriching location-based services with more refined and
+accurate location estimates.
 
 \pagebreak{}

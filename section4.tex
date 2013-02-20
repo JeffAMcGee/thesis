@@ -196,7 +196,7 @@ section that are correlated with users living near each other:
 \item if the contact mentioned the target
 \item if the contact had a protected account
 \item the contact's follower and friend count
-\item the PLE of the contact's location
+\item the MLE of the contact's location
 \item the contact's local friend ratio
 \end{itemize}
 %
@@ -262,7 +262,7 @@ Concretely, suppose we have a single edge from a user to one of his contacts.
 We propose to assign this edge to a quantile based on its estimated
 ``goodness'' as determined by the decision tree.
 %
-We will show that the tree regreessor described in the previous section does a
+We will show that the tree regressor described in the previous section does a
 reasonable job of sorting out good and bad edges.
 
 This decision tree will give us a set of $n$ predicted lengths $d^p_i \in D^p$

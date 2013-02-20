@@ -2,8 +2,6 @@
 
 \flsec{Definitions}
 
-\jam{Talk about how geo-located users are different.}
-
 Before going into the details of the data collection, we first define a few
 terms to simplify the process of explaining how the data was collected.
 %
@@ -312,7 +310,7 @@ locations and location types.
 This gives us a method to estimate the quality of a coordinate returned by
 Gisgraphy.
 %
-We define the \textbf{predicted location error (PLE)} for a given location to
+We define the \textbf{median location error (MLE)} for a given location to
 be the median location error if it is one of the 17,370 locations that have
 at least three geocoding calibration users; otherwise, it is the median
 location error for the location's type.
@@ -321,7 +319,7 @@ For example, one user had ``PDX,OR'' in his location field.
 %
 Gisgraphy identifies this as ``Portland International Airport''.
 %
-Since it is not one of the most common locations, its PLE is determined by its
+Since it is not one of the most common locations, its MLE is determined by its
 place type to be 258 miles as seen in Table~\ref{tab:MedianLocErr}.
 %
 An airport is a bad location name since airports tend to have regional names
@@ -330,7 +328,7 @@ lot.
 
 \newcommand{\geotuple}{{(l^g_i,p_i,t_i,e_i) \in T}}
 
-We will now formally define predicted location error.
+We will now formally define median location error.
 %
 We treat the locations returned by the geocoder as a set of tuples $\geotuple$,
 where $l^g_i$ is the latitude and longitude, $p_i$ is the id of the place, and
@@ -343,9 +341,9 @@ three users:
     F = \{ p_i \mid \geotuple \land |\{(l^g_j,p_j,t_j,e_j) \in T|p_i==p_j\}| \geq 3 \}
 \]
 
-This lets us define $PLE$ as a function of a place and type of place:
+This lets us define $MLE$ as a function of a place and type of place:
 \[
-    PLE(p,t) =
+    MLE(p,t) =
     \begin{cases}
         \median(\{e_i |\geotuple \land p_i=p\})  & p \in F \\
         \median(\{e_i |\geotuple \land t_i=t \land p_i \notin F\})  & p \notin F \\
@@ -359,32 +357,32 @@ This lets us define $PLE$ as a function of a place and type of place:
 Cumulative distribution function(CDF) of the distance between geo-located
 users' tweets and their geocoded self-reported location.
 %
-The distances are split into bins based on the predicted location error(PLE).
+The distances are split into bins based on the median location error(MLE).
 %
-The blue lines show that locations with a low PLE tend to be accurate, and
-locations with a high PLE are rarely accurate.
+The blue lines show that locations with a low MLE tend to be accurate, and
+locations with a high MLE are rarely accurate.
 %
-The dotted line shows the values of the PLE for all the
+The dotted line shows the values of the MLE for all the
 users in this graph.
 %
-63\% of these users have a PLE less than 10 miles, and 90\% have a PLE
+63\% of these users have a MLE less than 10 miles, and 90\% have a MLE
 less than 1000.
 }
 \label{fig:DiffMlocMdist}
 \end{figure}
 
-The blue curves in Figure~\ref{fig:DiffMlocMdist} show a comparison of the PLE
+The blue curves in Figure~\ref{fig:DiffMlocMdist} show a comparison of the MLE
 and the actual location error for 155,930 of the target users (these are the
 target users who also filled out the location field of their profile).
 %
-90\% of these users have a PLE that is less than 1000 miles.
+90\% of these users have a MLE that is less than 1000 miles.
 %
 85\% of the target users live within 1000 miles of the location returned by
-the geocoder, but after removing only the 10\% of them who have a PLE greater
+the geocoder, but after removing only the 10\% of them who have a MLE greater
 than 1000 miles, 93\% of the remaining users live within 1000 miles of the
 location the geocoder returns.
 %
-In all of the future experiments, we treat locations with a PLE that is greater
+In all of the future experiments, we treat locations with a MLE that is greater
 than 1000 as if no location had been supplied.
 %
 This filters out worthless locations such as ``Pluto'', while keeping somewhat
