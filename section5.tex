@@ -2,9 +2,10 @@
 \label{chap:eval}
 
 \jam{pContact or $p^*$}
+\jam{update ple to mle in rest of document}
 
-We evaluate the system against a baseline implementation, and we investigate
-several modifications to the system.
+In this section, we evaluate the system against a baseline implementation, and
+we investigate several modifications to the system.
 %
 We use five-fold cross validation on the target users to evaluate the system.
 We evaluated the FriendlyLocation system against the 249,584 target users.
@@ -16,10 +17,11 @@ We did not recalculate $\pStrangers$ or the probability as a function of distanc
 used for the baseline, since these are fairly independent of the selected set
 of users.
 
-We evaluate the system against the metrics used in previous works:
-accuracy at 25 miles (ACC) which was used in \cite{backstrom2010find}
-and average error distance (AED) proposed in \cite{cheng2010you} and
-extended in \cite{li2012towards}.
+\flsec{Metrics}
+We evaluate the system against the metrics used in
+previous works: accuracy at 25 miles (ACC) which was used in
+\cite{backstrom2010find} and average error distance (AED) proposed in
+\cite{cheng2010you} and extended in \cite{li2012towards}.
 %
 Following the notational conventions from \cite{li2012towards}, we define ACC
 and AED for a set of users $u \in U$ with $\Err(u)$ as the distance between a
@@ -36,13 +38,9 @@ Average error distance (reported as AED@100\%) is as follows:
     \AED(U) = { \sum_{u \in U} \Err(u) \over |U| }
 \]
 
-We also use the extension of AED created by \cite{li2012towards}:
-\begin{quote}
-However, as AED is easily affected by outliers in results, we report AED at
-different percentiles (60\%, 80\% and 100\%) of users ranked by their error
-distances. E.g., AED@60\% is the average error distance of the top 60\% of
-users ranked by their error distances.
-\end{quote}
+Since AED may be affected by outliers, we also report the AED at other
+percentiles, following \cite{li2012towards}.
+%
 The effect of outliers that they mention is even larger in our work than theirs
 because we are using locations from around the world instead of focusing on
 just the U.S.
@@ -50,7 +48,7 @@ just the U.S.
 We investigate several implementations of the FriendlyLocation system along
 with two baseline systems, which we will discuss in upcoming sections:
 \begin{description}
-\item[Baseline] This is based on the MLE estimator presented in
+\item[Baseline] This is based on the maximum likelihood estimator presented in
     \cite{backstrom2010find}. Some changes to the system had to be made to make it
     work on Twitter's directed graph. (Facebook friendships are always
     reciprocal.)
@@ -60,10 +58,10 @@ with two baseline systems, which we will discuss in upcoming sections:
     section with only information from the locations of contacts.
 \item[FriendlyLocation - Strangers] This is the system described in the previous
     section without $\pStrangers$.
-\ifdefined\THESIS
+\item[FriendlyLocation - Leafs] This is the system described in the previous
+    section without the locations of the leafs and tweets from the contacts.
 \item[FriendlyLocation + Time Zone] This is the system described in the previous
     section plus the target user's time zone information.
-\fi
 \item[FriendlyLocation + Location] This is the system described in the previous
     section plus the target user's reported location is included in the
     estimation.
@@ -88,9 +86,7 @@ with two baseline systems, which we will discuss in upcoming sections:
     FriendLoc$-$Strangers & 5.79$\pm$.028 & 25.2$\pm$.18 & 377$\pm$4.3 & 62.4\%$\pm$.09\% \\
     FriendLoc$-$Leafs & 5.36$\pm$.011 & 22.1$\pm$.12 & 367$\pm$4.0 & 63.6\%$\pm$.12\% \\
     FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
-\ifdefined\THESIS
     FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
-\fi
     FriendLoc+Location & 4.54$\pm$.011 & 15.7$\pm$.27 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
     FriendLoc+Cutoff & 4.56$\pm$.026 & 15.1$\pm$.22 & 343$\pm$4.2 & 67.4\%$\pm$.08\% \\
 \end{tabular}
@@ -193,7 +189,6 @@ or the other.
 %
 Since this showed so little benefit, it is unlikely to be improved by better
 time zone lines.
-\jam{Do we want the time zone section?}
 \fi
 
 \flsec{Location Field}
@@ -215,20 +210,20 @@ of the target users to make the distribution of the quality of their
 locations would match the quality of the contacts.
 %
 First, we sorted all the target users and all the contacts by their
-PLE(predicted location error).
+MLE(median location error).
 %
 Next, we looked at each percentile of the target users and compared
-their PLE to the PLE for that percentile in the contacts.
+their MLE to the MLE for that percentile in the contacts.
 %
 For each of the target users, we moved the user's location based on
 reverse geocoding away from the user's actual median location based on the
-difference between the PLEs.
+difference between the MLEs.
 %
-For example, the median PLE for a target user was 5.9 miles, and the median
-PLE for a contact was 6.7 miles.
+For example, the MLE for a target user was 5.9 miles, and the median
+MLE for a contact was 6.7 miles.
 %
 This means that we need to add .8 miles of noise to a target user
-with a PLE of 5.9 so that the quality of the geo-located target user's location
+with a MLE of 5.9 so that the quality of the geo-located target user's location
 would match the quality of normal Twitter users.
 %
 We also removed the location field from 17\% of the target users to
@@ -243,7 +238,7 @@ We investigate two different ways of using this information.
 The simpler of the two, which we refer to as ``FriendLoc+Cutoff'' in
 Table~\ref{tab:results}.
 %
-If the PLE for the target user's geocoded location is less than or equal to 25
+If the MLE for the target user's geocoded location is less than or equal to 25
 miles, then we use the geocoded location as the actual location; otherwise, we
 ignore the geocoded location and just use $\FriendLoc$t diff to find the location.
 %
@@ -303,7 +298,7 @@ If we don't crawl the leafs, we also do not need to download the friends and
 followers of the contacts to find the leafs, which makes the process well over
 an order of magnitude faster.
 %
-We re-ran the tree regreessor, curve fitting, and prediction using only
+We re-ran the tree regressor, curve fitting, and prediction using only
 information from the target users friends, followers, and tweets and the
 profiles of the contacts.
 %
@@ -312,7 +307,7 @@ good as the basic version of FriendLoc at 63.9\% accuracy, but they are still
 very close.
 %
 Prediction using only contacts takes only four calls to Twitter's API instead
-of the approximately 80 API calls it took to do the basic version of
+of the approximately 80 API calls it takes to do the basic version of
 FriendlyLocation.
 
 
