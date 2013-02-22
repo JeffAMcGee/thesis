@@ -154,6 +154,7 @@ refined and accurate location estimates.
 %pairs of users who are distant and more likely to be connected for news
 %distribution.
 
+
 \flsec{Related work}
 The study of geographical properties of online social media users has drawn
 intensive attention in recent years.
@@ -230,4 +231,46 @@ tie given precise location information from laptops and cell phones.
 They used a collection of features of when users are co-located.
 %
 Together, these efforts have begun to lay a foundation for the study geo-social media.
+
+
+\flsec{Overview}
+
+The remainder of this thesis is organized as follows:
+
+\begin{description}
+\item[Chapter 2: Preliminaries] --- This chapter discusses some basic topics
+    that need to be addressed before looking into location prediction.
+    We first define some labels for various parts of the social graph that will
+    be used throughout the paper.
+    Next, we use a crawler to retrieve information from 73 million Twitter
+    users.
+    A geocoder can convert free-form locations from Twitter user profiles into
+    a longitude and latitude coordinates.
+    For the last part of this chapter, We use information from Twitter to
+    evaluate the quality of locations returned by the geocoder.
+\item[Chapter 3: Analysis of Distance to Contacts] ---
+    Most Twitter users have at least dozens of friends and followers, and some
+    of them will obviously be closer than others.
+    We argue that users with a stronger tie strength are more likely to live
+    near each other.
+    In this chapter, we look at several factors that are correlated with the
+    length of an edge.
+\item[Chapter 4: Location Prediction] --- Researchers at Facebook built a
+    system that predicted locations of Facebook users given the street
+    addresses of their friends.
+    We use this as a baseline to compare our system against.
+    Using the insight gained in Chapter 3, we build a decision tree to sort
+    users that are useful from location prediction from those users who are
+    relatively useless.
+    We use the results of this decision tree to build a system for predicting
+    location which we call FriendlyLocation.
+\item[Chapter 5: Evaluation] --- We evaluate the system described in Chapter 4
+    against the Facebook baseline, and look at several potential improvements
+    to FriendlyLocation.
+\item[Chapter 6: Conclusion] --- We summarize the results of our work and
+    discuss potential future work that could be built on top of
+    FriendlyLocation.
+
+\end{description}
+
 
