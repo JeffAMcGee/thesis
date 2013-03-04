@@ -1,27 +1,62 @@
 \flchap{Conclusion}
-We demonstrated that some types of relationships tend to be closer than others,
-identified some features of relationships that are correlated with physical
-proximity, and used this to accurately predict the locations of users on a
-social media website.
-There are two directions that the future work on this project could go:
-improving the results of the predictor and using the predicted locations in
-other research projects.
 
-%\jam{Do you talk about future work in a thesis?}
+%After you ship it, you should also expand the conclusion to include more
+%thoughts on what we have learned and next steps.
+%Give us a vision of the future.
 
+In this thesis, we have demonstrated that some types of relationships tend to
+be closer than others.
+%
+Some features of relationships are correlated with physical proximity.
+%
+For example, users with lots of followers tend to be distant, while users who
+mention each other tend to be closer.
+%
+In general, users with stronger ties tend to be local.
+%
+We used this to accurately predict the locations of users on a social media
+website.
+
+There are two general directions that the future work on this research could
+go: improving the results of the prediction and using the predicted locations
+to build systems.
+%
 One way to improve this predictor is to combine tie strength and the social
 graph with other factors such as the words users choose to use as described by
 Cheng \cite{cheng2010you}.
+%
 It could be useful for the predictor to return not just a location, but an
-estimate of the quality of the prediction.  This paper only considered
-users who have a well-defined location. FriendlyLocation could identify users
-who do not have meaningful locations such as people who constantly travel.
-This could work well with the node locality metric which is defined by
-Scellato\cite{scellato2010distance}.
+estimate of the quality of the prediction.
+%
+The system described in this thesis only considered users who have a
+well-defined location.
+%
+FriendlyLocation could be modified to identify users who do not have meaningful
+locations such as people who constantly travel and accounts that represent
+large organizations.
+%
+% WAT?
+%This could work well with the node locality metric which is defined by
+%Scellato\cite{scellato2010distance}.
 
-Finally, high-quality geographic information opens up new avenues for research.
+Finally, high-quality geographic information opens up new avenues for research
+and software engineering.
+%
+Location prediction will allow websites to provide hyper-local content and
+services.
+%
+For example, the distance between a pair of users could be considered when
+suggesting new friends on a social network and websites will be able to give
+users more accurate, localized search results.
+
+The idea that started our research into location prediction was community crowd
+detection.
+%
 With geographic location of users, we can cluster users and find local
 conversations.
-It also allows businesses to provide hyper-local content and services.
-
-
+%
+These conversations can be analyzed to understand local political and social
+events.
+%
+Location prediction will allow us to create a more clear picture of the
+conversations in a community.
