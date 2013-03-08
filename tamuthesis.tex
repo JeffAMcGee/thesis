@@ -68,6 +68,12 @@
 \newcommand{\flchap}[1]{\chapter{\uppercase{#1}}}
 \newcommand{\flsec}[1]{\section{#1}}
 
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
 
 % Hyperref setup below.  You should be able to get away with using uncommenting just the first line.
 \usepackage[hidelinks]{hyperref}
@@ -109,8 +115,8 @@ on Tie Strength}
 
 \include{titlepage} % This is simply a file that formats and adds your titlepage, please do not edit this unless you have a specific need. .
 \include{abstract}
-%\include{dedication}
-%\include{acknowledgements}
+\include{dedication}
+\include{acknowledgements}
 %\include{nomenclature}
 
 \include{lists}  % This is simply a file that formats and adds your toc, lof, and lot, please do not edit this unless you have a specific need. .
