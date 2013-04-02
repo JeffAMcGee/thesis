@@ -10,8 +10,6 @@
 
 % TODO:
 % Move to top margin: pg. ii, iii, iv, ix, 1, 7, 14, 26, 35, 42, 44
-% TOC: single space subheadings
-% single space refs
 
 \documentclass[12pt]{report}
 \renewcommand{\familydefault}{\rmdefault}
@@ -96,6 +94,12 @@
 % }
 %%%%%%%  End of hyperref setup.  One of these two options should work, but my motto with hyperref is when in doubt, comment it out!
 
+% attempt to single-space sections
+\usepackage{tocloft}
+\renewcommand{\cftsecafterpnum}{\vskip0.5\baselineskip}
+\renewcommand{\cftsubsecafterpnum}{\vskip0.5\baselineskip}
+\renewcommand{\cftsubsubsecafterpnum}{\vskip0.5\baselineskip}
+
 \begin{document}
 %mucking with floats by Jeff
 \renewcommand\floatpagefraction{.9}
@@ -115,6 +119,10 @@ on Tie Strength}
 \renewcommand{\tamugradmonth}{May}
 \renewcommand{\tamugradyear}{2013}
 \renewcommand{\tamudepartment}{Computer Science}
+
+% fix spacing in bibliography
+\let\oldbibitem\bibitem
+\renewcommand{\bibitem}{\setlength{\itemsep}{0pt}\oldbibitem}
 
 % added by Jeff to split between thesis and www paper
 \newcommand*{\THESIS}{}%
