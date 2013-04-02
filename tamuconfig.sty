@@ -128,6 +128,8 @@
 
 \let\chaptermarkOLD\chaptermark
     \renewcommand*\chaptermark[1]{\chaptermarkOLD{#1}\addtocontents{thefigure}{\protect\addvspace{30pt}}}
-		
-		
-		
+
+% fix spacing in front of figures
+\setlength{\textfloatsep}{40pt plus 8.0pt minus 4.0pt}
+\setlength{\floatsep}{40pt plus 8.0pt minus 4.0pt}
+\setlength{\intextsep}{40pt plus 8.0pt minus 4.0pt}

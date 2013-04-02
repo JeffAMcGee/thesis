@@ -1,4 +1,10 @@
-\flchap{Analysis of Distance to Contacts}
+\chapter{\uppercase{Analysis of Distance to Contacts}
+\footnote{Portions of this chapter are based on an earlier work:
+A geographic study of tie strength in social media, in
+Proceedings of the 20th ACM international conference on Information and
+knowledge management, \copyright ACM, 2011.
+http://dx.doi.org/10.1145/2063576.2063959}
+}
 \label{sec:analysis}
 
 Every user who has multiple contacts will usually have some contacts who are
@@ -172,18 +178,6 @@ hundred.
 %
 Follower count and friend count are good ways to distinguish celebrity and news
 accounts which are useless for location prediction.
-
-\ifdefined\THESIS
-    \begin{figure}[tbh]
-    \centering
-    \includegraphics[width=\linewidth]{figures/com_types.pdf}
-    \caption{
-    CDF of the distance between a target user and various types of contacts
-    plotted on a logarithmic scale.
-    }
-    \label{fig:ComTypes}
-    \end{figure}
-\fi
 
 
 \begin{table*}[tbh]
@@ -462,9 +456,14 @@ This means that median distance to leafs does a reasonable job of separating the
 worst contacts from the average contacts, but local contact ratio does a better
 job of identifying the very best contacts.
 
-The figure shows that some users are much more local than other users.
+Figure~\ref{fig:Local10} is a graph of the distance to reciprocal friends split
+into bins based on the local contact ratio of the contact.
+%
+This shows that some users are much more local than other users.
+%
 For example, a local newspaper may have thousands of followers and few friends,
 but the people who follow a newspaper are generally local.
+%
 According to the other factors we looked at, the newspaper is a bad predictor
 of location, but in reality it is a great predictor.
 
