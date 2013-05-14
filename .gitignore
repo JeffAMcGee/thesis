@@ -1,6 +1,13 @@
 .DS_Store
-tamuthesis.dvi
-tamuthesis.pdf
-tamuthesis.log
 out/
 *.swp
+*.aux
+*.lof
+*.lot
+*.log
+*.pdf
+*.dvi
+*.bbl
+*.blg
+*.out
+*.toc
