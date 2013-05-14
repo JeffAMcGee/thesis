@@ -106,6 +106,9 @@ accurate location estimates.
 %
 \end{abstract}
 
+\jam{define contacts --- are defined to be the set of a user's friends, followers, and
+people who a user mentioned in her tweets (i.e., people the user speaks to).}
+
 \section{Introduction}
 Location-based social media is widespread, with the adoption of voluntary
 user-based location sharing via ``check-in'' services like Foursquare,
@@ -353,7 +356,8 @@ For convenience, we refer to this as $\pStrangers$:
 \]
 
 \noindent As suggested in \cite{backstrom2010find}, this can be pre-computed
-for every location.  Major cities have the lowest probability for
+for every location.
+Major cities have the lowest probability for
 $\pStrangers$, and remote areas have the highest probability.  It may seem
 counter-intuitive that areas with low population density have a higher
 probability, but consider this example: if someone has ten friends in New York
@@ -430,12 +434,12 @@ The other six curves of best fit are shown as faint dotted lines.}
     Target Users & 249,584 & Users who posted at least 3 geo-located tweets &
     Location from GPS coordinates, user ids of friends and followers,
     and text of tweets. \\
-    Geocoding Users & 894,617 & Users who posted at least 3 geo-located tweets
+    Geocoded Users & 894,617 & Users who posted at least 3 geo-located tweets
     and had a location the geocoder could parse, but not selected as target users &
     Location from GPS coordinates and geocoded location from user profile \\
     % 10,081,957 located contacts
     Located Contacts & 10 million & 25 contacts of target users with locations, randomly selected &
-    Location from geocoded profile, user ids of friends and followers, and text of tweets \\
+    Geocoded location from profile, user ids of friends and followers, and text of tweets \\
     % 71,596,805 leafs minus some of 250k contacts
     Leafs & 71 million & 100 contacts of target users, randomly selected &
     user profile (some of these users have a geocoded profile)\\
@@ -504,14 +508,16 @@ $X$.}
         \infty & j=m
     \end{cases}
 \]
-\noindent The quantile for a specific distance $d^p_i$ can be found by comparing it to the boundaries:
+\noindent The quantile for a specific distance $d^p_i$ can be found by
+comparing it to the boundaries:
 \[
     \quantile(d^p_i) = \max_{j \in \{0,\dots,m\}} \{j: d^p_i<q_j\}
 \]
 
 Hence, we can identify the actual edges ($\actEdges$) that exist with a distance of $d$.
 %
-This lets us find $\actEdges$, which is the number of users who fit in a quantile $j$ and had an actual distance of $d$
+This lets us find $\actEdges$, which is the number of users who fit in a
+quantile $j$ and had an actual distance of $d$
 \[
     \actEdges(j,d) = |\{
             i \in \{1,\dots,n\} :
@@ -561,7 +567,6 @@ $\edges(d)$.
 
 % i index in R, decision tree tuples
 % j index in Q, quantile boundaries
-% k index in 
 
 Next, we need to model the probability that two users are contacts.
 %
@@ -626,15 +631,37 @@ Feature to disclose their location.
 The crawler sampled over one hundred million geo-coded tweets by monitoring
 Twitter's public streaming API for all of May 2012.
 % 118,464,320 lines including keepalive newlines and non-status messages.
-We kept the tweets from the users who posted at least three tweets.
-%which left us with 1,758,101 Twitter users.
+We kept the tweets from the users who posted at least three tweets, which left
+us with 1,758,101 Twitter users.
 %
 For each of these users with geo-coded tweets, we used the median latitude and
 median longitude of the locations of the user's tweets as an approximation of
 her home location.
 %
-We filtered out 7\% of these users because they either had no contacts or they
-posted from too many different locations.
+Some Twitter accounts, such as accounts that posted jobs, would
+move around faster than a human could possibly move.
+%
+To account for this, the crawler calculated the distance between each tweet and
+the user's home location.
+%
+The crawler ignored users if the median distance from their tweets to their
+home location was greater than 50 miles.
+%
+This only removed 3.4\% of the geo-located users.
+%
+We also removed an additional 2.9\% of the geo-located users who did not have
+any contacts with locations we could decode, which left us with 1.6 million
+Twitter users with a known location.
+%
+We randomly selected 249,584 of these users for analysis and experimentation.
+\footnote{We originally selected 250,000 users, but had to remove 416 of them.
+These users had contacts with locations, but none of their contacts had
+meaningful locations.}
+%
+We refer to these users as the target users.
+%
+Almost all of the experiments in this paper are based on these target
+users.
 
 Users who post geo-located tweets are not entirely representative of the
 average Twitter user.
@@ -642,7 +669,7 @@ average Twitter user.
 In particular, they are less concerned about their privacy and have a precise
 location.
 %
-We only use information obtained from the contacts, and not the geolocated
+We only use information obtained from the contacts, and not the geo-located
 users themselves in our prediction.
 %
 There are some Twitter accounts, such as large organizations, who do not have a
@@ -652,39 +679,6 @@ In practice, a location prediction system would need to identify users who do
 not have a location.
 
 
-%Some Twitter accounts, such as accounts that posted jobs, would
-%move around faster than a human could possibly move.
-%%
-%To account for this, the crawler calculated the distance between each tweet and
-%the user's home location.
-%%
-%The crawler ignored users if the median distance from their tweets to their
-%home location was greater than 50 miles.
-%%
-%This only removed 3.4\% of the geo-located users.
-%%
-%We also removed an additional 2.9\% of the geo-located users who did not have
-%any contacts with locations we could decode, which left us with 1.6 million
-%Twitter users with a known location.
-%
-
-We randomly selected 249,584 of these users for the bulk of our analysis and
-experimentation.
-\ifdefined\THESIS
-\footnote{We originally selected 250,000 users, but had to remove 416 of them.
-These users had contacts with locations, but none of their contacts had
-meaningful locations.}
-\fi
-%
-We refer to these users as the target users.
-%
-Almost all of the experiments in this paper are based on these target
-users.
-%
-We used Twitter's API to download information about the target users, and
-crawled two steps out on the social graph.
-%
-Table~\ref{tab:datasets} shows the data obtained from Twitter.
 
 % distribution of the contacts
 %     med  avg      std
@@ -693,39 +687,17 @@ Table~\ref{tab:datasets} shows the data obtained from Twitter.
 %jfrd 78.0 153.5700 241.222
 %jats  5.0   7.0764   8.060
 
-%For all of the target users, the crawler used Twitter's API to download
-%the users' 100 most recent tweets, a list of friend ids, and a list of follower ids.
-%%
-%Most of the target users had plenty of contacts of each of the four types.
-%%
-%The median number of reciprocal friends is 62, and the average is 132.
-%%
-%The average numbers are higher because the number of contacts a user has
-%follows a heavy-tailed distribution.
-%%
-%The medians for other types of contacts are 35 just followers, 78 just friends,
-%and 7 just mentioned.
-%%
-%If a user had over 25 contacts in any of the four types of contacts, the
-%crawler chose a random sample of 25 from each of the types of contacts, and
-%downloaded the profiles for up to 100 total contacts per target user.
-%%
-%From that 100, we randomly picked at most 25 contacts with locations we could
-%decode to be the located contacts.
+For all of the target users, our crawler used Twitter's API to download
+the users' 100 most recent tweets, a list of friend ids, and a list of follower ids.
 %
-For those located contacts, we downloaded
-%their friends, followers, and tweets.
-%%
-%We finished this process by downloading up to 100 profiles of the contacts of
-%the contacts.
-%%
-%Since the Twitter social network graph has a large strongly connected
-%component, there are a significant number of users who are contacts or leafs for
-%more than one target user.
-%%
-%In the end, we collected just over 73 million Twitter user profiles.
-
-
+We also collected the user profiles for a sample of users who were two steps
+away from the target users on Twitter's social graph.
+%
+In the end, we collected just over 73 million Twitter user profiles.
+%
+Table~\ref{tab:datasets} shows a summary of the data obtained from Twitter.
+%
+This data was used to do the analysis in the rest of this section.
 
 \begin{figure}[tb]
 \centering
@@ -741,13 +713,12 @@ Reciprocal friends tend to be closer than other types of friendships.
 \end{figure}
 
 
-
-
-
 \subsection{Factor 1: What type of contact is closest?}
 \label{sec:EdgeTypes}
-We first consider the type of contact and its impact on distance by dividing all contacts into one of four sets:
+We first consider the type of contact and its impact on distance by dividing
+all contacts into one of four disjoint sets:
 
+\jam{check captialization of terms}
 \begin{description}
 \item[reciprocal friend:] The target user follows this user and is followed
     back.
@@ -760,7 +731,7 @@ We first consider the type of contact and its impact on distance by dividing all
 \end{description}
 
 Figure~\ref{fig:EdgeTypesCuml} shows the cumulative distribution
-function (CDF) of the distance between a target user and each of these types of
+function(CDF) of the distance between a target user and several types of
 contacts.
 %
 Distance is plotted on a logarithmic scale to show both local and
@@ -806,6 +777,7 @@ Histogram of distance to reciprocal friends.
 \label{fig:EdgeTypes}
 \vspace{-2pt}
 \end{figure}
+\jam{is the EdgeTypes label right here?}
 
 
 \noindent\textbf{What is the distribution of contacts?}
@@ -813,7 +785,8 @@ To further analyze the distribution of contacts, we show in
 Figure~\ref{fig:EdgeTypes} a logarithmically-scaled
 histogram of the distances between various types of contacts.
 %
-We see one peak around 10 miles from people who live nearby, and several
+All four types of contacts follow roughly the same
+distribution: one peak around 10 miles from people who live nearby, and several
 other peaks between 100 and 10,000 miles.
 %
 Since the contacts often list the name of their town, there is a small distance
@@ -855,12 +828,12 @@ friends or followers tend to be further away.
 \subsection{Factor 2: Does the number of friends and followers a person have affect how
 close they are?}
 
+The second factor we consider is the number of friends and followers of a contact.
+%
 %Since the primary goal of this research is to predict the location of users, we
 %want to be able to discern the differences between contacts.
 %
-The second factor we consider is the number of friends and followers of a contact.
-%
-%, we focus our attention on the
+%When looking at number of friends and followers, we focus our attention on the
 %number of friends and followers a contact has rather than the numbers for the
 %target user.
 %
@@ -890,19 +863,6 @@ hundred.
 Follower count and friend count are good ways to distinguish celebrity and news
 accounts which are useless for location prediction.
 
-\ifdefined\THESIS
-    \begin{figure}[tb]
-    \centering
-    \includegraphics[width=.9\linewidth]{figures/com_types.pdf}
-    \caption{
-    CDF of the distance between a target user and various types of contacts
-    plotted on a logarithmic scale.
-    }
-    \label{fig:ComTypes}
-    \vspace{-2pt}
-    \end{figure}
-\fi
-
 
 \begin{table*}[tb]
 \scriptsize
@@ -927,8 +887,7 @@ live nearby.
 %
 In this table, ``I'' refers to the target user.
 %
-``You'' refers to their
-contact.
+``You'' refers to their contact.
 %
 }
 \label{tab:ComTypes}
@@ -1049,8 +1008,10 @@ mutual friends.
 chance they live near you?}
 
 We now turn our attention to triangles of users.
+%
 Finding useful relationships between the edges of a social triangle is tricky
 because the three distances depend on each other.
+%
 Unfortunately, it is fairly simple to show using the triangle inequality theorem
 that if two users are 1000 miles apart, then the third member of the triangle
 has to be at least 500 miles from one of the other two.
@@ -1183,6 +1144,11 @@ This means that median distance to leafs does a reasonable job of separating the
 worst contacts from the average contacts, but local contact ratio does a better
 job of identifying the very best contacts.
 
+\jam{check figure citation}
+%Figure~\ref{fig:Local10} is a graph of the distance to reciprocal friends split
+%into bins based on the local contact ratio of the contact.
+%This shows that some users are much more local than other users.
+%
 The figure shows that some users are much more local than other users.
 For example, a local newspaper may have thousands of followers and few friends,
 but the people who follow a newspaper are generally local.
@@ -1234,9 +1200,11 @@ We can compare the results of the geocoder to the location of the geo-located
 tweets for these users to quantify how accurate the geocoder is for certain
 types of locations.
 %
-We define the \textbf{location error} to be the distance between a user's home
-location (from their tweets) and the location returned from the geocoder.
-
+We define the \textbf{location error} to be the great circle distance between a
+user's home location (from their tweets) and the location returned from the geocoder.
+The location error for a user can vary from less than a mile to over ten
+thousand miles.
+%
 We calculated the location error for each of geocoding users, and grouped the
 users by their location.
 %
@@ -1248,8 +1216,8 @@ according to the type of location returned by the geocoder.
 %
 We calculated the median location error for each location type.
 %
-%The median is more appropriate than the average or standard deviation because
-%those metrics are strongly affected by large outliers.
+The median is more appropriate than the average or standard deviation because
+those metrics are strongly affected by large outliers.
 %
 %We choose to make the cutoff three because that is the smallest value where the
 %median is not just an average.
@@ -1391,13 +1359,7 @@ Average error distance (reported as AED@100\%) is as follows:
 
 Since AED may be affected by outliers, we also report the AED at other
 percentiles, following \cite{li2012towards}.
-
-%\begin{quote}
-%However, as AED is easily affected by outliers in results, we report AED at
-%different percentiles (60\%, 80\% and 100\%) of users ranked by their error
-%distances. E.g., AED@60\% is the average error distance of the top 60\% of
-%users ranked by their error distances.
-%\end{quote}
+%
 %The effect of outliers that they mention is even larger in our work than theirs
 %because we are using locations from around the world instead of focusing on
 %just the U.S.
@@ -1448,19 +1410,11 @@ with two baseline systems, which we will discuss in upcoming sections:
     FriendLoc$-$Strangers & 5.79$\pm$.028 & 25.2$\pm$.18 & 377$\pm$4.3 & 62.4\%$\pm$.09\% \\
     FriendLoc$-$Leafs & 5.36$\pm$.011 & 22.1$\pm$.12 & 367$\pm$4.0 & 63.6\%$\pm$.12\% \\
     FriendLoc Basic & 5.35$\pm$.008 & 21.4$\pm$.12 & 364$\pm$3.2 & 63.9\%$\pm$.05\% \\
-\ifdefined\THESIS
-    FriendLoc+Time Zone & 5.33$\pm$.009 & 21.1$\pm$.07 & 352$\pm$3.5 & 64.0\%$\pm$.04\% \\
-    FriendLoc+Location & 4.54$\pm$.011 & 15.7$\pm$.27 & 325$\pm$2.6 & 66.9\%$\pm$.16\% \\
-    FriendLoc+Cutoff & 4.56$\pm$.026 & 15.1$\pm$.22 & 343$\pm$4.2 & 67.4\%$\pm$.08\% \\
-\fi
 \end{tabular}
 \caption{
     Results of our location prediction system when compared to a baseline.
     The value after the $\pm$ is the standard deviation from the five-fold
     cross-validation.
-    %Including the target user's time zone information does not improve the
-    %results, but using the target user's reported location, if they gave one,
-    %makes for significantly better results.
 }
 \label{tab:results}
 \end{table}
@@ -1493,142 +1447,7 @@ no real way to know.
 
 
 
-\ifdefined\THESIS
-\subsection{Time Zone}
-When the predictor is wrong, it is often wrong by thousands of miles.
-%
-All users on Twitter have a time zone setting for their account which is used
-to display the times that tweets were posted.
-%
-The time zone is set automatically when a user registers, and the user can
-change it, but it is still not always correct.
-%
-The time zone information is made available on the Twitter API as the offset
-in seconds from UTC.
-%
-We compared the longitudes of the target users to the UTC offset for their
-profiles.
-%
-We put the target users into one of 24 groups based on x, the target user's
-longitude and z, the UTC offset measured in hours:
-${(\lfloor {x\over15}\rfloor-z+24)\mod{24}}$.
-%
-We found that 72\% of Twitter users fit into either group 0 or 1.
-%
-We define $\pTimeZone$ to be the fraction of the target users who fit into one
-of the 24 groups.
-%
-We modified the formula for $\FriendLoc$ to include $\pTimeZone$ as follows and
-re-ran the evaluation.
-\[
-    \pTimeZone(l,z)
-    \left(
-        \prod_{l^c_k \in L,p_k \in P}
-        {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
-    \right)
-    \pStrangers(l)
-\]
-The evaluation results for this formula are in the ``FriendLoc+Time Zone'' row
-of Table~\ref{tab:results}.
-%
-We hoped that the time zone would help us avoid locations on the wrong side of
 
-the world; unfortunately, adding the time zone information does not improve the
-location prediction.
-%
-Part of the problem is that the time zone settings are often wrong---over 9\% of
-the target users have a time zone setting in the hemisphere opposite their home
-location.
-%
-The actual time zones on the earth have lines that are much more complex than
-the simple metric we used, but they rarely differ by more than an hour one way
-or the other.
-%
-Since this showed so little benefit, it is unlikely to be improved by better
-time zone lines.
-
-\fi
-
-\ifdefined\THESIS
-\subsection{Location Field}
-\jam{We probably want to chop out this section if space is a problem.}
-Many Twitter users fill out the text-based location field.
-%
-If this user-reported data is good, there is no reason to spend time
-crawling their contacts.
-%
-It would be nice to use this information when predicting location, but
-the target users we used to do the evaluation are less concerned about
-the privacy of their location information than the average Twitter user.
-%
-As a result, they tended to give more precise information in the location
-field of their user profile than other users.
-%
-We assume that the locations supplied by the contacts are more
-representative of normal Twitter users so we added noise to the locations
-of the target users to make the distribution of the quality of their
-locations would match the quality of the contacts.
-%
-First, we sorted all the target users and all the contacts by their
-MLE(median location error).
-%
-Next, we looked at each percentile of the target users and compared
-their MLE to the MLE for that percentile in the contacts.
-%
-For each of the target users, we moved the user's location based on
-reverse geocoding away from the user's actual median location based on the
-difference between the MLEs.
-%
-For example, the MLE for a target user was 5.9 miles, and the median
-MLE for a contact was 6.7 miles.
-%
-This means that we need to add .8 miles of noise to a target user
-with a MLE of 5.9 so that the quality of the geo-located target user's location
-would match the quality of normal Twitter users.
-%
-We also removed the location field from 17\% of the target users to
-make the proportion of target users with a location match the general
-Twitter population.
-
-After doing this, we can use the user-supplied location of the user we are
-going to predict.
-%
-We investigate two different ways of using this information.
-%
-The simpler of the two, which we refer to as ``FriendLoc+Cutoff'' in
-Table~\ref{tab:results}.
-%
-If the ME for the target user's geocoded location is less than or equal to 25
-miles, then we use the geocoded location as the actual location; otherwise, we
-ignore the geocoded location and just use $\FriendLoc$t diff to find the location.
-%
-This method locates 67.4\% of users within 25 miles, and is the best method
-that we found.
-
-We also look at including the geocoded location in the maximum-likelihood
-estimation similar to what we did for time zones.
-%
-The same data that was used to generate Figure~\ref{fig:DiffMlocMdist} can be
-used to calculate the probability that a user lives a certain distance from
-their geocoded location.
-%
-We take the location error, which is the distance between a user's home
-location and geocoded location, for all the target users with a location the
-geocoder can decode, and find the distribution of these errors.
-%
-This lets us add $\pLocation$ into the maximum-likelihood estimator:
-\[
-    \pLocation(|l-l^g|)
-    \left(
-        \prod_{l^c_k \in L,p_k \in P}
-        {\pContact(\quantile(p_k),|l-l^c_k|) \over (1-p(|l-l^c_k|))}
-    \right)
-    \pStrangers(l)
-\]
-\\{Do we want ``FriendLoc+Location''? It helped, but it is not as good as the
-    cutoff and more complicated.}
-
-\fi
 
 \subsection{Ignoring Strangers}
 Calculating $\pStrangers$ is very expensive.
@@ -1673,40 +1492,59 @@ FriendlyLocation.
 
 \section{Conclusion}
 
-We demonstrated that some types of relationships tend to be closer than others,
-identified some features of relationships that are correlated with physical
-proximity, and used this to accurately predict the locations of users on a
-social media website.
+In this paper, we have demonstrated that some features of relationships are
+correlated with physical proximity.
 %
-There are two directions that the future work on this project could go:
-improving the results of the predictor and using the predicted locations in
-other research projects.
+For example, users with lots of followers tend to be distant, while users who
+mention each other tend to be closer.
+%
+In general, users with stronger ties tend to be local.
+%
+We used this to accurately predict the locations of users on a social media
+website.
 
+There are two general directions that the future work on this research could
+go: improving the results of the prediction and using the predicted locations
+to build systems.
+%
 One way to improve this predictor is to combine tie strength and the social
 graph with other factors such as the words users choose to use as described by
-Cheng \cite{cheng2010you}.
+Cheng et al.\cite{cheng2010you}.
 %
 It could be useful for the predictor to return not just a location, but an
 estimate of the quality of the prediction.
 %
-This paper only considered users who have a well-defined location.
+The system described in this thesis only considered users who have a
+well-defined location.
 %
-FriendlyLocation could identify users who do not have meaningful locations such
-as people who constantly travel.
-%
-This could work well with the node locality metric which is defined by
-Scellato\cite{scellato2010distance}.
+FriendlyLocation could be modified to identify users who do not have meaningful
+locations such as people who constantly travel and accounts that represent
+large organizations.
 
-Finally, high-quality geographic information opens up new avenues for research.
+Finally, high-quality geographic information opens up new avenues for research
+and software engineering.
+%
+Location prediction will allow websites to provide hyper-local content and
+services.
+%
+For example, the distance between a pair of users could be considered when
+suggesting new friends on a social network and websites will be able to give
+users more accurate, localized search results.
+
+The idea that started our research into location prediction was community crowd
+detection.
+%
 With geographic location of users, we can cluster users and find local
 conversations.
 %
-It also allows businesses to provide hyper-local content and services.
+These conversations can be analyzed to understand local political and social
+events.
+%
+Location prediction will allow us to create a more clear picture of the
+conversations in a community.
 
-\fontsize{9pt}{10pt}
-\bibliographystyle{aaai}
-\bibliography{fl}
-\end{document}
+
+%\fontsize{9pt}{10pt}
 
 %
 % The following two commands are all you need in the
