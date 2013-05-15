@@ -105,9 +105,6 @@ accurate location estimates.
 %
 \end{abstract}
 
-\jam{define contacts --- are defined to be the set of a user's friends, followers, and
-people who a user mentioned in her tweets (i.e., people the user speaks to).}
-
 \section{Introduction}
 Location-based social media is widespread, with the adoption of voluntary
 user-based location sharing via ``check-in'' services like Foursquare,
@@ -482,7 +479,7 @@ other, have many friends in common, and yet still live on opposite sides of the
 globe.
 %
 
-\jam{define Dp, Da, and n}
+%\jam{define Dp, Da, and n}
 
 Hence, we propose to assess the relative quality of each edge from a target
 user to his contacts, so that edges conveying strong location information are
@@ -535,11 +532,11 @@ quantile $j$ and had an actual distance of $d$
         \}|
 \]
 
-By comparing the number of edges that could have existed to the number of edges
-that actually exist at a specific distance and in a specific quantile, we can
-find the probability that a contact at a specific distance is in a quantile:
+By comparing the number of edges that could have existed, $\edges(d)$, to the
+number of edges that actually exist at a specific distance and in a specific
+quantile, $\actEdges(j,d)$, we can find the probability that a contact at a
+specific distance is in a quantile:
 
-\jam{define edges}
 \[
 \pContact(j,d) = \frac{\actEdges(j,d)}{\edges(d)}
 \]
@@ -560,21 +557,21 @@ contacts:
         \pStrangers(l)
 \]
 
-\jam{This was commented out, but it defines edges...
-Location prediction with a maximum likelihood estimator requires an estimate of
-the probability that a user lives at a specific location.
-%
-We can find that probability by comparing the distribution of Twitter users to
-the distribution of the contacts.
-%
-First, we need a model for the density of Twitter users.
-%
-We calculate the distance between every target user and every contact (even for
-contacts and users who had no relationship).
-%
-We call the number of target and contact pairs that are $d$ miles apart
-$\edges(d)$.
-}
+%\jam{This was commented out, but it defines edges...
+%Location prediction with a maximum likelihood estimator requires an estimate of
+%the probability that a user lives at a specific location.
+%%
+%We can find that probability by comparing the distribution of Twitter users to
+%the distribution of the contacts.
+%%
+%First, we need a model for the density of Twitter users.
+%%
+%We calculate the distance between every target user and every contact (even for
+%contacts and users who had no relationship).
+%%
+%We call the number of target and contact pairs that are $d$ miles apart
+%$\edges(d)$.
+%}
 
 % i index in R, decision tree tuples
 % j index in Q, quantile boundaries
@@ -586,7 +583,7 @@ tuples $R = (d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where
 $d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by
 the decision tree.
 
-\jam{confusion about curve-fitting}
+%\jam{confusion about curve-fitting}
 For each of the quantiles, we can fit $\pContact$ to the curve from
 \cite{backstrom2010find}:
 \[
@@ -726,19 +723,17 @@ Reciprocal friends tend to be closer than other types of friendships.
 
 
 \subsection{Factor 1: What type of contact is closest?}
-\label{sec:EdgeTypes}
 We first consider the type of contact and its impact on distance by dividing
 all contacts into one of four disjoint sets:
 
-\jam{check captialization of terms}
 \begin{description}
-\item[reciprocal friend:] The target user follows this user and is followed
+\item[Reciprocal Friend:] The target user follows this user and is followed
     back.
-\item[just friend:] The target user follows this user and is not followed
+\item[Just Friend:] The target user follows this user and is not followed
     back.
-\item[just follower:] The target user is followed by this user, but does
+\item[Just Follower:] The target user is followed by this user, but does
     not follow them.
-\item[just mentioned:] The users do not follow each other, but the target
+\item[Just Mentioned:] The users do not follow each other, but the target
     user mentioned the other user in a tweet.
 \end{description}
 
@@ -786,15 +781,14 @@ them, it is probably someone who knows them.
 \caption{
 Histogram of distance to reciprocal friends.
 }
-\label{fig:EdgeTypes}
+\label{fig:RfrdNorm}
 \vspace{-2pt}
 \end{figure}
-\jam{is the EdgeTypes label right here?}
 
 
 \noindent\textbf{What is the distribution of contacts?}
 To further analyze the distribution of contacts, we show in
-Figure~\ref{fig:EdgeTypes} a logarithmically-scaled
+Figure~\ref{fig:RfrdNorm} a logarithmically-scaled
 histogram of the distances between various types of contacts.
 %
 All four types of contacts follow roughly the same
@@ -850,7 +844,7 @@ The second factor we consider is the number of friends and followers of a contac
 %target user.
 %
 We took each of the reciprocal friendships that we looked at in
-Section~\ref{sec:EdgeTypes} and put them into five log-scaled bins based on
+Figure~\ref{fig:EdgeTypesCuml} and put them into five log-scaled bins based on
 the number of friends or followers that the contact had.
 %
 Figure~\ref{fig:EdgeCounts} shows the result of this procedure.
@@ -1090,6 +1084,7 @@ live near the target user.
     for several numbers of leafs.
     Although looking at more leafs makes users with a high LCR more likely to
     be nearby, it probably doesn't justify how long it takes to compute.
+    \jam{consider removing this figure}
 }
 \label{fig:LocalCmp}
 \vspace{-2pt}
@@ -1151,14 +1146,14 @@ This means that median distance to leafs does a reasonable job of separating the
 worst contacts from the average contacts, but local contact ratio does a better
 job of identifying the very best contacts.
 
-\jam{check figure citation}
-%Figure~\ref{fig:Local10} is a graph of the distance to reciprocal friends split
-%into bins based on the local contact ratio of the contact.
-%This shows that some users are much more local than other users.
+Figure~\ref{fig:Local10} is a graph of the distance to reciprocal friends split
+into bins based on the local contact ratio of the contact.
 %
 The figure shows that some users are much more local than other users.
+%
 For example, a local newspaper may have thousands of followers and few friends,
 but the people who follow a newspaper are generally local.
+%
 According to the other factors we looked at, the newspaper is a bad predictor
 of location, but in reality it is a great predictor.
 
@@ -1304,7 +1299,7 @@ variables, and the leaves of the tree have a predicted value.
 \centering
 \includegraphics[width=.8\linewidth]{figures/tree_top.pdf}
 \caption{
-    \jam{What do samples and value mean in this chart?}
+    \jam{Reviewer asks: What do samples and value mean in this chart?}
     The top three levels of the decision tree. This tree will predict a
     distance of 839 miles for a contact with a local contact ratio of .2 and
     2800 friends. It will predict a much-closer distance of 43.7 miles for a
