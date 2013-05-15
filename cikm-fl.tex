@@ -306,9 +306,19 @@ In this section, we build a model for the probability that a user, who we refer
 to as the target user, lives at a specific location given the approximate
 location of his friends and followers.
 %
-Given a user, our goal is to estimate the location $l$ of the user provided
-only with some imperfect information about the location of that user's social
-network.
+Every user on Twitter has a set of people that they interact with, which we
+refer to as their contacts.
+%
+This includes the user's friends, followers, and people they mention in tweets
+(i.e., people the user speaks to).
+%
+Many of these contacts share their locations.
+%
+We define $L^c$ to be the set of known locations of the contacts of a user.
+%
+Given a target user, our goal is to estimate the location $l$ of the user
+provided only with some imperfect information about the location of that user's
+social network, $L^c$.
 %
 We first describe the baseline Facebook model for location estimation, identify
 several limitations of applying it more widely, and then describe the proposed
@@ -550,8 +560,7 @@ contacts:
         \pStrangers(l)
 \]
 
-\jam{ This was commented out, but it defines edges...
-
+\jam{This was commented out, but it defines edges...
 Location prediction with a maximum likelihood estimator requires an estimate of
 the probability that a user lives at a specific location.
 %
