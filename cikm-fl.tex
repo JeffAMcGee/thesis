@@ -36,7 +36,7 @@
 \hyphenation{Friend-ly-Lo-ca-tion}
 
 \pdfpagewidth 8.5in \pdfpageheight 11in
-\linespread{.98}
+\linespread{.99}
 
 \newcommand{\jam}[1]{\emph{#1}}
 
@@ -173,7 +173,7 @@ While an encouraging first step, this Facebook approach may encounter
 difficulties in location estimation when applied more broadly to other social
 media services:
 
-\begin{itemize}
+\squishlist
 \item \textit{Multiple (often imprecise) location granularities.} First, many
     users in social media reveal broad, imprecise locations (e.g., at the city
     or state level), while others provide fine-grained latitude-longitude
@@ -191,7 +191,7 @@ media services:
     (supporting global dissemination)  \cite{kwak2010why}.  What is the
     appropriate balance between these conflicting purposes for location
     estimation?
-\end{itemize}
+\squishend
 
 
 To address these challenges, we propose a novel network-based approach for
@@ -1032,12 +1032,12 @@ other and a third person who had no connection with the other two:
 To help label the four users, we describe this social graph from the
 perspective of the target user:
 
-\begin{itemize}
+\squishlist
 \item ``me'' is the target user
 \item ``you'' is the contact who is reciprocal friends with ``me''
 \item ``my'' has no relationship with ``you'' and is reciprocal friends with ``me''
 \item ``our'' is reciprocal friends with both ``me'' and ``you''
-\end{itemize}
+\squishend
 
 We found this pattern for 147,669 of the target users.
 %
@@ -1260,7 +1260,7 @@ nonsense values that happen to decode to an actual location.
 \subsection{Summary}
 Based on this large-scale analysis of Twitter, we conclude the following:
 
-\begin{itemize}
+\squishlist
 \item Reciprocal friendships tend to be physically closer than contacts with
     less strong relationships such as someone who is just a follower.
 \item Contacts who mention or are mentioned by the target user on Twitter tend
@@ -1273,8 +1273,7 @@ Based on this large-scale analysis of Twitter, we conclude the following:
 \item Some accounts, such as a local newspaper, may have lots of users from the same area.
     These accounts can be identified by looking at a small number of their contacts.
 \item Contacts with more precise locations are more useful for location prediction.
-\end{itemize}
-
+\squishend
 
 
 \section{Building and Evaluating FriendlyLocation}
