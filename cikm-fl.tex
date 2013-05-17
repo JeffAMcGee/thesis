@@ -502,7 +502,7 @@ Before going into the details of using the tree regressor, we introduce some not
 \squishlist
 \item $L^t$ denotes the locations of every target user
 \item $L^s$ denotes the locations of every contact
-\item $D^a$ is the set of actual distances from taget users to contacts
+\item $D^a$ is the set of actual distances from target users to contacts
 \item $D^p$ is the set of goodness values returned by the decision tree
 \item $n = |D^a| = |D^p|$ is the number of edges
 \item $m$ is the number of quantiles
@@ -548,7 +548,7 @@ quantile $j$ and have a distance of $d$ miles from the target to the contact:
         \}|
 \]
 \noindent We will compare this to the number of edges that could have possibly
-existed by looking at the cartesian product of all the target users ($L^t$) and all
+existed by looking at the Cartesian product of all the target users ($L^t$) and all
 of the contacts ($L^s$).
 %
 We define stgrEdges to be the number of edges that could have existed at a
@@ -569,7 +569,7 @@ a contact in a quantile $j$ lives $d$ miles from the target user:
 \]
 
 %using the millions of edges $\actEdges$ divided by billions of edges in $\stgrEdges$:
-For each of the quantiles, we can fit this probality to the curve from
+For each of the quantiles, we can fit this probability to the curve from
 \cite{backstrom2010find}:
 \[
     \pContact(j,d) = a_{j} (b_{j}+d)^{-c_{j}}
@@ -1087,7 +1087,6 @@ live near the target user.
 %    for several numbers of leafs.
 %    Although looking at more leafs makes users with a high LCR more likely to
 %    be nearby, it probably doesn't justify how long it takes to compute.
-%    \jam{consider removing this figure}
 %}
 %\label{fig:LocalCmp}
 %\vspace{-2pt}
@@ -1306,12 +1305,14 @@ variables, and the leaves of the tree have a predicted value.
 \centering
 \includegraphics[width=.8\linewidth]{figures/tree_top.pdf}
 \caption{
-    \jam{Reviewer asks: What do samples and value mean in this chart?}
-    The top three levels of the decision tree. This tree will predict a
-    distance of 839 miles for a contact with a local contact ratio of .2 and
-    2800 friends. It will predict a much-closer distance of 43.7 miles for a
-    user with a local contact ratio of .5 and a median location error of 10
-    miles.
+    The top three levels of the decision tree.
+    Samples is the number of edges used to train that node of the tree, and
+    value is the geometric average distance from a target to a contact for that
+    node.
+    This tree will predict a distance of 839 miles for a contact with a local
+    contact ratio of .2 and 2800 friends.
+    It will predict a much-closer distance of 43.7 miles for a user with a
+    local contact ratio of .5 and a median location error of 10 miles.
 }
 \label{fig:TreeTop}
 \vspace{-2pt}
