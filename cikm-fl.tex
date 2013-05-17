@@ -36,7 +36,7 @@
 \hyphenation{Friend-ly-Lo-ca-tion}
 
 \pdfpagewidth 8.5in \pdfpageheight 11in
-\linespread{.97}
+\linespread{.98}
 
 \newcommand{\jam}[1]{\emph{#1}}
 
@@ -328,10 +328,10 @@ The Facebook model developed by Backstrom et al. \cite{backstrom2010find}
 begins with a striking observation: that the probability of friendship is
 roughly inversely proportional to distance.
 %
-Specifically, by examining the ratio of actual edges at a particular distance
-to the total number of possible edges at that distance (i.e., the probability
-of friendship), they find a curve of the form $a(b+x)^{-c}$, with an exponent
-close to $c=-1$.
+Specifically, by examining the ratio of actual edges in the social graph at a
+particular distance to the total number of possible edges at that distance
+(i.e., the probability of friendship), they find a curve of the form
+$a(b+x)^{-c}$, with an exponent close to $c=-1$.
 
 With the empirically observed probability of friendship, they can estimate the
 likelihood that a user lives at a location $l$ using both $L^c$, the set of
@@ -502,7 +502,7 @@ Before going into the details of using the tree regressor, we introduce some not
 \squishlist
 \item $L^t$ denotes the locations of every target user
 \item $L^s$ denotes the locations of every contact
-\item $D^a$ is the set of actual edge lengths from taget users to contacts
+\item $D^a$ is the set of actual distances from taget users to contacts
 \item $D^p$ is the set of goodness values returned by the decision tree
 \item $n = |D^a| = |D^p|$ is the number of edges
 \item $m$ is the number of quantiles
@@ -513,10 +513,10 @@ contacts.
 %
 We ran the decision tree regressor on these edges to create a set of
 tuples $(d^a_i, d^p_i)$ for $d^a_i \in D^a$ and $d^p_i \in D^p$ where
-$d^a_i$ is the actual length of the edge, and $d^p_i$ is the value predicted by
-the decision tree.
+$d^a_i$ is the actual distance from target to contact, and $d^p_i$ is the value
+predicted by the decision tree.
 %
-Although the values returned by the regression tree are actually distances,
+Although the values returned by the regression tree are also distances,
 we only use them as a measurement of quality.
 
 Suppose we construct a set of $m$ quantiles, representing edges with different
@@ -592,9 +592,6 @@ contacts:
 \]
 
 
-%\jam{confusion about curve-fitting}
-
-
 We choose to split into ten quantiles, which gave us ten different curves for
 the probability that a certain type of contact exists between a pair of users.
 %
@@ -614,11 +611,11 @@ Larger numbers of quantiles give no benefit since the curves we are fitting
 are so noisy as can be seen in Figure~\ref{fig:NearProbFit}.
 
 
-\section{Factors Impacting the Length of an Edge}
+\section{Factors Impacting the Distance to a Contact}
 In the previous section, we formalized the location estimation problem
 incorporating evidence of tie strength.
 %
-But what factors actually impact the length of an edge? In this section, we
+But what factors actually impact the distance to a contact? In this section, we
 empirically examine a large sample from Twitter, totaling 100 million
 geo-encoded tweets and 73 million user profiles.
 %
@@ -732,6 +729,7 @@ We first consider the type of contact and its impact on distance by dividing
 all contacts into one of four disjoint sets:
 
 \begin{description}
+    \setlength{\itemsep}{0pt}
 \item[Reciprocal Friend:] The target user follows this user and is followed
     back.
 \item[Just Friend:] The target user follows this user and is not followed
@@ -1081,19 +1079,19 @@ live near the target user.
 \vspace{-2pt}
 \end{figure}
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=.9\linewidth]{figures/locals_cmp.pdf}
-\caption{
-    Distances to contacts with a local contact ratio better than the median LCR
-    for several numbers of leafs.
-    Although looking at more leafs makes users with a high LCR more likely to
-    be nearby, it probably doesn't justify how long it takes to compute.
-    \jam{consider removing this figure}
-}
-\label{fig:LocalCmp}
-\vspace{-2pt}
-\end{figure}
+%\begin{figure}[tb]
+%\centering
+%\includegraphics[width=.9\linewidth]{figures/locals_cmp.pdf}
+%\caption{
+%    Distances to contacts with a local contact ratio better than the median LCR
+%    for several numbers of leafs.
+%    Although looking at more leafs makes users with a high LCR more likely to
+%    be nearby, it probably doesn't justify how long it takes to compute.
+%    \jam{consider removing this figure}
+%}
+%\label{fig:LocalCmp}
+%\vspace{-2pt}
+%\end{figure}
 
 \subsection{Factor 6: Are some users closer to all of their friends and followers?}
 \label{sec:closer}
@@ -1174,14 +1172,18 @@ Our crawler originally looked at 100 leafs per contact because Twitter's API
 will return up to 100 profiles at a time, but fetching and saving all those
 profiles is slow.
 %
-In Figure~\ref{fig:LocalCmp}, we compare contacts with a high LCR calculated
-using at most 100 leafs per contact to at most 10 leafs per contact.
+%In Figure~\ref{fig:LocalCmp}, we compare contacts with a high LCR calculated
+%using at most 100 leafs per contact to at most 10 leafs per contact.
 %
 The percentage of contacts within 25 miles with a good LCR based on 10 leafs,
 20 leafs, and 100 leafs was 53\%, 55\%, and 58\%, respectively.
 %
 All of these are noticeably closer than reciprocal friends who are within 25
-miles 38\% of the time.
+miles 38\% of the time, but it wasn't worth the expense of obtaining 100 leafs
+for each contact.
+%
+We used LCR based on only 10 friends when evaluating the FriendlyLocation
+system.
 
 
 \subsection{Factor 7: Are some locations better than others?}
@@ -1245,8 +1247,8 @@ while contacts with a high MLE generally live in the same region.
 \vspace{-2pt}
 \end{figure}
 
-Figure~\ref{fig:RfrdMdist} shows the length of edges to reciprocal friends
-divided into three groups based on MLE.
+Figure~\ref{fig:RfrdMdist} shows the distance from target users to their
+reciprocal friends after being divided into three groups based on MLE.
 %
 Contacts with a low MLE provide relatively high-quality location
 information---50\% of reciprocal friends with a MLE less than 10 live within 25
@@ -1376,6 +1378,7 @@ percentiles, following \cite{li2012towards}.
 We investigate several implementations of the FriendlyLocation system along
 with two baseline systems, which we will discuss in upcoming sections:
 \begin{description}
+    \setlength{\itemsep}{0pt}
 \item[Baseline] This is based on the maximum likelihood estimator presented in
     \cite{backstrom2010find}. Some changes to the system had to be made to make it
     work on Twitter's directed graph. (Facebook friendships are always
